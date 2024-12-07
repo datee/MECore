@@ -1,0 +1,12 @@
+[submodule "subprojects/vfspp"]
+	path = subprojects/vfspp
+	url = https://github.com/nextgeniuspro/vfspp.git
+[submodule "subprojects/tinygltf"]
+	path = subprojects/tinygltf
+	url = https://github.com/syoyo/tinygltf.git
+[submodule "subprojects/kazmath"]
+	path = subprojects/kazmath
+	url = https://github.com/Kazade/kazmath.git
+[submodule "subprojects/SDL3"]
+	path = subprojects/SDL3
+	url = https://github.com/libsdl-org/SDL.git
