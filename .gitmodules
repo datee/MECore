@@ -4,9 +4,6 @@
 [submodule "vendor/tinygltf"]
 	path = vendor/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
-[submodule "vendor/kazmath"]
-	path = vendor/kazmath
-	url = https://github.com/Kazade/kazmath.git
 [submodule "vendor/SDL3"]
 	path = vendor/SDL3
 	url = https://github.com/libsdl-org/SDL.git
@@ -16,3 +13,6 @@
 [submodule "vendor/rapidjson"]
 	path = vendor/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "vendor/mathfu"]
+	path = vendor/mathfu
+	url = https://github.com/google/mathfu.git

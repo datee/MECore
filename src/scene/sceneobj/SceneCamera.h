@@ -28,6 +28,7 @@ namespace me::scene {
 
         inline void SetFOV(float fov) { fieldOfView = fov; RegenerateMatrix(); }
         [[nodiscard]] inline float GetFOV() const { return fieldOfView; }
+        [[nodiscard]] inline math::Matrix4x4 GetProjectionMatrix() const { return projection; }
     };
 }
 

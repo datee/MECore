@@ -14,16 +14,17 @@ namespace me::scene {
     // An object used for rendering.
     class SceneObject {
         private:
-        SceneWorld* world; // no good use of a smart pointer here
+        SceneWorld* world;
         bool enabled;
         math::Transform transform;
 
         public:
         SceneObject();
+        virtual ~SceneObject();
 
-        [[nodiscard]] inline bool IsEnabled() const;
-        inline void SetEnabled(bool state);
-        [[nodiscard]] math::Transform& GetTransform();
+        [[nodiscard]] inline bool IsEnabled() const { return enabled; }
+        inline void SetEnabled(const bool state) { enabled = state; }
+        [[nodiscard]] inline math::Transform& GetTransform() { return transform; }
 
         void Internal_AssignWorld(SceneWorld* world);
     };

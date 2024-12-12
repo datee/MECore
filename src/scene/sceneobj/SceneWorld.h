@@ -5,6 +5,7 @@
 #ifndef SCENEWORLD_H
 #define SCENEWORLD_H
 
+#include <vector>
 #include <memory>
 #include <map>
 
@@ -12,15 +13,19 @@
 #include "SceneCamera.h"
 
 namespace me::scene {
+    typedef std::map<uint32_t, std::unique_ptr<SceneObject>> WorldMap;
+    typedef std::vector<std::unique_ptr<SceneObject>> WorldList;
+
     class SceneWorld {
         private:
-        std::map<uint32_t, std::unique_ptr<SceneObject>> allSceneObjects;
+        WorldList objects;
         SceneCamera camera;
 
         public:
         SceneWorld();
 
         [[nodiscard]] inline SceneCamera& GetCamera() { return camera; }
+        [[nodiscard]] std::vector<SceneObject*> GetSceneObjects();
 
         void AddObject(SceneObject* obj);
     };

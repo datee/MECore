@@ -14,6 +14,6 @@ namespace me::scene {
     }
 
     void SceneCamera::RegenerateMatrix() {
-        kmMat4PerspectiveProjection(&projection, fieldOfView, window::aspect, zNear, zFar);
+        projection = math::Matrix4x4::Perspective(fieldOfView, window::aspect, zNear, zFar);
     }
 }

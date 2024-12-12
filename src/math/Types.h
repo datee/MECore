@@ -5,27 +5,26 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "kazmath/kazmath.h"
+#include "mathfu/constants.h"
+#include "mathfu/quaternion.h"
+#include "mathfu/hlsl_mappings.h"
 
 namespace me::math {
-    struct IntVector2 {
-        int32_t x, y;
-    };
+    typedef mathfu::int2 IntVector2;
+    typedef mathfu::int3 IntVector3;
+    typedef mathfu::int4 IntVector4;
 
-    struct IntVector3 {
-        int32_t x, y, z;
-    };
+    typedef mathfu::float2 Vector2;
+    typedef mathfu::float3 Vector3;
+    typedef mathfu::float4 Vector4;
 
-    struct IntVector4 {
-        int32_t x, y, z, w;
-    };
+    typedef mathfu::float4 Color;
+    typedef mathfu::Quaternion<float> Quaternion;
+    typedef mathfu::float4x4 Matrix4x4;
 
-    typedef kmVec2 Vector2;
-    typedef kmVec3 Vector3;
-    typedef kmVec4 Vector4;
-    typedef kmVec4 Color;
-    typedef kmQuaternion Quaternion;
-    typedef kmMat4 Matrix4x4;
+    constexpr int VEC2_SIZE = sizeof(float) * 2;
+    constexpr int VEC3_SIZE = sizeof(float) * 3;
+    constexpr int VEC4_SIZE = sizeof(float) * 4;
 }
 
 #endif //TYPES_H

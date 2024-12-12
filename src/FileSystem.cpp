@@ -6,10 +6,12 @@
 
 namespace me::fs {
     void Initialize() {
-        nativeFs = std::make_unique<vfspp::NativeFileSystem>("../data");
+        vfs = std::make_shared<vfspp::VirtualFileSystem>();
+
+        nativeFs = std::make_unique<vfspp::NativeFileSystem>("../assets");
         nativeFs->Initialize();
 
-        vfs->AddFileSystem("/", std::move(nativeFs));
+        vfs->AddFileSystem("/", nativeFs);
     }
 
     vfspp::IFilePtr OpenFile(const std::string& path, vfspp::IFile::FileMode mode) {

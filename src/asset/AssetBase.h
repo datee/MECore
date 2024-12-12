@@ -7,7 +7,8 @@
 
 namespace me::asset {
     class AssetBase {
-        
+        // some kind of guid
+        // a collection of sub-assets
     };
 }
 

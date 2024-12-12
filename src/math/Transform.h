@@ -12,20 +12,25 @@ namespace me::math {
         Quaternion rotation;
         Vector3 scale;
 
-        static const Transform IDENTITY;
+        Transform() { }
+        Transform(const Vector3 &position, const Quaternion &rotation, const Vector3 &scale) {
+            this->position = position;
+            this->rotation = rotation;
+            this->scale = scale;
+        }
 
-        [[nodiscard]] inline Vector3 Up() const;
-        [[nodiscard]] inline Vector3 Right() const;
-        [[nodiscard]] inline Vector3 Forward() const;
+        static Transform identity;
 
-        [[nodiscard]] inline Matrix4x4 ToMatrix() const;
+        [[nodiscard]] inline Vector3 Up() const { return rotation * mathfu::kAxisY3f; }
+        [[nodiscard]] inline Vector3 Right() const { return rotation * mathfu::kAxisX3f; }
+        [[nodiscard]] inline Vector3 Forward() const { return rotation * mathfu::kAxisZ3f; }
+
+        [[nodiscard]] inline Matrix4x4 ToMatrix() const {
+            return Matrix4x4::Transform(position, rotation.ToMatrix(), scale);
+        }
     };
 
-    constexpr Transform Transform::IDENTITY {
-        kmVec3{ 0.0f, 0.0f, 0.0f },
-        kmQuaternion{ 0.0f, 0.0f, 0.0f, 1.0f },
-        kmVec3{ 1.0f, 1.0f, 1.0f }
-    };
+    inline Transform Transform::identity = Transform(mathfu::kZeros3f, Quaternion::identity, mathfu::kOnes3f);
 }
 
 #endif //TRANSFORM_H

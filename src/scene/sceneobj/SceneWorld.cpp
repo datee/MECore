@@ -4,6 +4,8 @@
 
 #include "SceneWorld.h"
 
+#include <utility>
+
 namespace me::scene {
     SceneWorld::SceneWorld() {
         AddObject(&camera);
@@ -11,7 +13,16 @@ namespace me::scene {
 
     void SceneWorld::AddObject(SceneObject* obj) {
         obj->Internal_AssignWorld(this);
-        allSceneObjects.insert({ allSceneObjects.size(), std::unique_ptr<SceneObject>(obj) });
+        objects.push_back(std::unique_ptr<SceneObject>(obj));
+        // objects.insert({ objects.size(), std::unique_ptr<SceneObject>(obj) });
     }
+
+    std::vector<SceneObject*> SceneWorld::GetSceneObjects() {
+        std::vector<SceneObject*> raw;
+        raw.reserve(objects.size());
+        std::ranges::transform(std::as_const(objects), std::back_inserter(raw), [](auto& ptr) { return ptr.get(); });
+        return raw;
+    }
+
 
 }

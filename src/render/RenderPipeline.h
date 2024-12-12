@@ -5,11 +5,11 @@
 #ifndef RENDERPIPELINE_H
 #define RENDERPIPELINE_H
 
-#include "../scene/sceneobj/SceneWorld.h"
+#include "RenderPass.h"
 
 namespace me::render {
     class RenderPipeline {
-    public:
+        public:
         RenderPipeline();
         virtual ~RenderPipeline();
 

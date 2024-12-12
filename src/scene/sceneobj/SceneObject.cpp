@@ -8,19 +8,11 @@ namespace me::scene {
     SceneObject::SceneObject() {
         world = nullptr;
         enabled = true;
-        transform = math::Transform::IDENTITY;
+        transform = math::Transform::identity;
     }
 
-    bool SceneObject::IsEnabled() const {
-        return enabled;
-    }
-
-    void SceneObject::SetEnabled(bool state) {
-        enabled = state;
-    }
-
-    math::Transform& SceneObject::GetTransform() {
-        return transform;
+    SceneObject::~SceneObject() {
+        // nothing to clean up lol
     }
 
     void SceneObject::Internal_AssignWorld(SceneWorld *world) {
