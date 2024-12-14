@@ -4,6 +4,9 @@
 
 #define SDL_MAIN_USE_CALLBACKS
 
+#include <imgui.h>
+#include <backends/imgui_impl_sdl3.h>
+#include "imgui/imgui_impl_sdlgpu3.h"
 #include <string>
 #include <tiny_gltf.h>
 #include <SDL3/SDL.h>
@@ -31,7 +34,7 @@ me::math::Vector3 vertices[8] =
     me::math::Vector3(-1, 1, 1)
 };
 
-uint32_t indices[6 * 6] =
+uint16_t indices[6 * 6] =
 {
     0, 1, 3, 3, 1, 2,
     1, 5, 2, 2, 5, 6,
@@ -43,10 +46,15 @@ uint32_t indices[6 * 6] =
 
 struct AppContext {
     me::scene::ScenePtr scene;
+    float imguiFloat;
+    me::math::Vector3 imguiFloat3;
     me::scene::SceneObject* exampleObject;
 
-    me::asset::MeshPtr mesh;
-    me::scene::SceneMesh* meshObject;
+    me::asset::MeshPtr cubeMesh;
+    me::scene::SceneMesh* cubeMeshObject;
+
+    me::asset::MeshPtr gltfMesh;
+    me::scene::SceneMesh* gltfMeshObject;
 
     me::asset::MaterialPtr material;
     me::asset::ShaderPtr vertexShader;
@@ -61,8 +69,8 @@ me::asset::ShaderPtr LoadShader(const std::string& path, me::asset::ShaderType t
     if (file && file->IsOpened()) {
         SDL_Log(("Opened shader: " + path).c_str());
         size_t size = file->Size();
-        unsigned char* buffer = new unsigned char[size];
-        memset(buffer, 0, size);
+        unsigned char* buffer = new unsigned char[size + 1];
+        memset(buffer, 0, size + 1);
         file->Read(buffer, size);
         file->Close();
 
@@ -82,10 +90,11 @@ std::vector<T> ReadAccessor(tinygltf::Model& model, int id) {
     tinygltf::BufferView view = model.bufferViews[accessor.bufferView];
     tinygltf::Buffer buffer = model.buffers[view.buffer];
 
-    const size_t stride = view.byteStride / sizeof(T);
-    T* dataPointer = reinterpret_cast<T*>(buffer.data.data() + view.byteOffset);
+    const size_t stride = view.byteStride + sizeof(T);
+    unsigned char* dataPointer = buffer.data.data() + view.byteOffset;
     for (size_t i = 0; i < accessor.count; i++) {
-        vector[i] = dataPointer[i * stride];
+        vector[i] = *reinterpret_cast<T*>(dataPointer);
+        dataPointer += stride;
     }
 
     return std::move(vector);
@@ -111,7 +120,7 @@ me::asset::MeshPtr LoadMesh(const std::string& path) {
 
             // assume there are indices
             int indexAccessorID = gltfModel.meshes[0].primitives[0].indices;
-            std::vector<unsigned int> indexBuffer = ReadAccessor<unsigned int>(gltfModel, indexAccessorID);
+            std::vector<uint16_t> indexBuffer = ReadAccessor<uint16_t>(gltfModel, indexAccessorID);
 
             return std::make_shared<me::asset::Mesh>(vertexBuffer, indexBuffer);
         }
@@ -144,21 +153,37 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
     ctx->scene = std::make_shared<me::scene::Scene>();
 
     // set camera pos
-    ctx->scene->GetSceneWorld().GetCamera().GetTransform().position = { 0.f, 0.f, -10.f };
+    ctx->scene->GetSceneWorld().GetCamera().GetTransform().SetPosition({ 0.f, 0.f, -10.f });
 
     // make blank object
-    ctx->exampleObject = new me::scene::SceneObject();
+    ctx->exampleObject = new me::scene::SceneObject("blank");
     ctx->scene->GetSceneWorld().AddObject(ctx->exampleObject);
 
     // make mesh and object
-    ctx->mesh = std::make_shared<me::asset::Mesh>(vertices, 8, indices, 36);
-    ctx->meshObject = new me::scene::SceneMesh();
-    ctx->meshObject->mesh = ctx->mesh;
-    ctx->meshObject->material = ctx->material;
-    ctx->scene->GetSceneWorld().AddObject(ctx->meshObject);
+    ctx->cubeMesh = std::make_shared<me::asset::Mesh>(vertices, 8, indices, 36);
+    ctx->cubeMeshObject = new me::scene::SceneMesh("cube");
+    ctx->cubeMeshObject->mesh = ctx->cubeMesh;
+    ctx->cubeMeshObject->material = ctx->material;
+    ctx->scene->GetSceneWorld().AddObject(ctx->cubeMeshObject);
+
+    ctx->gltfMesh = LoadMesh("/alitrophy.glb");
+    ctx->gltfMeshObject = new me::scene::SceneMesh("gltf");
+    ctx->gltfMeshObject->GetTransform().SetPosition({ 5.f, 0.f, 0.f });
+    ctx->gltfMeshObject->mesh = ctx->gltfMesh;
+    ctx->gltfMeshObject->material = ctx->material;
+    ctx->scene->GetSceneWorld().AddObject(ctx->gltfMeshObject);
 
     me::scene::Initialize();
     me::scene::AddScene(ctx->scene);
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    ImGui_ImplSDL3_InitForVulkan(me::window::window);
+    ImGui_ImplSDLGPU3_Init(me::window::device, me::window::window);
 
     *appstate = ctx;
     SDL_Log("initialized");
@@ -169,6 +194,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[]) {
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event) {
     auto* ctx = static_cast<AppContext*>(appstate);
 
+    ImGui_ImplSDL3_ProcessEvent(event);
+
     if (event->type == SDL_EVENT_QUIT) {
         ctx->shouldQuit = true;
     }
@@ -178,6 +205,53 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event) {
 SDL_AppResult SDL_AppIterate(void* appstate) {
     auto* ctx = static_cast<AppContext*>(appstate);
 
+    ImGui_ImplSDL3_NewFrame();
+    ImGui_ImplSDLGPU3_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("Basic Debug Panel");
+    ImGui::Text("sample text");
+
+    if (ImGui::CollapsingHeader("Active Scene World")) {
+        if (ImGui::TreeNode("Camera")) {
+            auto& camera = ctx->scene->GetSceneWorld().GetCamera();
+            auto& cameraTransform = camera.GetTransform();
+            auto& raw = cameraTransform.Raw();
+            ctx->imguiFloat = camera.GetFOV();
+            ctx->imguiFloat3 = cameraTransform.GetAngles();
+
+            ImGui::DragFloat3("Position", reinterpret_cast<float*>(&raw.position), 0.1f);
+            if (ImGui::DragFloat3("Rotation", reinterpret_cast<float*>(&ctx->imguiFloat3), 2.f)) {
+                cameraTransform.SetAngles(ctx->imguiFloat3);
+            }
+
+            if (ImGui::SliderFloat("Field of View", &ctx->imguiFloat, 1.0f, 179.0f)) {
+                camera.SetFOV(ctx->imguiFloat);
+                // SDL_Log(std::format("FOV = {}", ctx->cameraFOVBuffer).c_str());
+            }
+            ImGui::TreePop();
+        }
+        if (ImGui::TreeNode("Objects")) {
+            for (auto obj : ctx->scene->GetSceneWorld().GetSceneObjects()) {
+                if (ImGui::TreeNode(std::format("SceneObject id {}", obj->GetName()).c_str())) {
+                    auto& transform = obj->GetTransform();
+                    auto& raw = transform.Raw();
+                    ctx->imguiFloat3 = transform.GetAngles();
+
+                    ImGui::Text("Transform");
+                    ImGui::DragFloat3("Position", reinterpret_cast<float*>(&raw.position), 0.1f);
+                    if (ImGui::DragFloat3("Rotation", reinterpret_cast<float*>(&ctx->imguiFloat3), 2.f)) {
+                        transform.SetAngles(ctx->imguiFloat3);
+                    }
+                    ImGui::DragFloat3("Scale", reinterpret_cast<float*>(&raw.scale), 0.1f);
+                    ImGui::TreePop();
+                }
+            }
+            ImGui::TreePop();
+        }
+    }
+    ImGui::End();
+
+    ImGui::Render();
     ctx->renderPipeline->Render(&ctx->scene->GetSceneWorld());
 
     return ctx->shouldQuit ? SDL_APP_SUCCESS : SDL_APP_CONTINUE;
@@ -190,6 +264,9 @@ void SDL_AppQuit(void* appstate, SDL_AppResult result) {
         delete ctx;
     }
 
+    ImGui_ImplSDL3_Shutdown();
+    ImGui_ImplSDLGPU3_Shutdown();
+    ImGui::DestroyContext();
     me::window::CloseWindow();
     SDL_Log("Quitted");
 }

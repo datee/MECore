@@ -21,16 +21,23 @@ include_directories(
         vendor/vfspp/include
         vendor/mathfu/include
         vendor/mathfu/dependencies/vectorial/include
+        vendor/imgui
 )
 
 # EXEC
 add_custom_target(assets COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets)
 
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-add_executable(engine ${SOURCES})
+file(GLOB IMGUI_SOURCES vendor/imgui/*.h, vendor/imgui/*cpp)
+set(IMGUI_BACKENDS vendor/imgui/backends/imgui_impl_sdl3.cpp vendor/imgui/backends/imgui_impl_sdl3.h)
+
+add_executable(engine ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKENDS})
 add_dependencies(engine assets)
 
-mathfu_configure_flags(engine)
+set(LIBRARIES SDL3::SDL3 SDL3_shadercross-shared RapidJSON tinygltf vfspp)
 
-# add_compile_definitions(VFSPP_ENABLE_MULTITHREADING)
-target_link_libraries(engine PRIVATE SDL3::SDL3 SDL3_shadercross-shared RapidJSON tinygltf vfspp)
+mathfu_configure_flags(engine)
+target_link_libraries(engine PRIVATE ${LIBRARIES})
+
+install(TARGETS engine RUNTIME DESTINATION bin)
+include(CPack)

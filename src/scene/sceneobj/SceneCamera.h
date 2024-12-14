@@ -13,9 +13,9 @@ namespace me::scene {
     class SceneCamera : public SceneObject {
         private:
         // Vertical field of view.
-        float fieldOfView = 60.0f;
-        float zNear = 0.01f;
-        float zFar = 1000.0f;
+        float fieldOfView;
+        float zNear;
+        float zFar;
 
         bool usingCustomProjection;
         math::Matrix4x4 projection;
@@ -26,7 +26,7 @@ namespace me::scene {
         public:
         SceneCamera();
 
-        inline void SetFOV(float fov) { fieldOfView = fov; RegenerateMatrix(); }
+        inline void SetFOV(const float fov) { fieldOfView = fov; RegenerateMatrix(); }
         [[nodiscard]] inline float GetFOV() const { return fieldOfView; }
         [[nodiscard]] inline math::Matrix4x4 GetProjectionMatrix() const { return projection; }
     };

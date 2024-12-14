@@ -1,6 +1,3 @@
-[submodule "vendor/vfspp"]
-	path = vendor/vfspp
-	url = https://github.com/nextgeniuspro/vfspp.git
 [submodule "vendor/tinygltf"]
 	path = vendor/tinygltf
 	url = https://github.com/syoyo/tinygltf.git
@@ -16,3 +13,10 @@
 [submodule "vendor/mathfu"]
 	path = vendor/mathfu
 	url = https://github.com/google/mathfu.git
+[submodule "vendor/vfspp"]
+	path = vendor/vfspp
+	url = git@github.com:dotryen/vfspp.git
+[submodule "vendor/imgui"]
+	path = vendor/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking

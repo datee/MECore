@@ -17,6 +17,7 @@ namespace me::math {
     typedef mathfu::float2 Vector2;
     typedef mathfu::float3 Vector3;
     typedef mathfu::float4 Vector4;
+    typedef mathfu::VectorPacked<float, 4> PackedVector4;
 
     typedef mathfu::float4 Color;
     typedef mathfu::Quaternion<float> Quaternion;

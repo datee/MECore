@@ -26,19 +26,19 @@ namespace me::asset {
     class Mesh : public AssetBase {
         private:
         std::vector<math::Vector3> cpuVertexBuffer;
-        std::vector<uint32_t> cpuIndexBuffer;
+        std::vector<uint16_t> cpuIndexBuffer;
 
         SDL_GPUBuffer* gpuVertexBuffer;
         SDL_GPUBuffer* gpuIndexBuffer;
 
         public:
         Mesh();
-        Mesh(std::vector<math::Vector3> vertex, std::vector<uint32_t> index);
-        Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint32_t* index, const uint32_t indexCount);
+        Mesh(std::vector<math::Vector3> vertex, std::vector<uint16_t> index);
+        Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount);
         ~Mesh();
 
         [[nodiscard]] inline std::vector<math::Vector3>& GetVertexBuffer() { return cpuVertexBuffer; }
-        [[nodiscard]] inline std::vector<uint32_t>& GetIndexBuffer() { return cpuIndexBuffer; }
+        [[nodiscard]] inline std::vector<uint16_t>& GetIndexBuffer() { return cpuIndexBuffer; }
 
         [[nodiscard]] inline bool HasGPUBuffers() const { return gpuVertexBuffer && gpuIndexBuffer; }
         [[nodiscard]] inline SDL_GPUBuffer* GetGPUVertexBuffer() const { return gpuVertexBuffer; }
@@ -48,7 +48,6 @@ namespace me::asset {
         void DestroyGPUBuffers();
 
         [[nodiscard]] MeshTransfer StartTransfer() const;
-        bool UploadToGPU(SDL_GPUCopyPass* copyPass) const;
     };
 
     typedef std::shared_ptr<Mesh> MeshPtr;

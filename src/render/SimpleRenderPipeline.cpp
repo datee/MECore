@@ -5,9 +5,19 @@
 #include "SimpleRenderPipeline.h"
 
 #include "MainWindow.h"
+#include "../imgui/imgui_impl_sdlgpu3.h"
 #include "../scene/sceneobj/SceneMesh.h"
 
 namespace me::render {
+    struct WorldBuffer {
+        math::PackedVector4 view[4];
+        math::PackedVector4 proj[4];
+    };
+
+    struct ObjectBuffer {
+        math::PackedVector4 model[4];
+    };
+
     struct MatrixBuffer {
         math::Matrix4x4 model;
         math::Matrix4x4 view;
@@ -55,9 +65,9 @@ namespace me::render {
             SDL_SubmitGPUCommandBuffer(transferCmd);
         }
 
-        SDL_GPUCommandBuffer* cmdBuf = SDL_AcquireGPUCommandBuffer(window::device);
+        SDL_GPUCommandBuffer* commandBuffer = SDL_AcquireGPUCommandBuffer(window::device);
         SDL_GPUTexture* swapchainTex;
-        if (!SDL_AcquireGPUSwapchainTexture(cmdBuf, window::window, &swapchainTex, NULL, NULL)) {
+        if (!SDL_AcquireGPUSwapchainTexture(commandBuffer, window::window, &swapchainTex, NULL, NULL)) {
             return;
         }
         if (swapchainTex == nullptr) return;
@@ -69,23 +79,28 @@ namespace me::render {
             .store_op = SDL_GPU_STOREOP_STORE
         };
 
-        SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(cmdBuf, &colorTargetInfo, 1, NULL);
+        SDL_GPURenderPass* renderPass = SDL_BeginGPURenderPass(commandBuffer, &colorTargetInfo, 1, NULL);
         SDL_BindGPUGraphicsPipeline(renderPass, material->GetPipeline());
 
-        math::Matrix4x4 view = world->GetCamera().GetTransform().ToMatrix();
-        math::Matrix4x4 proj = world->GetCamera().GetProjectionMatrix();
+        WorldBuffer worldBuffer;
+        world->GetCamera().GetTransform().Raw().ToSRT(true).Pack(worldBuffer.view);
+        world->GetCamera().GetProjectionMatrix().Pack(worldBuffer.proj);
+        SDL_PushGPUVertexUniformData(commandBuffer, 0, &worldBuffer, sizeof(WorldBuffer));
+
         for (scene::SceneMesh* mesh : meshes) {
-            math::Matrix4x4 model = mesh->GetTransform().ToMatrix();
-            MatrixBuffer matrices = { model, view, proj };
+            ObjectBuffer objectBuffer;
+            mesh->GetTransform().Raw().ToTRS(true).Pack(objectBuffer.model);
 
             SDL_GPUBufferBinding vertexBinding = { mesh->mesh->GetGPUVertexBuffer(), 0 };
             SDL_GPUBufferBinding indexBinding = { mesh->mesh->GetGPUIndexBuffer(), 0 };
             SDL_BindGPUVertexBuffers(renderPass, 0, &vertexBinding, 1);
-            SDL_BindGPUIndexBuffer(renderPass, &indexBinding, SDL_GPU_INDEXELEMENTSIZE_32BIT);
-            SDL_PushGPUVertexUniformData(cmdBuf, 0, &matrices, sizeof(matrices));
+            SDL_BindGPUIndexBuffer(renderPass, &indexBinding, SDL_GPU_INDEXELEMENTSIZE_16BIT);
+            SDL_PushGPUVertexUniformData(commandBuffer, 1, &objectBuffer, sizeof(ObjectBuffer));
             SDL_DrawGPUIndexedPrimitives(renderPass, mesh->mesh->GetIndexBuffer().size(), 1, 0, 0, 0);
         }
         SDL_EndGPURenderPass(renderPass);
-        SDL_SubmitGPUCommandBuffer(cmdBuf);
+
+        ImGui_ImplSDLGPU3_RenderDrawData(ImGui::GetDrawData(), commandBuffer, swapchainTex);
+        SDL_SubmitGPUCommandBuffer(commandBuffer);
     }
 }

@@ -5,14 +5,19 @@
 #include "SceneObject.h"
 
 namespace me::scene {
-    SceneObject::SceneObject() {
+    SceneObject::SceneObject() : SceneObject("") {
+
+    }
+
+    SceneObject::SceneObject(const std::string str) {
         world = nullptr;
         enabled = true;
-        transform = math::Transform::identity;
+        transform = SceneTransform();
+        name = str;
     }
 
     SceneObject::~SceneObject() {
-        // nothing to clean up lol
+
     }
 
     void SceneObject::Internal_AssignWorld(SceneWorld *world) {

@@ -13,6 +13,9 @@ namespace me::scene {
         public:
         asset::MeshPtr mesh;
         asset::MaterialPtr material;
+
+        SceneMesh() {}
+        explicit SceneMesh(const std::string name) : SceneObject(name) {};
     };
 }
 

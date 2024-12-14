@@ -14,13 +14,13 @@ namespace me::asset {
         gpuIndexBuffer = nullptr;
     }
 
-    Mesh::Mesh(std::vector<math::Vector3> vertex, std::vector<uint32_t> index) : Mesh() {
+    Mesh::Mesh(std::vector<math::Vector3> vertex, std::vector<uint16_t> index) : Mesh() {
         cpuVertexBuffer = std::move(vertex);
         cpuIndexBuffer = std::move(index);
     }
 
 
-    Mesh::Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint32_t* index, const uint32_t indexCount) : Mesh() {
+    Mesh::Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount) : Mesh() {
         cpuVertexBuffer = std::vector(vertex, vertex + vertexCount);
         cpuIndexBuffer = std::vector(index, index + indexCount);
     }
@@ -40,7 +40,7 @@ namespace me::asset {
         if (!gpuVertexBuffer) return false;
 
         info.usage = SDL_GPU_BUFFERUSAGE_INDEX;
-        info.size = sizeof(uint32_t) * cpuIndexBuffer.size();
+        info.size = sizeof(uint16_t) * cpuIndexBuffer.size();
         gpuIndexBuffer = SDL_CreateGPUBuffer(window::device, &info);
         if (!gpuIndexBuffer) return false;
 
@@ -59,7 +59,7 @@ namespace me::asset {
 
     MeshTransfer Mesh::StartTransfer() const {
         SDL_GPUTransferBufferCreateInfo info;
-        info.size = (sizeof(math::Vector3) * cpuVertexBuffer.size()) + (sizeof(uint32_t) * cpuIndexBuffer.size());
+        info.size = (sizeof(math::Vector3) * cpuVertexBuffer.size()) + (sizeof(uint16_t) * cpuIndexBuffer.size());
         info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
 
         SDL_GPUTransferBuffer* transferBuffer = SDL_CreateGPUTransferBuffer(window::device, &info);
@@ -68,8 +68,8 @@ namespace me::asset {
         math::Vector3* vertexPointer = static_cast<math::Vector3*>(SDL_MapGPUTransferBuffer(window::device, transferBuffer, false));
         SDL_memcpy(vertexPointer, cpuVertexBuffer.data(), vertexPointerSize);
 
-        uint32_t indexPointerSize = sizeof(uint32_t) * cpuIndexBuffer.size();
-        uint32_t* indexPointer = reinterpret_cast<uint32_t*>(vertexPointer + cpuVertexBuffer.size());
+        uint32_t indexPointerSize = sizeof(uint16_t) * cpuIndexBuffer.size();
+        uint16_t* indexPointer = reinterpret_cast<uint16_t*>(vertexPointer + cpuVertexBuffer.size());
         SDL_memcpy(indexPointer, cpuIndexBuffer.data(), indexPointerSize);
 
         SDL_UnmapGPUTransferBuffer(window::device, transferBuffer);
@@ -102,44 +102,4 @@ namespace me::asset {
             }
         };
     }
-
-    bool Mesh::UploadToGPU(SDL_GPUCopyPass* copyPass) const {
-        // CREATE TRANSFER BUFFER
-        SDL_GPUTransferBufferCreateInfo info;
-        info.size = (sizeof(math::Vector3) * cpuVertexBuffer.size()) + (sizeof(uint32_t) * cpuIndexBuffer.size());
-        info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
-
-        SDL_GPUTransferBuffer* transferBuffer = SDL_CreateGPUTransferBuffer(window::device, &info);
-        if (!transferBuffer) return false;
-
-        // VERTEX
-        SDL_GPUTransferBufferLocation vertSource;
-        vertSource.transfer_buffer = transferBuffer;
-        vertSource.offset = 0;
-
-        SDL_GPUBufferRegion vertDestination;
-        vertDestination.buffer = gpuVertexBuffer;
-        vertDestination.offset = 0;
-        vertDestination.size = sizeof(math::Vector3) * cpuVertexBuffer.size();
-
-        SDL_UploadToGPUBuffer(copyPass, &vertSource, &vertDestination, false);
-
-        // INDEX
-        SDL_GPUTransferBufferLocation indexSource;
-        indexSource.transfer_buffer = transferBuffer;
-        indexSource.offset = 0;
-
-        SDL_GPUBufferRegion indexDestination;
-        indexDestination.buffer = gpuIndexBuffer;
-        indexDestination.offset = 0;
-        indexDestination.size = sizeof(uint32_t) * cpuIndexBuffer.size();
-
-        SDL_UploadToGPUBuffer(copyPass, &indexSource, &indexDestination, false);
-
-        // DESTROY TRANSFER BUFFER
-        SDL_ReleaseGPUTransferBuffer(window::device, transferBuffer);
-
-        return true;
-    }
-
 }

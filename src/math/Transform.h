@@ -25,8 +25,15 @@ namespace me::math {
         [[nodiscard]] inline Vector3 Right() const { return rotation * mathfu::kAxisX3f; }
         [[nodiscard]] inline Vector3 Forward() const { return rotation * mathfu::kAxisZ3f; }
 
-        [[nodiscard]] inline Matrix4x4 ToMatrix() const {
-            return Matrix4x4::Transform(position, rotation.ToMatrix(), scale);
+        [[nodiscard]] inline Matrix4x4 ToTRS(const bool rightHanded = false) const {
+            auto posPrime = position;
+            posPrime *= (rightHanded ? -1.f : 1.f);
+            return Matrix4x4::Transform(posPrime, rotation.ToMatrix(), scale);
+        }
+        [[nodiscard]] inline Matrix4x4 ToSRT(const bool rightHanded = false) const {
+            auto posPrime = position;
+            posPrime *= (rightHanded ? -1.f : 1.f);
+            return Matrix4x4::FromScaleVector(scale) * Matrix4x4::FromRotationMatrix(rotation.ToMatrix()) * Matrix4x4::FromTranslationVector(position);
         }
     };
 

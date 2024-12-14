@@ -6,6 +6,7 @@
 #define SCENEOBJECT_H
 
 #include <memory>
+#include "SceneTransform.h"
 #include "../../math/Transform.h"
 
 namespace me::scene {
@@ -16,15 +17,20 @@ namespace me::scene {
         private:
         SceneWorld* world;
         bool enabled;
-        math::Transform transform;
+        SceneTransform transform;
+        std::string name;
 
         public:
         SceneObject();
+        explicit SceneObject(const std::string name);
         virtual ~SceneObject();
 
         [[nodiscard]] inline bool IsEnabled() const { return enabled; }
         inline void SetEnabled(const bool state) { enabled = state; }
-        [[nodiscard]] inline math::Transform& GetTransform() { return transform; }
+        [[nodiscard]] inline SceneTransform& GetTransform() { return transform; }
+
+        [[nodiscard]] inline std::string GetName() const { return name; }
+        inline void SetName(const std::string name) { this->name = name; }
 
         void Internal_AssignWorld(SceneWorld* world);
     };
