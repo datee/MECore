@@ -1,43 +1,35 @@
-cmake_minimum_required(VERSION 3.31)
-project(MANIFOLDEngine)
+cmake_minimum_required(VERSION 3.30)
+cmake_policy(SET CMP0048 NEW)
+
+project(MANIFOLDEngine VERSION 1.0.0 DESCRIPTION "MANIFOLDEngine Core")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# LIBRARIES (WE ARE DEFAULTING TO VENDORED FOR NOW)
-add_subdirectory(vendor/SDL3 EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/SDL_shadercross EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/rapidjson EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/tinygltf EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/vfspp EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/mathfu EXCLUDE_FROM_ALL)
+# OPTIONS
+option(MANIFOLD_VENDORED "Use vendored libraries when compiling" ON)
 
-# BUILD MATHFU
-# add_library(mathfu)
-# target_sources(mathfu INTERFACE ${MATHFU_HEADERS})
+# SUBDIRECTORIES
+if(MANIFOLD_VENDORED)
+    add_subdirectory(vendor/SDL3 EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/SDL_shadercross EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/rapidjson EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/vfspp EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/mathfu EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/hashlink EXCLUDE_FROM_ALL)
+endif() # add linking for non vendored lol
 
-include_directories(
-        ${SDL3_INCLUDE_DIRS}
-        ${RAPIDJSON_INCLUDE_DIRS}
-        vendor/vfspp/include
-        vendor/mathfu/include
-        vendor/mathfu/dependencies/vectorial/include
-        vendor/imgui
-)
-
-# EXEC
-add_custom_target(assets COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_LIST_DIR}/assets ${CMAKE_CURRENT_BINARY_DIR}/assets)
-
+# SOURCES
 file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
-file(GLOB IMGUI_SOURCES vendor/imgui/*.h, vendor/imgui/*cpp)
-set(IMGUI_BACKENDS vendor/imgui/backends/imgui_impl_sdl3.cpp vendor/imgui/backends/imgui_impl_sdl3.h)
+set(HAXE_EMBED_SOURCES vendor/hashlink/src/code.c vendor/hashlink/src/module.c vendor/hashlink/src/jit.c)
 
-add_executable(engine ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKENDS})
-add_dependencies(engine assets)
+add_library(MANIFOLDEngine SHARED)
+target_sources(MANIFOLDEngine PRIVATE ${SOURCES})
 
-set(LIBRARIES SDL3::SDL3 SDL3_shadercross-shared RapidJSON tinygltf vfspp)
+target_include_directories(MANIFOLDEngine
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
+mathfu_configure_flags(MANIFOLDEngine) # this adds includes
 
-mathfu_configure_flags(engine)
-target_link_libraries(engine PRIVATE ${LIBRARIES})
+target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared RapidJSON vfspp)
 
-install(TARGETS engine RUNTIME DESTINATION bin)
-include(CPack)
