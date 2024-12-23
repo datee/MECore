@@ -20,3 +20,6 @@
 [submodule "vendor/hashlink"]
 	path = vendor/hashlink
 	url = https://github.com/HaxeFoundation/hashlink.git
+[submodule "vendor/spdlog"]
+	path = vendor/spdlog
+	url = https://github.com/gabime/spdlog.git

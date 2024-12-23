@@ -8,12 +8,15 @@
 #include "vfspp/VFS.h"
 
 namespace me::fs {
+    typedef vfspp::IFile::FileMode FileMode;
+    typedef vfspp::IFilePtr FilePtr;
+
     static vfspp::VirtualFileSystemPtr vfs;
     static vfspp::IFileSystemPtr nativeFs;
 
     void Initialize();
-    vfspp::IFilePtr OpenFile(const std::string& path, vfspp::IFile::FileMode mode = vfspp::IFile::FileMode::Read);
-    vfspp::IFilePtr OpenFile(const vfspp::FileInfo& info, vfspp::IFile::FileMode mode = vfspp::IFile::FileMode::Read);
+    FilePtr OpenFile(const std::string& path, FileMode mode = FileMode::Read);
+    FilePtr OpenFile(const vfspp::FileInfo& info, FileMode mode = FileMode::Read);
 }
 
 #endif //FILESYSTEM_H
