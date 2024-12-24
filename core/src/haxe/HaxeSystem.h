@@ -4,10 +4,11 @@
 
 #ifndef HAXESYSTEM_H
 #define HAXESYSTEM_H
+#include <map>
+#include <memory>
 #include <string>
-extern "C" {
-#include "hlmodule.h"
-}
+
+#include "HaxeType.h"
 
 namespace me::haxe {
     class HaxeSystem {
@@ -16,11 +17,15 @@ namespace me::haxe {
         hl_code* code;
         hl_module* module;
 
+        std::map<std::u16string, std::unique_ptr<HaxeType>> types;
+
         public:
         explicit HaxeSystem(std::string path);
 
-        bool Load();
+        inline hl_module* GetModule() const { return module; }
 
+        bool Load();
+        HaxeType* GetType(const std::u16string name);
         void CallEntryPoint();
     };
 }

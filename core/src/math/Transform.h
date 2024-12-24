@@ -12,7 +12,7 @@ namespace me::math {
         Quaternion rotation;
         Vector3 scale;
 
-        Transform() { }
+        Transform() = default;
         Transform(const Vector3 &position, const Quaternion &rotation, const Vector3 &scale) {
             this->position = position;
             this->rotation = rotation;
