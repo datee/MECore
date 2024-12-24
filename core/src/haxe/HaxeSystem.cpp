@@ -55,6 +55,7 @@ namespace me::haxe {
         if (except) {
             spdlog::error("Haxe Entrypoint exception");
         }
+        spdlog::info("Haxe Entrypoint finished");
     }
 
 }

@@ -1,0 +1,10 @@
+{
+    "name": "MANIFOLDEngineAPI",
+    "url" : "https://github.com/dotryen/meapi",
+    "license": "MIT",
+    "tags": ["api"],
+    "description": "This library is useless in the same way on every platform.",
+    "version": "1.0.0",
+    "releasenote": "Initial release, everything is working correctly.",
+    "contributors": ["dotRYEN"]
+  }

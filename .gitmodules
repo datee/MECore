@@ -1,25 +1,21 @@
 [submodule "vendor/SDL3"]
-	path = vendor/SDL3
+	path = core/vendor/SDL3
 	url = https://github.com/libsdl-org/SDL.git
 [submodule "vendor/SDL_shadercross"]
-	path = vendor/SDL_shadercross
+	path = core/vendor/SDL_shadercross
 	url = https://github.com/libsdl-org/SDL_shadercross.git
 [submodule "vendor/rapidjson"]
-	path = vendor/rapidjson
+	path = core/vendor/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
 [submodule "vendor/mathfu"]
-	path = vendor/mathfu
+	path = core/vendor/mathfu
 	url = https://github.com/google/mathfu.git
 [submodule "vendor/vfspp"]
-	path = vendor/vfspp
+	path = core/vendor/vfspp
 	url = git@github.com:dotryen/vfspp.git
-[submodule "vendor/imgui"]
-	path = vendor/imgui
-	url = https://github.com/ocornut/imgui.git
-	branch = docking
 [submodule "vendor/hashlink"]
-	path = vendor/hashlink
+	path = core/vendor/hashlink
 	url = https://github.com/HaxeFoundation/hashlink.git
 [submodule "vendor/spdlog"]
-	path = vendor/spdlog
+	path = core/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
