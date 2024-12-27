@@ -5,6 +5,7 @@
 #include "HaxeType.h"
 
 #include "spdlog/spdlog.h"
+#include "HaxeUtils.cpp"
 
 namespace me::haxe {
     HaxeType::HaxeType(HaxeSystem* system, hl_module* module, hl_type* type) {
@@ -20,31 +21,17 @@ namespace me::haxe {
         return ptr;
     }
 
-    vdynamic* HaxeType::CallStaticMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const {
-        hl_obj_proto* target = nullptr;
-        for (int i = 0; i < type->obj->nproto; i++) {
-            auto proto = &type->obj->proto[i];
-            std::u16string protoName = proto->name;
-            if (protoName == name) {
-                target = proto;
-                break;
-            }
-        }
-
+    vdynamic* HaxeType::CallStaticMethod(const std::u16string& name, std::vector<vdynamic*>& args) const {
+        hl_obj_proto* target = Util_FindMethod(type, name);
         if (target == nullptr) {
             spdlog::error("HaxeType::CallStaticMethod: unknown static method");
             return nullptr;
         }
 
-        vclosure closure;
-        closure.t = module->code->functions[module->functions_indexes[target->findex]].type;
-        closure.fun = module->functions_ptrs[target->findex];
-        closure.hasValue = false;
-
-        bool except = false;
-        auto result = hl_dyn_call_safe(&closure, const_cast<vdynamic**>(args.data()), args.size(), &except);
-        if (except) {
-            spdlog::error("HaxeType::CallStaticMethod: exception thrown");
+        bool isExcept = false;
+        auto result = Util_CallMethod(module, target, args, &isExcept);
+        if (isExcept) {
+            Util_PrintException(result);
         }
         return result;
     }

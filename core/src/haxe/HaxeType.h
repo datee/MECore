@@ -29,7 +29,7 @@ namespace me::haxe {
         inline hl_type* GetType() const { return type; }
 
         HaxeObject* CreateInstance();
-        vdynamic* CallStaticMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const;
+        vdynamic* CallStaticMethod(const std::u16string& name, std::vector<vdynamic*>& args) const;
     };
 }
 

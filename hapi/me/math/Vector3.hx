@@ -1,24 +1,21 @@
 package me.math;
 
-import me.math.PureVector3;
+import me.math.BaseVec3;
 
 /**
     A three-dimensional vector.
 **/
 @:notNull
-@:forward(x, y, z)
-abstract Vector3(PureVector3) from PureVector3 to PureVector3 {
-    public inline function new(x: Single, y: Single, z: Single) {
-        this = new PureVector3(x, y, z);
-    }
-
+@:forward(x, y, z, Set, Copy)
+@:forward.new
+abstract Vector3(BaseVec3) from BaseVec3 to BaseVec3 {
     // CONSTRUCTORS
     public inline static function Zero(): Vector3 {
-        return new PureVector3(0, 0, 0);
+        return new BaseVec3(0, 0, 0);
     }
 
     public inline static function One(): Vector3 {
-        return new PureVector3(1, 1, 1);
+        return new BaseVec3(1, 1, 1);
     }
 
     // COMPONENT

@@ -4,7 +4,7 @@ package me.math;
     A four-dimensional vector.
 **/
 @:struct
-class PureVector4 {
+class BaseVec4 {
     public var x: Single;
     public var y: Single;
     public var z: Single;
@@ -17,14 +17,14 @@ class PureVector4 {
         this.w = w;
     }
 
-    public function Set(quat: PureVector4): Void {
-        x = quat.x;
-        y = quat.y;
-        z = quat.z;
-        w = quat.w;
+    public inline function Set(vec: BaseVec4): Void {
+        x = vec.x;
+        y = vec.y;
+        z = vec.z;
+        w = vec.w;
     }
 
-    public function Copy(): PureVector4 {
-        return new PureVector4(x, y, z, w);
+    public inline function Copy(): BaseVec4 {
+        return new BaseVec4(x, y, z, w);
     }
 }

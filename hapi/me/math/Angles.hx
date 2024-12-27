@@ -1,7 +1,9 @@
 package me.math;
 
-import me.math.PureVector3;
+import me.math.BaseVec3;
 
-abstract Angles(PureVector3) from PureVector3 to PureVector3 {
+@:notNull
+@:forward.new
+abstract Angles(BaseVec3) from BaseVec3 to BaseVec3 {
     
 }

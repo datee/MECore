@@ -4,13 +4,15 @@
 
 #ifndef HAXEOBJECT_H
 #define HAXEOBJECT_H
-#include <hl.h>
+
 #include <memory>
 #include <string>
 #include <vector>
 
+#define HAXE_INCLUDE
 extern "C" {
-#include "hlmodule.h"
+#include <hl.h>
+#include <hlmodule.h>
 }
 
 namespace me::haxe {
@@ -38,8 +40,8 @@ namespace me::haxe {
         inline void SetPtr(const std::string& name, void* value) const { hl_dyn_setp(object, hl_hash_utf8(name.c_str()), vmType, value); }
         inline void SetPtr(const std::string& name, HaxeObject* value) const { hl_dyn_setp(object, hl_hash_utf8(name.c_str()), vmType, value->object); }
 
-        vdynamic* CallMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const;
-        vdynamic* CallVirtualMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const;
+        vdynamic* CallMethod(const std::u16string& name, std::vector<vdynamic*> args) const;
+        vdynamic* CallVirtualMethod(const std::u16string& name, std::vector<vdynamic*> args) const;
     };
 
     typedef std::shared_ptr<HaxeObject> HaxeObjectPtr;
