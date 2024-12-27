@@ -1,6 +1,6 @@
 package me;
 
-import me.internal.TimeInterface;
+import me.bindings.TimeBindings;
 
 final class Time {
     public static var ElapsedAsDouble(get, never): Float;
@@ -20,19 +20,19 @@ final class Time {
     // GAME TIME
 
     static function get_ElapsedAsDouble(): Float {
-        return TimeInterface.time_game_get_elapsed();
+        return TimeBindings.time_game_get_elapsed();
     }
 
     static function get_DeltaAsDouble(): Float {
-        return TimeInterface.time_game_get_delta();
+        return TimeBindings.time_game_get_delta();
     }
 
     static function get_ScaleAsDouble(): Float {
-        return TimeInterface.time_game_get_scale();
+        return TimeBindings.time_game_get_scale();
     }
 
     static function set_ScaleAsDouble(value: Float): Float {
-        TimeInterface.time_game_set_scale(value);
+        TimeBindings.time_game_set_scale(value);
         return value;
     }
 
@@ -56,11 +56,11 @@ final class Time {
     // REAL TIME
 
     static function get_RealElapsedAsDouble(): Float {
-        return TimeInterface.time_real_get_elapsed();
+        return TimeBindings.time_real_get_elapsed();
     }
 
     static function get_RealDeltaAsDouble(): Float {
-        return TimeInterface.time_real_get_delta();
+        return TimeBindings.time_real_get_delta();
     }
 
     static function get_RealElapsed(): Single {

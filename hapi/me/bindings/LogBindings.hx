@@ -1,8 +1,8 @@
-package me.internal;
+package me.bindings;
 
 @:allow(me)
 @:hlNative("MECore")
-extern class LogInterface {
+extern class LogBindings {
     static function log_info(msg: String): Void;
     static function log_warn(msg: String): Void;
     static function log_error(msg: String): Void;

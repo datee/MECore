@@ -1,8 +1,8 @@
-package me.internal;
+package me.bindings;
 
 @:allow(me)
 @:hlNative("MECore")
-extern class TimeInterface {
+extern class TimeBindings {
     public static function time_game_get_elapsed(): Float;
     public static function time_game_get_delta(): Float;
     public static function time_game_get_scale(): Float;

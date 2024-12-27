@@ -8,11 +8,9 @@
 
 namespace me::log {
     bool Initialize() {
-        stream = std::ostringstream();
+        stream = std::stringstream();
         auto sink = std::make_shared<spdlog::sinks::ostream_sink_mt>(stream);
-        auto logger = std::make_shared<spdlog::logger>("main", sink);
-
-        spdlog::set_default_logger(logger);
+        spdlog::default_logger()->sinks().push_back(sink);
 
         return true;
     }

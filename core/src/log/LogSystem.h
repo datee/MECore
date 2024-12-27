@@ -7,7 +7,7 @@
 #include <sstream>
 
 namespace me::log {
-    inline std::ostringstream stream;
+    inline std::stringstream stream;
 
     bool Initialize();
 }

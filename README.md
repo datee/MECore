@@ -17,7 +17,7 @@ Contributions are welcome.
 - No documentation whatsoever.
 
 ### Usage
-Add this repository as a submodule and use CMake. **Make sure to update your submodules recursively.**\
+Add this repository as a submodule and use CMake. **Make sure to update your submodules recursively.**
 ```cmake
 add_subdirectory(vendor/MANIFOLDEngine EXCLUDE_FROM_ALL)
 

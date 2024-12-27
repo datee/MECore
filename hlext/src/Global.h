@@ -9,9 +9,13 @@
 
 #include <hl.h>
 
+#define _PTR _I64
+
 #define _VECTOR2 _OBJ(_F32 _F32)
 #define _VECTOR3 _OBJ(_F32 _F32 _F32)
 #define _VECTOR4 _OBJ(_F32 _F32 _F32 _F32)
 #define _QUAT _VECTOR4
+
+#define _TRANSFORM _OBJ(_VECTOR3 _QUAT _VECTOR3)
 
 #endif //GLOBAL_H

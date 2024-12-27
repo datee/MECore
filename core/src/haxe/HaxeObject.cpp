@@ -19,39 +19,70 @@ namespace me::haxe {
         hl_remove_root(object);
     }
 
-    vdynamic* HaxeObject::CallMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const {
+    inline hl_obj_proto* FindMethod(const hl_type *type, const std::u16string& name) {
         hl_obj_proto* target = nullptr;
-        for (int i = 0; i < vmType->obj->nproto; i++) {
-            auto proto = &vmType->obj->proto[i];
+        for (int i = 0; i < type->obj->nproto; i++) {
+            auto proto = &type->obj->proto[i];
             std::u16string protoName = proto->name;
             if (protoName == name) {
                 target = proto;
                 break;
             }
         }
+        return target;
+    }
 
-        if (target == nullptr) {
-            spdlog::error("HaxeObject::CallMethod: unknown static method");
-            return nullptr;
-        }
-
+    inline vdynamic* CallMethodInl(const hl_module* module, const hl_obj_proto* func, vdynamic* instance, const std::vector<vdynamic*>& args, bool* isExcept) {
         vdynamic* closureArgs[args.size() + 1];
-        closureArgs[0] = object;
+        closureArgs[0] = instance;
         for (int i = 0; i < args.size(); ++i) {
             closureArgs[i + 1] = args[i];
         }
 
         vclosure closure;
-        closure.t = module->code->functions[module->functions_indexes[target->findex]].type;
-        closure.fun = module->functions_ptrs[target->findex];
+        closure.t = module->code->functions[module->functions_indexes[func->findex]].type;
+        closure.fun = module->functions_ptrs[func->findex];
         closure.hasValue = false;
 
-        bool except = false;
-        auto result = hl_dyn_call_safe(&closure, closureArgs, args.size() + 1, &except);
-        if (except) {
+        return hl_dyn_call_safe(&closure, closureArgs, args.size() + 1, isExcept);
+    }
+
+    vdynamic* HaxeObject::CallMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const {
+        hl_obj_proto* target = FindMethod(vmType, name);
+
+        if (target == nullptr) {
+            spdlog::error("HaxeObject::CallMethod: unknown method");
+            return nullptr;
+        }
+
+        bool isExcept = false;
+        auto result = CallMethodInl(module, target, object, args, &isExcept);
+        if (isExcept) {
             spdlog::error("HaxeObject::CallMethod: exception thrown");
+            // TODO: print exception and stack trace
         }
         return result;
     }
 
+    vdynamic* HaxeObject::CallVirtualMethod(const std::u16string& name, const std::vector<vdynamic*>& args) const {
+        hl_type* currentType = vmType;
+        hl_obj_proto* target = nullptr;
+        do {
+            target = FindMethod(currentType, name);
+            currentType = currentType->obj->super;
+        } while (target == nullptr && currentType != nullptr);
+
+        if (target == nullptr) {
+            spdlog::error("HaxeObject::CallVirtualMethod: unknown method");
+            return nullptr;
+        }
+
+        bool isExcept = false;
+        auto result = CallMethodInl(module, target, object, args, &isExcept);
+        if (isExcept) {
+            spdlog::error("HaxeObject::CallVirtualMethod: exception thrown");
+            // TODO: print exception and stack trace
+        }
+        return result;
+    }
 }

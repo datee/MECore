@@ -10,17 +10,22 @@
 #include "Scene.h"
 
 namespace me::scene {
-    static std::map<uint32_t, ScenePtr> scenes;
-    static uint32_t nextId = 0;
-    static bool initialized = false;
+    typedef std::map<uint32_t, ScenePtr> SceneMap;
 
-    bool Initialize();
-    void AddScene(ScenePtr scene);
-    void RemoveScene(ScenePtr scene);
-    void NewFrame();
-    void Cleanup();
+    class SceneSystem {
+        private:
+        SceneMap scenes;
+        uint32_t nextId;
 
-    uint32_t GetNextId();
+        public:
+        SceneSystem();
+
+        void AddScene(const ScenePtr scene);
+        void RemoveScene(ScenePtr scene);
+        void NewFrame();
+
+        uint32_t GetNextId();
+    };
 }
 
 #endif //SCENESYSTEM_H
