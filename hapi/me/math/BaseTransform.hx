@@ -1,6 +1,5 @@
 package me.math;
 
-import me.math.BaseVec3;
 import me.math.BaseVec4;
 
 // I would use the abstract types here for extra clarity but then HashLink would expect abstracts to be returned.
@@ -12,11 +11,11 @@ import me.math.BaseVec4;
 **/
 @:struct
 class BaseTransform {
-    @:packed public var position(default, never): BaseVec3;
+    @:packed public var position(default, never): BaseVec4;
     @:packed public var rotation(default, never): BaseVec4;
-    @:packed public var scale(default, never): BaseVec3;
+    @:packed public var scale(default, never): BaseVec4;
 
-    public inline function new(pos: BaseVec3, rot: BaseVec4, sc: BaseVec3) {
+    public inline function new(pos: BaseVec4, rot: BaseVec4, sc: BaseVec4) {
         // Since they're packed, they cannot be null. So it is safe to set them.
         position.Set(pos);
         rotation.Set(rot);

@@ -25,7 +25,7 @@ namespace me::asset {
     // Stores a single mesh.
     class Mesh : public AssetBase {
         private:
-        std::vector<math::Vector3> cpuVertexBuffer;
+        std::vector<math::PackedVector3> cpuVertexBuffer;
         std::vector<uint16_t> cpuIndexBuffer;
 
         SDL_GPUBuffer* gpuVertexBuffer;
@@ -33,11 +33,11 @@ namespace me::asset {
 
         public:
         Mesh();
-        Mesh(std::vector<math::Vector3> vertex, std::vector<uint16_t> index);
-        Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount);
+        Mesh(std::vector<math::PackedVector3> vertex, std::vector<uint16_t> index);
+        Mesh(math::PackedVector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount);
         ~Mesh();
 
-        [[nodiscard]] inline std::vector<math::Vector3>& GetVertexBuffer() { return cpuVertexBuffer; }
+        [[nodiscard]] inline std::vector<math::PackedVector3>& GetVertexBuffer() { return cpuVertexBuffer; }
         [[nodiscard]] inline std::vector<uint16_t>& GetIndexBuffer() { return cpuIndexBuffer; }
 
         [[nodiscard]] inline bool HasGPUBuffers() const { return gpuVertexBuffer && gpuIndexBuffer; }

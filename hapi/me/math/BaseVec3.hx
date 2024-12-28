@@ -5,7 +5,7 @@ package me.math;
 // But that messes with the interopability with C. So it stays this way.
 
 /**
-    A three-dimensional vector.
+    A plain three-dimensional vector.
 **/
 @:struct
 class BaseVec3 {

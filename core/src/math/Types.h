@@ -16,12 +16,14 @@ namespace me::math {
 
     typedef mathfu::float2 Vector2;
     typedef mathfu::float3 Vector3;
+    typedef mathfu::VectorPacked<float, 3> PackedVector3;
     typedef mathfu::float4 Vector4;
     typedef mathfu::VectorPacked<float, 4> PackedVector4;
 
     typedef mathfu::float4 Color;
     typedef mathfu::Quaternion<float> Quaternion;
     typedef mathfu::float4x4 Matrix4x4;
+    typedef PackedVector4 PackedMatrix4x4[4];
 
     constexpr int VEC2_SIZE = sizeof(float) * 2;
     constexpr int VEC3_SIZE = sizeof(float) * 3;

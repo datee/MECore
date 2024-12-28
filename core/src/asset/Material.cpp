@@ -47,7 +47,7 @@ namespace me::asset {
                 .vertex_buffer_descriptions = (SDL_GPUVertexBufferDescription[]){
                     {
                         .slot = 0,
-                        .pitch = sizeof(math::Vector3),
+                        .pitch = sizeof(math::PackedVector3),
                         .input_rate = SDL_GPU_VERTEXINPUTRATE_VERTEX,
                         .instance_step_rate = 0,
                     }

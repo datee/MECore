@@ -1,9 +1,9 @@
 package me.math;
 
-import me.math.BaseVec3;
+import me.math.BaseVec4;
 
 @:notNull
 @:forward.new
-abstract Angles(BaseVec3) from BaseVec3 to BaseVec3 {
+abstract Angles(BaseVec4) from BaseVec4 to BaseVec4 {
     
 }

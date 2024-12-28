@@ -14,13 +14,13 @@ namespace me::asset {
         gpuIndexBuffer = nullptr;
     }
 
-    Mesh::Mesh(std::vector<math::Vector3> vertex, std::vector<uint16_t> index) : Mesh() {
+    Mesh::Mesh(std::vector<math::PackedVector3> vertex, std::vector<uint16_t> index) : Mesh() {
         cpuVertexBuffer = std::move(vertex);
         cpuIndexBuffer = std::move(index);
     }
 
 
-    Mesh::Mesh(math::Vector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount) : Mesh() {
+    Mesh::Mesh(math::PackedVector3* vertex, const uint32_t vertexCount, uint16_t* index, const uint32_t indexCount) : Mesh() {
         cpuVertexBuffer = std::vector(vertex, vertex + vertexCount);
         cpuIndexBuffer = std::vector(index, index + indexCount);
     }
@@ -35,7 +35,7 @@ namespace me::asset {
         SDL_GPUBufferCreateInfo info;
 
         info.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
-        info.size = sizeof(math::Vector3) * cpuIndexBuffer.size();
+        info.size = sizeof(math::PackedVector3) * cpuIndexBuffer.size();
         gpuVertexBuffer = SDL_CreateGPUBuffer(window::device, &info);
         if (!gpuVertexBuffer) return false;
 
@@ -59,13 +59,13 @@ namespace me::asset {
 
     MeshTransfer Mesh::StartTransfer() const {
         SDL_GPUTransferBufferCreateInfo info;
-        info.size = (sizeof(math::Vector3) * cpuVertexBuffer.size()) + (sizeof(uint16_t) * cpuIndexBuffer.size());
+        info.size = (sizeof(math::PackedVector3) * cpuVertexBuffer.size()) + (sizeof(uint16_t) * cpuIndexBuffer.size());
         info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
 
         SDL_GPUTransferBuffer* transferBuffer = SDL_CreateGPUTransferBuffer(window::device, &info);
 
-        uint32_t vertexPointerSize = sizeof(math::Vector3) * cpuVertexBuffer.size();
-        math::Vector3* vertexPointer = static_cast<math::Vector3*>(SDL_MapGPUTransferBuffer(window::device, transferBuffer, false));
+        uint32_t vertexPointerSize = sizeof(math::PackedVector3) * cpuVertexBuffer.size();
+        math::PackedVector3* vertexPointer = static_cast<math::PackedVector3*>(SDL_MapGPUTransferBuffer(window::device, transferBuffer, false));
         SDL_memcpy(vertexPointer, cpuVertexBuffer.data(), vertexPointerSize);
 
         uint32_t indexPointerSize = sizeof(uint16_t) * cpuIndexBuffer.size();
