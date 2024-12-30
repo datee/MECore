@@ -10,7 +10,7 @@
 #include "AssetBase.h"
 
 namespace me::asset {
-    enum ShaderType {
+    enum class ShaderType {
         Vertex, Fragment
     };
 

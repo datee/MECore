@@ -8,8 +8,8 @@
 #include "TimeSystem.h"
 
 namespace me::time {
-    inline TimeSystem gameTime;
-    inline TimeSystem realTime;
+    inline TimeSystem mainGame;
+    inline TimeSystem mainReal;
 
     void Initialize();
     void Update();

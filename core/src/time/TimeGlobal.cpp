@@ -6,17 +6,17 @@
 
 namespace me::time {
     void Initialize() {
-        gameTime = TimeSystem();
-        realTime = TimeSystem();
+        mainGame = TimeSystem();
+        mainReal = TimeSystem();
     }
 
     void Update() {
-        gameTime.Update();
-        realTime.Update();
+        mainGame.Update();
+        mainReal.Update();
     }
 
     void Reset() {
-        gameTime.Reset();
-        realTime.Reset();
+        mainGame.Reset();
+        mainReal.Reset();
     }
 }

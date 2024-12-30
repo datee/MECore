@@ -6,20 +6,27 @@
 #define WINDOW_H
 
 #include <SDL3/SDL_video.h>
-#include <SDL3/SDL_gpu.h>
+
+#include "math/Types.h"
 
 namespace me::render {
     class Window {
         private:
         SDL_Window* window;
-        SDL_GPUDevice* device;
+        math::IntVector2 resolution;
+        float aspect;
+
+        Window() = default;
 
         public:
-        Window(); // we should probably use a factory method since it can error
         ~Window();
 
-        [[nodiscard]] SDL_Window* GetWindow() const;
-        [[nodiscard]] SDL_GPUDevice* GetDevice() const;
+        static Window* Create(const std::string& name, const math::IntVector2& resolution);
+
+        // Please don't destroy it.
+        [[nodiscard]] inline SDL_Window* GetWindow() const { return window; }
+        [[nodiscard]] inline math::IntVector2 GetResolution() const { return resolution; }
+        [[nodiscard]] inline float GetAspect() const { return aspect; }
     };
 }
 

@@ -6,7 +6,7 @@
 
 #include <utility>
 
-#include "../render/MainWindow.h"
+#include "render/RenderGlobals.h"
 
 namespace me::asset {
     Mesh::Mesh() {
@@ -36,12 +36,12 @@ namespace me::asset {
 
         info.usage = SDL_GPU_BUFFERUSAGE_VERTEX;
         info.size = sizeof(math::PackedVector3) * cpuIndexBuffer.size();
-        gpuVertexBuffer = SDL_CreateGPUBuffer(window::device, &info);
+        gpuVertexBuffer = SDL_CreateGPUBuffer(render::mainDevice, &info);
         if (!gpuVertexBuffer) return false;
 
         info.usage = SDL_GPU_BUFFERUSAGE_INDEX;
         info.size = sizeof(uint16_t) * cpuIndexBuffer.size();
-        gpuIndexBuffer = SDL_CreateGPUBuffer(window::device, &info);
+        gpuIndexBuffer = SDL_CreateGPUBuffer(render::mainDevice, &info);
         if (!gpuIndexBuffer) return false;
 
         return true;
@@ -50,8 +50,8 @@ namespace me::asset {
     void Mesh::DestroyGPUBuffers() {
         if (!HasGPUBuffers()) return;
 
-        SDL_ReleaseGPUBuffer(window::device, gpuVertexBuffer);
-        SDL_ReleaseGPUBuffer(window::device, gpuIndexBuffer);
+        SDL_ReleaseGPUBuffer(render::mainDevice, gpuVertexBuffer);
+        SDL_ReleaseGPUBuffer(render::mainDevice, gpuIndexBuffer);
 
         gpuVertexBuffer = nullptr;
         gpuIndexBuffer = nullptr;
@@ -62,17 +62,17 @@ namespace me::asset {
         info.size = (sizeof(math::PackedVector3) * cpuVertexBuffer.size()) + (sizeof(uint16_t) * cpuIndexBuffer.size());
         info.usage = SDL_GPU_TRANSFERBUFFERUSAGE_UPLOAD;
 
-        SDL_GPUTransferBuffer* transferBuffer = SDL_CreateGPUTransferBuffer(window::device, &info);
+        SDL_GPUTransferBuffer* transferBuffer = SDL_CreateGPUTransferBuffer(render::mainDevice, &info);
 
         uint32_t vertexPointerSize = sizeof(math::PackedVector3) * cpuVertexBuffer.size();
-        math::PackedVector3* vertexPointer = static_cast<math::PackedVector3*>(SDL_MapGPUTransferBuffer(window::device, transferBuffer, false));
+        math::PackedVector3* vertexPointer = static_cast<math::PackedVector3*>(SDL_MapGPUTransferBuffer(render::mainDevice, transferBuffer, false));
         SDL_memcpy(vertexPointer, cpuVertexBuffer.data(), vertexPointerSize);
 
         uint32_t indexPointerSize = sizeof(uint16_t) * cpuIndexBuffer.size();
         uint16_t* indexPointer = reinterpret_cast<uint16_t*>(vertexPointer + cpuVertexBuffer.size());
         SDL_memcpy(indexPointer, cpuIndexBuffer.data(), indexPointerSize);
 
-        SDL_UnmapGPUTransferBuffer(window::device, transferBuffer);
+        SDL_UnmapGPUTransferBuffer(render::mainDevice, transferBuffer);
 
         return (MeshTransfer){
             .buffer = transferBuffer,

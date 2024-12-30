@@ -3,9 +3,10 @@
 //
 
 #include "Shader.h"
+
 #include <SDL3_shadercross/SDL_shadercross.h>
 
-#include "../render/MainWindow.h"
+#include "render/RenderGlobals.h"
 
 namespace me::asset {
     inline SDL_GPUShaderStage GetStage(ShaderType type) {
@@ -41,7 +42,7 @@ namespace me::asset {
             SDL_ShaderCross_GraphicsShaderInfo info;
 
             shader = SDL_ShaderCross_CompileGraphicsShaderFromHLSL(
-                window::device,
+                render::mainDevice,
                 code,
                 GetEntrypoint(type),
                 NULL,
@@ -59,7 +60,7 @@ namespace me::asset {
 
     void Shader::DestroyGPUShader() {
         if (!shader) return;
-        SDL_ReleaseGPUShader(window::device, shader);
+        SDL_ReleaseGPUShader(render::mainDevice, shader);
         shader = nullptr;
     }
 

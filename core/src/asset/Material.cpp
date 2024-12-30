@@ -6,7 +6,9 @@
 
 #include <SDL3/SDL_log.h>
 
-#include "../render/MainWindow.h"
+#include "math/Types.h"
+#include "render/RenderGlobals.h"
+#include "render/Window.h"
 
 namespace me::asset {
     Material::Material() {
@@ -40,6 +42,7 @@ namespace me::asset {
             }
         }
 
+        // Should this class maintain graphics pipelines? it is meant to be an asset...
         const SDL_GPUGraphicsPipelineCreateInfo info = {
             .vertex_shader = vertexShader->GetGPUShader(),
             .fragment_shader = fragmentShader->GetGPUShader(),
@@ -69,13 +72,13 @@ namespace me::asset {
             },
             .target_info = {
                 .color_target_descriptions = (SDL_GPUColorTargetDescription[]){
-                    { .format = SDL_GetGPUSwapchainTextureFormat(window::device, window::window) }
+                    { .format = SDL_GetGPUSwapchainTextureFormat(render::mainDevice, render::mainWindow->GetWindow()) }
                 },
                 .num_color_targets = 1,
             },
         };
 
-        pipeline = SDL_CreateGPUGraphicsPipeline(window::device, &info);
+        pipeline = SDL_CreateGPUGraphicsPipeline(render::mainDevice, &info);
         if (pipeline == nullptr) {
             SDL_Log("Failed to create graphics pipeline");
             return false;
@@ -84,7 +87,7 @@ namespace me::asset {
     }
 
     void Material::DestroyGPUPipeline() {
-        SDL_ReleaseGPUGraphicsPipeline(window::device, pipeline);
+        SDL_ReleaseGPUGraphicsPipeline(render::mainDevice, pipeline);
         pipeline = nullptr;
     }
 }

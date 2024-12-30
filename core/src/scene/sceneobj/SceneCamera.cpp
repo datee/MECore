@@ -4,7 +4,8 @@
 
 #include "SceneCamera.h"
 
-#include "../../render/MainWindow.h"
+#include "render/RenderGlobals.h"
+#include "render/Window.h"
 
 namespace me::scene {
     SceneCamera::SceneCamera() {
@@ -17,6 +18,6 @@ namespace me::scene {
     }
 
     void SceneCamera::RegenerateMatrix() {
-        projection = math::Matrix4x4::Perspective(fieldOfView * mathfu::kDegreesToRadians, window::aspect, zNear, zFar, -1);
+        projection = math::Matrix4x4::Perspective(fieldOfView * mathfu::kDegreesToRadians, render::mainWindow->GetAspect(), zNear, zFar, -1);
     }
 }

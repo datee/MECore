@@ -7,27 +7,27 @@
 
 HL_PRIM double HL_NAME(time_game_get_elapsed)() {
     hl_blocking(true);
-    return me::time::gameTime.GetElapsed();
+    return me::time::mainGame.GetElapsed();
 }
 
 HL_PRIM double HL_NAME(time_game_get_delta)() {
-    return me::time::gameTime.GetDelta();
+    return me::time::mainGame.GetDelta();
 }
 
 HL_PRIM double HL_NAME(time_game_get_scale)() {
-    return me::time::gameTime.GetScale();
+    return me::time::mainGame.GetScale();
 }
 
 HL_PRIM void HL_NAME(time_game_set_scale)(double value) {
-    me::time::gameTime.SetScale(value);
+    me::time::mainGame.SetScale(value);
 }
 
 HL_PRIM double HL_NAME(time_real_get_elapsed)() {
-    return me::time::realTime.GetElapsed();
+    return me::time::mainReal.GetElapsed();
 }
 
 HL_PRIM double HL_NAME(time_real_get_delta)() {
-    return me::time::realTime.GetDelta();
+    return me::time::mainReal.GetDelta();
 }
 
 DEFINE_PRIM(_F64, time_game_get_elapsed, _NO_ARG);
