@@ -24,6 +24,8 @@ if(MANIFOLD_VENDORED)
     add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
 endif() # add linking for non vendored lol
 
+find_package(Threads REQUIRED)
+
 # HAXE VM
 file(GLOB HAXE_EMBED_SOURCES
         vendor/hashlink/src/code.c
@@ -45,6 +47,6 @@ target_include_directories(MANIFOLDEngine
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
 mathfu_configure_flags(MANIFOLDEngine) # ADDS MATHFU INCLUDES
 
-target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared vfspp libhl HLVM spdlog::spdlog)
+target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared Threads::Threads vfspp libhl HLVM spdlog::spdlog)
 
 add_library(ME::Core ALIAS MANIFOLDEngine)

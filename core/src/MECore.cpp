@@ -8,6 +8,7 @@
 
 #include "fs/FileSystem.h"
 #include "haxe/HaxeGlobals.h"
+#include "job/JobGlobals.h"
 #include "log/LogSystem.h"
 #include "render/RenderGlobals.h"
 #include "scene/SceneGlobals.h"
@@ -35,7 +36,7 @@ namespace me {
             render::Initialize();
         }
         if (Has(systems, MESystems::Job)) {
-            // TODO: Add global job system
+            job::Initialize();
         }
         if (Has(systems, MESystems::Physics)) {
             // but this requires a job system lol
@@ -65,9 +66,14 @@ namespace me {
         if (Has(initialized, MESystems::Scene)) {
             scene::Shutdown();
         }
+        if (Has(initialized, MESystems::Job)) {
+            job::Shutdown();
+        }
         if (Has(initialized, MESystems::SDLRender)) {
             render::Shutdown();
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
+
+        SDL_Quit();
     }
 }
