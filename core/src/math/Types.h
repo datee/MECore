@@ -5,6 +5,9 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <Jolt/Jolt.h>
+#include <Jolt/Math/Vec3.h>
+
 #include "mathfu/constants.h"
 #include "mathfu/quaternion.h"
 #include "mathfu/hlsl_mappings.h"
@@ -24,10 +27,6 @@ namespace me::math {
     typedef mathfu::Quaternion<float> Quaternion;
     typedef mathfu::float4x4 Matrix4x4;
     typedef PackedVector4 PackedMatrix4x4[4];
-
-    constexpr int VEC2_SIZE = sizeof(float) * 2;
-    constexpr int VEC3_SIZE = sizeof(float) * 3;
-    constexpr int VEC4_SIZE = sizeof(float) * 4;
 }
 
 #endif //TYPES_H

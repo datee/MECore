@@ -10,6 +10,7 @@
 #include "haxe/HaxeGlobals.h"
 #include "job/JobGlobals.h"
 #include "log/LogSystem.h"
+#include "physics/PhysicsGlobals.h"
 #include "render/RenderGlobals.h"
 #include "scene/SceneGlobals.h"
 #include "spdlog/spdlog.h"
@@ -39,8 +40,7 @@ namespace me {
             job::Initialize();
         }
         if (Has(systems, MESystems::Physics)) {
-            // but this requires a job system lol
-            // TODO: Initialize global Jolt values
+            physics::Initialize();
         }
         if (Has(systems, MESystems::FS)) {
             fs::Initialize();
@@ -65,6 +65,9 @@ namespace me {
         }
         if (Has(initialized, MESystems::Scene)) {
             scene::Shutdown();
+        }
+        if (Has(initialized, MESystems::Physics)) {
+            physics::Shutdown();
         }
         if (Has(initialized, MESystems::Job)) {
             job::Shutdown();

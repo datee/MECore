@@ -16,7 +16,7 @@ namespace me {
         Scene = 1 << 5,
         Time = 1 << 6,
         Haxe = 1 << 7,
-        All = Log | SDLRender | Job | Physics | FS | Scene | Time | Haxe,
+        All = Log | SDLRender | Physics | FS | Scene | Time | Haxe,
     };
 
     // Initializes specified engine subsystems

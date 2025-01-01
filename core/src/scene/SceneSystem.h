@@ -22,7 +22,7 @@ namespace me::scene {
 
         void AddScene(const ScenePtr scene);
         void RemoveScene(ScenePtr scene);
-        void NewFrame();
+        void Update() const;
 
         uint32_t GetNextId();
     };

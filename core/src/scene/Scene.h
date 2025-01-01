@@ -5,6 +5,7 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include "physobj/PhysicsWorld.h"
 #include "sceneobj/SceneWorld.h"
 
 namespace me::scene {
@@ -14,12 +15,14 @@ namespace me::scene {
         bool isManaged;
         uint32_t id;
         SceneWorld sceneWorld;
+        PhysicsWorld physicsWorld;
 
         public:
         Scene();
 
         [[nodiscard]] inline uint32_t GetID() const { return id; }
         [[nodiscard]] inline SceneWorld& GetSceneWorld() { return sceneWorld; }
+        [[nodiscard]] inline PhysicsWorld& GetPhysicsWorld() { return physicsWorld; }
 
         void Internal_StartManage(uint32_t id);
         void Internal_StopManage();

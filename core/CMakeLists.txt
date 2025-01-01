@@ -47,6 +47,6 @@ target_include_directories(MANIFOLDEngine
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
 mathfu_configure_flags(MANIFOLDEngine) # ADDS MATHFU INCLUDES
 
-target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared Threads::Threads vfspp libhl HLVM spdlog::spdlog)
+target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared Threads::Threads Jolt vfspp libhl HLVM spdlog::spdlog)
 
 add_library(ME::Core ALIAS MANIFOLDEngine)

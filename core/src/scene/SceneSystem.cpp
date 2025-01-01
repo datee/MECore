@@ -21,8 +21,10 @@ namespace me::scene {
 
     }
 
-    void SceneSystem::NewFrame() {
-
+    void SceneSystem::Update() const {
+        for (const auto& pair : scenes) {
+            pair.second->Update();
+        }
     }
 
     uint32_t SceneSystem::GetNextId() {

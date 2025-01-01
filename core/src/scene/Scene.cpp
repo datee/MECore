@@ -6,9 +6,13 @@
 #include "Scene.h"
 
 namespace me::scene {
-    Scene::Scene() {
+    Scene::Scene() : physicsWorld(60) {
         isManaged = false;
         id = 0;
+    }
+
+    void Scene::Update() {
+        physicsWorld.TryUpdate();
     }
 
     void Scene::Internal_StartManage(uint32_t id) {
