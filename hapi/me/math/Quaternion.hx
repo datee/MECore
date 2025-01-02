@@ -1,6 +1,6 @@
 package me.math;
 
-import me.math.BaseVec4;
+import me.internal.math.BaseVec4;
 
 @:notNull
 @:forward(x, y, z, w, Set, Copy)

@@ -8,14 +8,15 @@
 namespace me {
     enum class MESystems {
         None = 0,
-        Log = 1 << 0,
-        SDLRender = 1 << 1,
-        Job = 1 << 2,
-        Physics = 1 << 3,
-        FS = 1 << 4,
-        Scene = 1 << 5,
-        Time = 1 << 6,
-        Haxe = 1 << 7,
+        Log = 1,
+        FS = Log << 1,
+        SDLRender = FS << 1,
+        Haxe = SDLRender << 1,
+        Job = Haxe << 1,
+        Physics = Job << 1,
+        Scene = Physics << 1,
+        Time = Scene << 1,
+
         All = Log | SDLRender | Physics | FS | Scene | Time | Haxe,
     };
 

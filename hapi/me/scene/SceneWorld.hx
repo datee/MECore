@@ -1,5 +1,7 @@
 package me.scene;
 
-class SceneWorld {
+import me.internal.EngineObject;
+
+class SceneWorld extends EngineObject {
     
 }

@@ -1,6 +1,6 @@
-package me;
+package me.scene;
 
-import me.EngineObject;
+import me.internal.EngineObject;
 
 abstract class SceneObject extends EngineObject {
     

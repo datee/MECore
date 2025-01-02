@@ -1,4 +1,4 @@
-package me.math;
+package me.internal.math;
 
 // It would be cool if I could make this type generic.
 // So if something requires a different type its as easy as BaseVec3<Int>.

@@ -22,6 +22,7 @@ if(MANIFOLD_VENDORED)
     add_subdirectory(vendor/spdlog EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/hashlink EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
+    add_subdirectory(vendor/crossguid EXCLUDE_FROM_ALL)
 endif() # add linking for non vendored lol
 
 find_package(Threads REQUIRED)

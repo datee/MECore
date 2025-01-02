@@ -1,6 +1,6 @@
 package me;
 
-import me.bindings.LogBindings;
+import me.internal.bindings.LogBindings;
 
 /**
     The engine's logger.

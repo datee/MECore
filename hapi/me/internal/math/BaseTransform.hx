@@ -1,6 +1,6 @@
-package me.math;
+package me.internal.math;
 
-import me.math.BaseVec4;
+import me.internal.math.BaseVec4;
 
 // I would use the abstract types here for extra clarity but then HashLink would expect abstracts to be returned.
 // While it is possible to pass in abstracts from the C side. It probably isn't worth the hassle.

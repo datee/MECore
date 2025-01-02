@@ -4,33 +4,33 @@
 
 #ifndef GAMETRANSFORM_H
 #define GAMETRANSFORM_H
-#include "../../math/Transform.h"
+#include "GameObjectModule.h"
+#include "math/Transform.h"
 
 namespace me::scene {
-    class GameTransform {
+    class GameTransform final : public GameObjectModule {
         private:
-        math::Transform global;
+        math::Transform world;
+        math::Transform local;
         math::Vector3 eulerAngles;
 
         public:
-        GameTransform() {
-            global = math::Transform::identity;
-            eulerAngles = math::Vector3(0, 0, 0);
-        }
+        explicit GameTransform(GameObject* obj);
 
-        [[nodiscard]] inline math::Vector3 GetPosition() const { return global.position; }
-        [[nodiscard]] inline math::Quaternion GetRotation() const { return global.rotation; }
+        [[nodiscard]] inline math::Vector3 GetPosition() const { return world.position; }
+        [[nodiscard]] inline math::Quaternion GetRotation() const { return world.rotation; }
         [[nodiscard]] inline math::Vector3 GetAngles() const { return eulerAngles; }
-        [[nodiscard]] inline math::Vector3 GetScale() const { return global.scale; }
-        [[nodiscard]] inline math::Vector3 GetRight() const { return global.Right(); }
-        [[nodiscard]] inline math::Vector3 GetUp() const { return global.Up(); }
-        [[nodiscard]] inline math::Vector3 GetForward() const { return global.Forward(); }
-        [[nodiscard]] inline math::Transform& Raw() { return global; }
+        [[nodiscard]] inline math::Vector3 GetScale() const { return world.scale; }
 
-        inline void SetPosition(const math::Vector3 pos) { global.position = pos; }
-        inline void SetRotation(const math::Quaternion rot) { global.rotation = rot; eulerAngles = rot.ToEulerAngles(); }
-        inline void SetAngles(const math::Vector3 angles) { eulerAngles = angles; global.rotation = math::Quaternion::FromEulerAngles(angles * mathfu::kDegreesToRadians); }
-        inline void SetScale(const math::Vector3 scale) { global.scale = scale; }
+        [[nodiscard]] inline math::Transform& GlobalRaw() { return world; }
+        [[nodiscard]] inline math::Transform& LocalRaw() { return local; }
+
+        void SetGlobalPosition(const math::Vector3& pos);
+        void SetGlobalRotation(const math::Quaternion& rot);
+
+        void SetLocalPosition(const math::Vector3& pos);
+        void SetLocalRotation(const math::Quaternion& rot);
+        void SetLocalScale(const math::Vector3& scale);
     };
 }
 

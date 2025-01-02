@@ -1,4 +1,4 @@
-package me.math;
+package me.internal.math;
 
 /**
     A four-dimensional vector.

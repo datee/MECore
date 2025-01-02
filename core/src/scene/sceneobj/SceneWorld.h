@@ -13,12 +13,12 @@
 #include "SceneCamera.h"
 
 namespace me::scene {
-    typedef std::map<uint32_t, std::unique_ptr<SceneObject>> WorldMap;
-    typedef std::vector<std::unique_ptr<SceneObject>> WorldList;
+    using SceneWorldMap = std::map<uint32_t, std::unique_ptr<SceneObject>>;
+    using SceneWorldList = std::vector<std::unique_ptr<SceneObject>>;
 
     class SceneWorld {
         private:
-        WorldList objects;
+        SceneWorldList objects;
         SceneCamera camera;
 
         public:

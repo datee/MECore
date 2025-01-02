@@ -1,13 +1,13 @@
 package me.scene;
 
 import me.math.Vector3;
-import me.bindings.SceneTransformBindings;
+import me.internal.bindings.SceneTransformBindings;
 import me.math.Transform;
-import me.EngineObject;
-import me.memory.Pointer;
+import me.internal.EngineObject;
+import me.internal.Pointer;
 import me.Log;
 
-class SceneTransform extends EngineObject {
+final class SceneTransform extends EngineObject {
     public var Global(get, set): Transform;
     public var Position(get, set): Vector3;
 

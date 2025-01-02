@@ -22,3 +22,6 @@
 [submodule "core/vendor/JoltPhysics"]
 	path = core/vendor/JoltPhysics
 	url = https://github.com/jrouwe/JoltPhysics.git
+[submodule "core/vendor/crossguid"]
+	path = core/vendor/crossguid
+	url = https://github.com/graeme-hill/crossguid.git

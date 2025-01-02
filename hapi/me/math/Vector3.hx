@@ -1,6 +1,6 @@
 package me.math;
 
-import me.math.BaseVec4;
+import me.internal.math.BaseVec4;
 
 // I know the Vector3 being a Vector4 under the hood is super cursed but its for SIMD.
 

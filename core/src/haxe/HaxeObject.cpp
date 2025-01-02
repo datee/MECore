@@ -20,7 +20,7 @@ namespace me::haxe {
         hl_remove_root(object);
     }
 
-    vdynamic* HaxeObject::CallMethod(const std::u16string& name, std::vector<vdynamic*> args) const {
+    vdynamic* HaxeObject::CallMethod(const FuncName& name, FuncArgs args) const {
         hl_obj_proto* target = Util_FindMethod(vmType, name);
         if (target == nullptr) {
             spdlog::error("HaxeObject::CallMethod: unknown method");
@@ -37,7 +37,7 @@ namespace me::haxe {
         return result;
     }
 
-    vdynamic* HaxeObject::CallVirtualMethod(const std::u16string& name, std::vector<vdynamic*> args) const {
+    vdynamic* HaxeObject::CallVirtualMethod(const FuncName& name, FuncArgs args) const {
         hl_type* currentType = vmType;
         hl_obj_proto* target = nullptr;
         do {

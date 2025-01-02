@@ -21,7 +21,7 @@ namespace me::haxe {
         return ptr;
     }
 
-    vdynamic* HaxeType::CallStaticMethod(const std::u16string& name, std::vector<vdynamic*>& args) const {
+    vdynamic* HaxeType::CallStaticMethod(const FuncName& name, FuncArgs& args) const {
         hl_obj_proto* target = Util_FindMethod(type, name);
         if (target == nullptr) {
             spdlog::error("HaxeType::CallStaticMethod: unknown static method");

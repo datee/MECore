@@ -1,6 +1,6 @@
 package me;
 
-import me.bindings.TimeBindings;
+import me.internal.bindings.TimeBindings;
 
 final class Time {
     public static var ElapsedAsDouble(get, never): Float;

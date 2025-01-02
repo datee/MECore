@@ -1,4 +1,4 @@
-package me.memory;
+package me.internal;
 
 import haxe.Int64;
 import hl.I64;

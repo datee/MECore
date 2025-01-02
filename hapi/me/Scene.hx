@@ -1,6 +1,6 @@
 package me;
 
-import me.EngineObject;
+import me.internal.EngineObject;
 
 final class Scene extends EngineObject {
     

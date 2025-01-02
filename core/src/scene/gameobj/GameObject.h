@@ -4,10 +4,32 @@
 
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
+#include "GameTransform.h"
+#include "haxe/HaxeEngineObject.h"
 
-class GameObject {
-    private:
-    GameObject* parent;
-};
+namespace me::scene {
+    class GameWorld;
+
+    class GameObject final : public haxe::HaxeEngineObject {
+        private:
+        GameWorld* world;
+        GameObject* parent;
+        GameTransform transform;
+        std::string name;
+
+        public:
+        GameObject();
+        explicit GameObject(const std::string& name);
+        explicit GameObject(GameObject* parent);
+
+        [[nodiscard]] inline GameObject* GetParent() const { return parent; }
+        [[nodiscard]] inline GameTransform& GetTransform() { return transform; }
+        [[nodiscard]] inline std::string GetName() const { return name; }
+
+        inline void SetParent(GameObject* parent) { this->parent = parent; }
+
+        void Internal_AssignWorld(GameWorld* world);
+    };
+}
 
 #endif //GAMEOBJECT_H

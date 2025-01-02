@@ -1,8 +1,7 @@
-package me;
+package me.game;
 
-import me.GameObjectModule;
+import me.game.GameObjectModule;
 
-@:struct
 final class GameTransform extends GameObjectModule {
     
 }

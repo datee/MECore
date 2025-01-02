@@ -1,8 +1,8 @@
-package me.bindings;
+package me.internal.bindings;
 
-import me.math.BaseVec4;
-import me.memory.Pointer;
-import me.math.BaseTransform;
+import me.internal.math.BaseVec4;
+import me.internal.Pointer;
+import me.internal.math.BaseTransform;
 
 @:hlNative("MECore")
 extern class SceneTransformBindings {

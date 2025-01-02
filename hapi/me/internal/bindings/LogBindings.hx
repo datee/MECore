@@ -1,4 +1,4 @@
-package me.bindings;
+package me.internal.bindings;
 
 @:allow(me)
 @:hlNative("MECore")

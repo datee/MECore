@@ -2,7 +2,7 @@ package me.math;
 
 import me.math.Vector3;
 import me.math.Quaternion;
-import me.math.BaseTransform;
+import me.internal.math.BaseTransform;
 
 @:forward(Copy)
 @:forward.new

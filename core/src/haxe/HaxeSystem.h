@@ -17,7 +17,7 @@ namespace me::haxe {
         hl_code* code;
         hl_module* module;
 
-        std::map<std::u16string, std::unique_ptr<HaxeType>> types;
+        std::map<TypeName, std::unique_ptr<HaxeType>> types;
 
         public:
         explicit HaxeSystem(std::string path);
@@ -25,7 +25,7 @@ namespace me::haxe {
         inline hl_module* GetModule() const { return module; }
 
         bool Load();
-        HaxeType* GetType(const std::u16string name);
+        HaxeType* GetType(const TypeName& name);
         void CallEntryPoint();
     };
 }

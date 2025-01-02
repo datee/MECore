@@ -46,7 +46,7 @@ namespace me::haxe {
         return result;
     }
 
-    HaxeType* HaxeSystem::GetType(const std::u16string name) {
+    HaxeType* HaxeSystem::GetType(const TypeName& name) {
         if (types.contains(name)) {
             return types[name].get();
         }
@@ -55,7 +55,7 @@ namespace me::haxe {
         for (int i = 0; i < module->code->ntypes; i++) {
             auto type = &module->code->types[i];
             if (type->kind == hl_type_kind::HOBJ) {
-                std::u16string typeName = type->obj->name;
+                TypeName typeName = type->obj->name;
                 if (typeName == name) {
                     result = type;
                     break;

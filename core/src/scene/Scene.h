@@ -7,6 +7,7 @@
 
 #include "physobj/PhysicsWorld.h"
 #include "sceneobj/SceneWorld.h"
+#include "gameobj/GameWorld.h"
 
 namespace me::scene {
     // Holds all kinds of objects for game.
@@ -16,6 +17,7 @@ namespace me::scene {
         uint32_t id;
         SceneWorld sceneWorld;
         PhysicsWorld physicsWorld;
+        GameWorld gameWorld;
 
         public:
         Scene();
@@ -23,6 +25,7 @@ namespace me::scene {
         [[nodiscard]] inline uint32_t GetID() const { return id; }
         [[nodiscard]] inline SceneWorld& GetSceneWorld() { return sceneWorld; }
         [[nodiscard]] inline PhysicsWorld& GetPhysicsWorld() { return physicsWorld; }
+        [[nodiscard]] inline GameWorld& GetGameWorld() { return gameWorld; }
 
         void Internal_StartManage(uint32_t id);
         void Internal_StopManage();

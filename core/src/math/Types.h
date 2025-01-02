@@ -13,20 +13,20 @@
 #include "mathfu/hlsl_mappings.h"
 
 namespace me::math {
-    typedef mathfu::int2 IntVector2;
-    typedef mathfu::int3 IntVector3;
-    typedef mathfu::int4 IntVector4;
+    using IntVector2 = mathfu::int2;
+    using IntVector3 = mathfu::int3;
+    using IntVector4 = mathfu::int4;
 
-    typedef mathfu::float2 Vector2;
-    typedef mathfu::float3 Vector3;
-    typedef mathfu::VectorPacked<float, 3> PackedVector3;
-    typedef mathfu::float4 Vector4;
-    typedef mathfu::VectorPacked<float, 4> PackedVector4;
+    using Vector2 = mathfu::float2;
+    using Vector3 = mathfu::float3;
+    using PackedVector3 = mathfu::VectorPacked<float, 3>;
+    using Vector4 = mathfu::float4;
+    using PackedVector4 = mathfu::VectorPacked<float, 4>;
 
-    typedef mathfu::float4 Color;
-    typedef mathfu::Quaternion<float> Quaternion;
-    typedef mathfu::float4x4 Matrix4x4;
-    typedef PackedVector4 PackedMatrix4x4[4];
+    using Color = mathfu::float4;
+    using Quaternion = mathfu::Quaternion<float>;
+    using Matrix4x4 = mathfu::float4x4;
+    using PackedMatrix4x4 = PackedVector4[4];
 }
 
 #endif //TYPES_H

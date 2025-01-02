@@ -36,6 +36,9 @@ namespace me {
             }
             render::Initialize();
         }
+        if (Has(systems, MESystems::Haxe)) {
+            haxe::Initialize(0, nullptr);
+        }
         if (Has(systems, MESystems::Job)) {
             job::Initialize();
         }
@@ -51,18 +54,12 @@ namespace me {
         if (Has(systems, MESystems::Time)) {
             time::Initialize();
         }
-        if (Has(systems, MESystems::Haxe)) {
-            haxe::Initialize(0, nullptr);
-        }
 
         initialized = systems;
         return true;
     }
 
     void Shutdown() {
-        if (Has(initialized, MESystems::Haxe)) {
-            haxe::Shutdown();
-        }
         if (Has(initialized, MESystems::Scene)) {
             scene::Shutdown();
         }
@@ -71,6 +68,9 @@ namespace me {
         }
         if (Has(initialized, MESystems::Job)) {
             job::Shutdown();
+        }
+        if (Has(initialized, MESystems::Haxe)) {
+            haxe::Shutdown();
         }
         if (Has(initialized, MESystems::SDLRender)) {
             render::Shutdown();
