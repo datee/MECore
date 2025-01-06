@@ -6,7 +6,7 @@
 #include "Scene.h"
 
 namespace me::scene {
-    Scene::Scene() : physicsWorld(60) {
+    Scene::Scene() : HaxeEngineObject(u"me.Scene"), physicsWorld(60) {
         isManaged = false;
         id = 0;
     }

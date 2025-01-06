@@ -1,13 +1,29 @@
 package me.game;
 
+import me.IValid;
 import me.game.ComponentManager;
 import me.game.GameTransform;
 import me.game.GameObject;
 
-abstract class Component {
-    // var GameObject(get, never): GameObject;
-    // var Transform(get, never): GameTransform;
-    // var Components(get, never): ComponentManager;
+using me.IValid.IValidExt;
+
+/**
+    A scripted component on a game object.
+**/
+abstract class Component implements IValid {
+    public var GameObject(default, null): GameObject;
+    public var Transform(default, null): GameTransform;
+    public var Components(default, null): ComponentManager;
+
+    public var IsValid(get, never): Bool;
+
+    public final function new() {
+        // do nothing, invalid component
+    }
+
+    final inline function get_IsValid(): Bool {
+        return GameObject.IsValidSafe();
+    }
 
     // ENGINE CALLBACKS
 
@@ -44,5 +60,12 @@ abstract class Component {
     **/
     function OnFixedUpdate(): Void {
 
+    }
+
+    // INTERNAL FUNCTIONS
+    public final function ME_Initialize(manager: ComponentManager): Void {
+        // Components = manager;
+        // GameObject = manager.GameObject;
+        // Transform = manager.GameObject.Transform;
     }
 }

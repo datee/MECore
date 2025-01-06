@@ -8,7 +8,8 @@
 
 namespace me::scene {
     class GameComponentManager : public GameObjectModule {
-
+        public:
+        void CreateComponent(haxe::HaxeType* type);
     };
 }
 

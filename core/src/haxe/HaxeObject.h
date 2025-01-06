@@ -22,6 +22,8 @@ namespace me::haxe {
         HaxeObject(HaxeType* type, hl_type* vmType, hl_module* module, vdynamic* obj);
         ~HaxeObject();
 
+        [[nodiscard]] inline vdynamic* GetDynamic() const { return object; }
+
         [[nodiscard]] inline int GetInt(const FieldName& name) const { return hl_dyn_geti(object, hl_hash_utf8(name.c_str()), vmType); }
         [[nodiscard]] inline float GetFloat(const FieldName& name) const { return hl_dyn_getf(object, hl_hash_utf8(name.c_str())); }
         [[nodiscard]] inline double GetDouble(const FieldName& name) const { return hl_dyn_getd(object, hl_hash_utf8(name.c_str())); }

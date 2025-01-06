@@ -20,12 +20,16 @@ namespace me::haxe {
         std::map<TypeName, std::unique_ptr<HaxeType>> types;
 
         public:
-        explicit HaxeSystem(std::string path);
+        explicit HaxeSystem(const std::string& path);
 
         inline hl_module* GetModule() const { return module; }
 
         bool Load();
+        void Release();
+
         HaxeType* GetType(const TypeName& name);
+        std::vector<HaxeType*> GetTypesWithName(const TypeName& name);
+
         void CallEntryPoint();
     };
 }

@@ -5,7 +5,7 @@ interface IValid {
 }
 
 class IValidExt {
-    public static function IsValid(obj: IValid) {
+    public static function IsValidSafe(obj: IValid) {
         return obj != null && obj.IsValid;
     }
 }

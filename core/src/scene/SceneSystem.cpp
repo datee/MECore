@@ -7,7 +7,7 @@
 #include "SceneSystem.h"
 
 namespace me::scene {
-    SceneSystem::SceneSystem() {
+    SceneSystem::SceneSystem() : HaxeEngineObject(u"me.SceneSystem") {
         scenes = SceneMap();
         nextId = 0;
     }
@@ -25,6 +25,14 @@ namespace me::scene {
         for (const auto& pair : scenes) {
             pair.second->Update();
         }
+    }
+
+    uint32_t SceneSystem::GetSceneCount() const {
+        return scenes.size();
+    }
+
+    ScenePtr SceneSystem::GetScene(const uint32_t id) const {
+        return scenes.at(id);
     }
 
     uint32_t SceneSystem::GetNextId() {

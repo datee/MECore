@@ -25,6 +25,7 @@ namespace me::haxe {
 
     void Shutdown() {
         if (mainSystem) {
+            mainSystem->Release();
             mainSystem = nullptr;
         }
 
@@ -43,6 +44,7 @@ namespace me::haxe {
         }
 
         mainSystem = std::unique_ptr<HaxeSystem>(system);
+        system->CallEntryPoint(); // Do not THINK of removing this call.
         return true;
     }
 

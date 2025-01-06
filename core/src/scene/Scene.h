@@ -11,7 +11,7 @@
 
 namespace me::scene {
     // Holds all kinds of objects for game.
-    class Scene {
+    class Scene : public haxe::HaxeEngineObject {
         private:
         bool isManaged;
         uint32_t id;

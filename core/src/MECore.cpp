@@ -29,6 +29,16 @@ namespace me {
         if (Has(systems, MESystems::Log)) {
             log::Initialize();
         }
+        if (Has(systems, MESystems::FS)) {
+            fs::Initialize();
+        }
+        if (Has(systems, MESystems::Haxe)) {
+            haxe::Initialize(0, nullptr);
+            haxe::CreateMainSystem("/code.hl");
+        }
+        if (Has(systems, MESystems::Job)) {
+            job::Initialize();
+        }
         if (Has(systems, MESystems::SDLRender)) {
             if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
                 spdlog::critical("Failed to initialize SDL video subsystem");
@@ -36,17 +46,8 @@ namespace me {
             }
             render::Initialize();
         }
-        if (Has(systems, MESystems::Haxe)) {
-            haxe::Initialize(0, nullptr);
-        }
-        if (Has(systems, MESystems::Job)) {
-            job::Initialize();
-        }
         if (Has(systems, MESystems::Physics)) {
             physics::Initialize();
-        }
-        if (Has(systems, MESystems::FS)) {
-            fs::Initialize();
         }
         if (Has(systems, MESystems::Scene)) {
             scene::Initialize();
@@ -66,15 +67,15 @@ namespace me {
         if (Has(initialized, MESystems::Physics)) {
             physics::Shutdown();
         }
+        if (Has(initialized, MESystems::SDLRender)) {
+            render::Shutdown();
+            SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        }
         if (Has(initialized, MESystems::Job)) {
             job::Shutdown();
         }
         if (Has(initialized, MESystems::Haxe)) {
             haxe::Shutdown();
-        }
-        if (Has(initialized, MESystems::SDLRender)) {
-            render::Shutdown();
-            SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
 
         SDL_Quit();

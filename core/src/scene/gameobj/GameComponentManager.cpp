@@ -3,3 +3,10 @@
 //
 
 #include "GameComponentManager.h"
+
+namespace me::scene {
+    void GameComponentManager::CreateComponent(haxe::HaxeType* type) {
+
+    }
+
+}

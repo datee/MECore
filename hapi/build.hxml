@@ -1,5 +1,7 @@
 # this file exists purely for editing reasons. ignore.
 
 --class-path me
+--macro include('me', true)
+
 --dce no
 --hl code.hl

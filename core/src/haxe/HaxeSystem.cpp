@@ -10,8 +10,10 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/fmt/bundled/ranges.h"
 
+#include "HaxeUtils.cpp"
+
 namespace me::haxe {
-    HaxeSystem::HaxeSystem(const std::string path) {
+    HaxeSystem::HaxeSystem(const std::string& path) {
         filePath = path;
         code = nullptr;
         module = nullptr;
@@ -37,6 +39,7 @@ namespace me::haxe {
                 } else {
                     spdlog::error("Haxe Module Init Error");
                 }
+                hl_code_free(code);
             } else {
                 spdlog::error("Haxe Code Load Error: %s", msg);
             }
@@ -44,6 +47,15 @@ namespace me::haxe {
             file->Close();
         }
         return result;
+    }
+
+    void HaxeSystem::Release() {
+        if (module) return;
+
+        hl_module_free(module);
+        hl_free(&code->alloc);
+
+        module = nullptr;
     }
 
     HaxeType* HaxeSystem::GetType(const TypeName& name) {
@@ -73,6 +85,30 @@ namespace me::haxe {
         return type;
     }
 
+    std::vector<HaxeType*> HaxeSystem::GetTypesWithName(const TypeName& name) {
+        std::vector<HaxeType*> result{};
+
+        for (int i = 0; i < module->code->ntypes; i++) {
+            auto type = &module->code->types[i];
+            if (type->kind == hl_type_kind::HOBJ) {
+                TypeName typeName = type->obj->name;
+                if (typeName.contains(name)) {
+                    HaxeType* haxeType;
+                    if (types.contains(typeName)) {
+                        haxeType = types[typeName].get();
+                    } else {
+                        haxeType = new HaxeType(this, module, type);
+                        types.insert({ name, std::unique_ptr<HaxeType>(haxeType) });
+                    }
+                    result.push_back(haxeType);
+                }
+            }
+        }
+
+        return std::move(result);
+    }
+
+
     void HaxeSystem::CallEntryPoint() {
         int entrypoint = module->code->entrypoint;
         vclosure closure;
@@ -81,9 +117,9 @@ namespace me::haxe {
         closure.hasValue = 0; // static
 
         bool except = false;
-        hl_dyn_call_safe(&closure, NULL, 0, &except);
+        auto* result = hl_dyn_call_safe(&closure, NULL, 0, &except);
         if (except) {
-            spdlog::error("Haxe Entrypoint exception");
+            Util_PrintException(result);
         }
         spdlog::info("Haxe Entrypoint finished");
     }

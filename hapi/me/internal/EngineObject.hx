@@ -12,11 +12,6 @@ abstract class EngineObject implements IValid {
 
     public var IsValid(get, never): Bool;
 
-    @:allow(me)
-    private function new(pointer: Pointer) {
-        ME_Initialize(pointer);
-    }
-
     function get_IsValid(): Bool {
         return pointer.IsNull();
     }

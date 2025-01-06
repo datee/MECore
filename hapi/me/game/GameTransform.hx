@@ -1,6 +1,6 @@
 package me.game;
 
-import me.game.GameObjectModule;
+import me.internal.game.GameObjectModule;
 
 final class GameTransform extends GameObjectModule {
     

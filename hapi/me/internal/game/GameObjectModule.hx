@@ -1,4 +1,4 @@
-package me.game;
+package me.internal.game;
 
 import me.internal.EngineObject;
 import me.game.GameObject;
