@@ -27,6 +27,7 @@ namespace me::scene {
 
         [[nodiscard]] inline JPH::BodyInterface& GetInterface() { return physicsSystem.GetBodyInterface(); }
 
+        bool CanUpdate() const;
         // Tries to update the physics if enough time has passed.
         bool TryUpdate();
         // Runs the physics simulation

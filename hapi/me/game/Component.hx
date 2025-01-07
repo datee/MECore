@@ -10,15 +10,19 @@ using me.IValid.IValidExt;
 /**
     A scripted component on a game object.
 **/
+
 abstract class Component implements IValid {
+    public var Enabled(default, default): Bool;
+
     public var GameObject(default, null): GameObject;
     public var Transform(default, null): GameTransform;
     public var Components(default, null): ComponentManager;
 
     public var IsValid(get, never): Bool;
 
-    public final function new() {
-        // do nothing, invalid component
+    // Hide constructor
+    private final function new() {
+
     }
 
     final inline function get_IsValid(): Bool {
@@ -28,7 +32,7 @@ abstract class Component implements IValid {
     // ENGINE CALLBACKS
 
     /**
-        Called when the object is loaded.
+        Called when the component is loaded/created.
     **/
     function OnLoaded(): Void {
 
@@ -64,8 +68,9 @@ abstract class Component implements IValid {
 
     // INTERNAL FUNCTIONS
     public final function ME_Initialize(manager: ComponentManager): Void {
-        // Components = manager;
-        // GameObject = manager.GameObject;
-        // Transform = manager.GameObject.Transform;
+        Components = manager;
+        GameObject = manager.GameObject;
+        Transform = manager.GameObject.Transform;
+        Enabled = true;
     }
 }

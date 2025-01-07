@@ -1,9 +1,9 @@
 {
-    "name": "MANIFOLDEngineAPI",
-    "url" : "https://github.com/dotryen/meapi",
+    "name": "MEAPI",
+    "url" : "https://github.com/dotryen/mecore",
     "license": "MIT",
     "tags": ["api"],
-    "description": "This library is useless in the same way on every platform.",
+    "description": "MANIFOLD_ENGINE :: API",
     "version": "1.0.0",
     "releasenote": "Initial release, everything is working correctly.",
     "contributors": ["dotRYEN"]

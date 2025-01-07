@@ -11,4 +11,12 @@
 
 #define _PTR _I64
 
+#define _VECTOR2 _STRUCT
+#define _VECTOR3 _STRUCT
+#define _VECTOR4 _STRUCT
+
+#define _QUAT _STRUCT
+
+#define _TRANSFORM _STRUCT
+
 #endif //GLOBAL_H

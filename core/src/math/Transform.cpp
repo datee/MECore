@@ -5,43 +5,43 @@
 #include "Transform.h"
 
 namespace me::math {
-    inline Vector3 Transform::EnterPoint(const Vector3& worldPoint) const {
+    Vector3 Transform::EnterPoint(const Vector3& worldPoint) const {
         return (rotation.Inverse() * (worldPoint - position)) / scale;
     }
 
-    inline Vector3 Transform::EnterDirection(const Vector3& worldDir) const {
+    Vector3 Transform::EnterDirection(const Vector3& worldDir) const {
         return (rotation.Inverse() * worldDir) / scale;
     }
 
-    inline Vector3 Transform::EnterVector(const Vector3& worldVector) const {
+    Vector3 Transform::EnterVector(const Vector3& worldVector) const {
         return worldVector / scale;
     }
 
-    inline Quaternion Transform::EnterQuaternion(const Quaternion& worldRot) const {
+    Quaternion Transform::EnterQuaternion(const Quaternion& worldRot) const {
         return rotation.Inverse() * worldRot;
     }
 
-    inline Transform Transform::Enter(const Transform& world) const {
+    Transform Transform::Enter(const Transform& world) const {
         return { EnterPoint(world.position), EnterQuaternion(world.rotation), EnterVector(world.scale) };
     }
 
-    inline Vector3 Transform::ExitPoint(const Vector3& localPoint) const {
+    Vector3 Transform::ExitPoint(const Vector3& localPoint) const {
         return position + (rotation * (localPoint * scale));
     }
 
-    inline Vector3 Transform::ExitDirection(const Vector3& localDir) const {
+    Vector3 Transform::ExitDirection(const Vector3& localDir) const {
         return rotation * (localDir * scale);
     }
 
-    inline Vector3 Transform::ExitVector(const Vector3& localVector) const {
+    Vector3 Transform::ExitVector(const Vector3& localVector) const {
         return localVector / scale;
     }
 
-    inline Quaternion Transform::ExitQuaternion(const Quaternion& localRot) const {
+    Quaternion Transform::ExitQuaternion(const Quaternion& localRot) const {
         return localRot * rotation;
     }
 
-    inline Transform Transform::Exit(const Transform& local) const {
+    Transform Transform::Exit(const Transform& local) const {
         return { ExitPoint(local.position), ExitQuaternion(local.rotation), ExitVector(local.scale) };
     }
 

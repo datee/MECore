@@ -21,6 +21,10 @@ namespace me::scene {
 
         [[nodiscard]] std::vector<GameObject*> GetObjects();
 
+        void Update();
+        void FixedUpdate();
+        void LateUpdate();
+
         void AddObject(GameObject* obj);
     };
 }

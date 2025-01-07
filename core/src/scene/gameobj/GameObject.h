@@ -4,6 +4,7 @@
 
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
+#include "GameComponentManager.h"
 #include "GameTransform.h"
 #include "haxe/HaxeEngineObject.h"
 
@@ -15,6 +16,7 @@ namespace me::scene {
         GameWorld* world;
         GameObject* parent;
         GameTransform transform;
+        GameComponentManager components;
         std::string name;
 
         public:
@@ -24,6 +26,7 @@ namespace me::scene {
 
         [[nodiscard]] inline GameObject* GetParent() const { return parent; }
         [[nodiscard]] inline GameTransform& GetTransform() { return transform; }
+        [[nodiscard]] inline GameComponentManager& GetComponents() { return components; }
         [[nodiscard]] inline std::string GetName() const { return name; }
 
         inline void SetParent(GameObject* parent) { this->parent = parent; }

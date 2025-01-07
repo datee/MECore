@@ -19,7 +19,7 @@ namespace me::haxe {
         HaxeSystem* system;
         hl_module* module;
         hl_type* type;
-        
+
         std::vector<std::unique_ptr<HaxeObject>> instances;
 
         public:

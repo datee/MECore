@@ -28,9 +28,4 @@ final class SceneTransform extends EngineObject {
         SceneTransformBindings.scene_sceneobj_transform_set_pos(pointer, value);
         return value;
     }
-
-    override function ME_Initialize(ptr: Pointer): Void {
-        super.ME_Initialize(ptr);
-        Log.Info("Scene Transform's address is " + ptr);
-    }
 }

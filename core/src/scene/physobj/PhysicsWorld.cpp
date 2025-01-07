@@ -14,10 +14,14 @@ namespace me::scene {
         physicsSystem.Init(65536, 0, 65536, 10240, bpLayerInterface, objVBpFilter, objPairFilter);
     }
 
+    inline bool PhysicsWorld::CanUpdate() const {
+        return accumulator >= timeStep;
+    }
+
     bool PhysicsWorld::TryUpdate() {
         accumulator += time::mainGame.GetElapsed();
 
-        if (accumulator >= timeStep) {
+        if (CanUpdate()) {
             Update(timeStep);
             accumulator -= timeStep;
             return true;

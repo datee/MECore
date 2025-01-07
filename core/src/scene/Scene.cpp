@@ -12,7 +12,15 @@ namespace me::scene {
     }
 
     void Scene::Update() {
-        physicsWorld.TryUpdate();
+        gameWorld.Update();
+
+        if (physicsWorld.CanUpdate()) {
+            gameWorld.FixedUpdate();
+            physicsWorld.TryUpdate();
+        }
+
+        // Scene world update here
+        gameWorld.LateUpdate();
     }
 
     void Scene::Internal_StartManage(uint32_t id) {

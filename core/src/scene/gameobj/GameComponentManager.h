@@ -9,7 +9,13 @@
 namespace me::scene {
     class GameComponentManager : public GameObjectModule {
         public:
-        void CreateComponent(haxe::HaxeType* type);
+        GameComponentManager(GameObject* obj);
+
+        void Update() const;
+        void LateUpdate() const;
+        void FixedUpdate() const;
+
+        void CreateComponent(haxe::HaxeType* type) const;
     };
 }
 

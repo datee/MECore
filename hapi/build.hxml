@@ -1,6 +1,6 @@
 # this file exists purely for editing reasons. ignore.
 
---class-path me
+--class-path .
 --macro include('me', true)
 
 --dce no

@@ -16,6 +16,24 @@ namespace me::scene {
         return raw;
     }
 
+    void GameWorld::Update() {
+        for (const auto& obj : objects) {
+            obj->GetComponents().Update();
+        }
+    }
+
+    void GameWorld::FixedUpdate() {
+        for (const auto& obj : objects) {
+            obj->GetComponents().FixedUpdate();
+        }
+    }
+
+    void GameWorld::LateUpdate() {
+        for (const auto& obj : objects) {
+            obj->GetComponents().LateUpdate();
+        }
+    }
+
     void GameWorld::AddObject(GameObject* obj) {
         obj->Internal_AssignWorld(this);
         objects.push_back(std::unique_ptr<GameObject>(obj));

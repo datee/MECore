@@ -32,27 +32,27 @@ namespace me::scene {
         eulerAngles = math::Vector3(0, 0, 0);
     }
 
-    inline void GameTransform::SetGlobalPosition(const math::Vector3& pos) {
+    void GameTransform::SetGlobalPosition(const math::Vector3& pos) {
         world.position = pos;
         Util_GlobalToLocal(gameObject->GetParent(), local, world);
     }
 
-    inline void GameTransform::SetGlobalRotation(const math::Quaternion& rot) {
+    void GameTransform::SetGlobalRotation(const math::Quaternion& rot) {
         world.rotation = rot;
         Util_GlobalToLocal(gameObject->GetParent(), local, world);
     }
 
-    inline void GameTransform::SetLocalPosition(const math::Vector3& pos) {
+    void GameTransform::SetLocalPosition(const math::Vector3& pos) {
         local.position = pos;
         Util_LocalToGlobal(gameObject->GetParent(), local, world);
     }
 
-    inline void GameTransform::SetLocalRotation(const math::Quaternion& rot) {
+    void GameTransform::SetLocalRotation(const math::Quaternion& rot) {
         local.rotation = rot;
         Util_LocalToGlobal(gameObject->GetParent(), local, world);
     }
 
-    inline void GameTransform::SetLocalScale(const math::Vector3& scale) {
+    void GameTransform::SetLocalScale(const math::Vector3& scale) {
         local.scale = scale;
         Util_LocalToGlobal(gameObject->GetParent(), local, world);
     }
