@@ -9,7 +9,7 @@
 #include "render/RenderGlobals.h"
 
 namespace me::asset {
-    Mesh::Mesh() {
+    Mesh::Mesh() : AssetBase(u"me.asset.MeshAsset") {
         gpuVertexBuffer = nullptr;
         gpuIndexBuffer = nullptr;
     }

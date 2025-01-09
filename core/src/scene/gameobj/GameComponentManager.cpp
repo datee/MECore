@@ -11,6 +11,10 @@ namespace me::scene {
 
     }
 
+    void GameComponentManager::StartCheck() const {
+        object->CallMethod(u"ME_StartCheck", {});
+    }
+
     void GameComponentManager::Update() const {
         object->CallMethod(u"ME_Update", {});
     }
@@ -18,8 +22,13 @@ namespace me::scene {
     void GameComponentManager::FixedUpdate() const {
         object->CallMethod(u"ME_FixedUpdate", {});
     }
+
     void GameComponentManager::LateUpdate() const {
         object->CallMethod(u"ME_LateUpdate", {});
+    }
+
+    void GameComponentManager::OnPreRender() const {
+        object->CallMethod(u"ME_PreRender", {});
     }
 
     void GameComponentManager::CreateComponent(haxe::HaxeType* type) const {

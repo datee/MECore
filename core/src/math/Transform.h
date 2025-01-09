@@ -21,9 +21,9 @@ namespace me::math {
 
         static Transform identity;
 
-        [[nodiscard]] inline Vector3 Up() const { return rotation * mathfu::kAxisY3f; }
-        [[nodiscard]] inline Vector3 Right() const { return rotation * mathfu::kAxisX3f; }
-        [[nodiscard]] inline Vector3 Forward() const { return rotation * mathfu::kAxisZ3f; }
+        [[nodiscard]] inline Vector3 Right() const { return rotation * Vector3(1, 0, 0); }
+        [[nodiscard]] inline Vector3 Up() const { return rotation * Vector3(0, 1, 0); }
+        [[nodiscard]] inline Vector3 Forward() const { return rotation * Vector3(0, 0, 1); }
 
         // Localizes a point.
         [[nodiscard]] Vector3 EnterPoint(const Vector3& worldPoint) const;
@@ -47,7 +47,7 @@ namespace me::math {
         [[nodiscard]] Matrix4x4 ToSRT(bool rightHanded = false) const;
     };
 
-    inline Transform Transform::identity = Transform(mathfu::kZeros3f, Quaternion::identity, mathfu::kOnes3f);
+    inline Transform Transform::identity = Transform({}, Quaternion::sIdentity(), {1, 1, 1});
 }
 
 #endif //TRANSFORM_H

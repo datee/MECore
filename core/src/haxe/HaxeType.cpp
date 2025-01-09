@@ -14,10 +14,11 @@ namespace me::haxe {
         this->type = type;
     }
 
-    HaxeObject* HaxeType::CreateInstance() {
+    HaxeObject* HaxeType::CreateInstance(const bool preserve) {
         auto obj = hl_alloc_obj(type);
         auto ptr = new HaxeObject(this, type, module, obj);
         instances.push_back(std::unique_ptr<HaxeObject>(ptr));
+        if (preserve) ptr->Preserve();
         return ptr;
     }
 

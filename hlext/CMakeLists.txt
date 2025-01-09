@@ -7,8 +7,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
 
 add_library(me.hdll SHARED)
 target_sources(me.hdll PRIVATE ${SOURCES})
-target_link_libraries(me.hdll ME::Core Jolt libhl HLVM spdlog::spdlog)
-mathfu_configure_flags(me.hdll)
+target_link_libraries(me.hdll ME::Core SDL3::SDL3 Jolt libhl HLVM spdlog::spdlog)
 
 set_target_properties(me.hdll PROPERTIES PREFIX "" OUTPUT_NAME MECore SUFFIX .hdll)
 

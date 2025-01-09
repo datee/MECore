@@ -28,7 +28,9 @@ namespace me::haxe {
         inline HaxeSystem* GetSystem() const { return system; }
         inline hl_type* GetType() const { return type; }
 
-        HaxeObject* CreateInstance();
+        inline void SetPtr(const FieldName& name, HaxeObject* value) const { hl_dyn_setp(*reinterpret_cast<vdynamic**>(type->obj->global_value), hl_hash_utf8(name.c_str()), type, value->GetDynamic()); }
+
+        HaxeObject* CreateInstance(const bool preserve = true);
         vdynamic* CallStaticMethod(const FuncName& name, FuncArgs& args) const;
     };
 }

@@ -37,6 +37,9 @@ namespace me::haxe {
 
         vdynamic* CallMethod(const FuncName& name, FuncArgs args) const;
         vdynamic* CallVirtualMethod(const FuncName& name, FuncArgs args) const;
+
+        void Preserve() const;
+        void StopPreserving() const;
     };
 
     typedef std::shared_ptr<HaxeObject> HaxeObjectPtr;

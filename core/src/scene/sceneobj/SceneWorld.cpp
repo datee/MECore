@@ -7,7 +7,8 @@
 #include <utility>
 
 namespace me::scene {
-    SceneWorld::SceneWorld() {
+    SceneWorld::SceneWorld(Scene* scene) : HaxeEngineObject(u"me.scene.SceneWorld") {
+        this->scene = scene;
         AddObject(&camera);
     }
 

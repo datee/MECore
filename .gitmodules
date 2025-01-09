@@ -7,9 +7,6 @@
 [submodule "vendor/rapidjson"]
 	path = core/vendor/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
-[submodule "vendor/mathfu"]
-	path = core/vendor/mathfu
-	url = https://github.com/google/mathfu.git
 [submodule "vendor/vfspp"]
 	path = core/vendor/vfspp
 	url = git@github.com:dotryen/vfspp.git

@@ -8,7 +8,7 @@
 #include <vector>
 #include <SDL3/SDL_gpu.h>
 
-#include "../math/Types.h"
+#include "math/Types.h"
 #include "AssetBase.h"
 
 namespace me::asset {

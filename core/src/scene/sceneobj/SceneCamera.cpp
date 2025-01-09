@@ -8,7 +8,7 @@
 #include "render/Window.h"
 
 namespace me::scene {
-    SceneCamera::SceneCamera() {
+    SceneCamera::SceneCamera() : SceneObject(u"me.scene.SceneCamera") {
         zNear = 0.01f;
         zFar = 1000.0f;
         fieldOfView = 60.0f;
@@ -18,6 +18,6 @@ namespace me::scene {
     }
 
     void SceneCamera::RegenerateMatrix() {
-        projection = math::Matrix4x4::Perspective(fieldOfView * mathfu::kDegreesToRadians, render::mainWindow->GetAspect(), zNear, zFar, -1);
+        projection = math::Matrix4x4::sPerspective(fieldOfView * math::DEG_TO_RAD, render::mainWindow->GetAspect(), zNear, zFar);
     }
 }

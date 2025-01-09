@@ -13,17 +13,17 @@ namespace me::scene {
     class SceneWorld;
 
     // An object used for rendering.
-    class SceneObject {
+    class SceneObject : public haxe::HaxeEngineObject {
         private:
         SceneWorld* world;
+
+        protected:
         bool enabled;
         SceneTransform transform;
         std::string name;
 
         public:
-        SceneObject();
-        explicit SceneObject(const std::string name);
-        virtual ~SceneObject();
+        explicit SceneObject(const haxe::TypeName& type);
 
         [[nodiscard]] inline bool IsEnabled() const { return enabled; }
         inline void SetEnabled(const bool state) { enabled = state; }

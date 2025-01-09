@@ -6,26 +6,38 @@
 #define TYPES_H
 
 #include <Jolt/Jolt.h>
-#include <Jolt/Math/Vec3.h>
-
-#include "mathfu/constants.h"
-#include "mathfu/quaternion.h"
-#include "mathfu/hlsl_mappings.h"
 
 namespace me::math {
-    using IntVector2 = mathfu::int2;
-    using IntVector3 = mathfu::int3;
-    using IntVector4 = mathfu::int4;
+    constexpr float DEG_TO_RAD = JPH::JPH_PI / 180.0f;
+    constexpr float RAD_TO_DEG = 180.0f / JPH::JPH_PI;
 
-    using Vector2 = mathfu::float2;
-    using Vector3 = mathfu::float3;
-    using PackedVector3 = mathfu::VectorPacked<float, 3>;
-    using Vector4 = mathfu::float4;
-    using PackedVector4 = mathfu::VectorPacked<float, 4>;
+    // using IntVector2 = mathfu::int2;
+    // using IntVector3 = mathfu::int3;
+    // using IntVector4 = mathfu::int4;
 
-    using Color = mathfu::float4;
-    using Quaternion = mathfu::Quaternion<float>;
-    using Matrix4x4 = mathfu::float4x4;
+    struct IntVector2 {
+        int x;
+        int y;
+    };
+
+    struct Vector2 {
+        union {
+            struct {
+                float x;
+                float y;
+            };
+            float data[4];
+            JPH::Vec4 vec4;
+        };
+    };
+    using Vector3 = JPH::Vec3;
+    using PackedVector3 = JPH::Float3;
+    using Vector4 = JPH::Vec4;
+    using PackedVector4 = JPH::Float4;
+
+    using Color = Vector4;
+    using Quaternion = JPH::Quat;
+    using Matrix4x4 = JPH::Mat44;
     using PackedMatrix4x4 = PackedVector4[4];
 }
 

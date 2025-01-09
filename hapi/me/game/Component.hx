@@ -11,22 +11,32 @@ using me.IValid.IValidExt;
     A scripted component on a game object.
 **/
 
+@:allow(me.game)
 abstract class Component implements IValid {
     public var Enabled(default, default): Bool;
-
     public var GameObject(default, null): GameObject;
-    public var Transform(default, null): GameTransform;
-    public var Components(default, null): ComponentManager;
 
+    public var Transform(get, never): GameTransform;
+    public var Components(get, never): ComponentManager;
+    public var Scene(get, never): Scene;
+
+    @:inheritDoc
     public var IsValid(get, never): Bool;
-
-    // Hide constructor
-    private final function new() {
-
-    }
 
     final inline function get_IsValid(): Bool {
         return GameObject.IsValidSafe();
+    }
+
+    final inline function get_Transform(): GameTransform {
+        return GameObject.Transform;
+    }
+
+    final inline function get_Components(): ComponentManager {
+        return GameObject.Components;
+    }
+
+    final inline function get_Scene(): Scene {
+        return GameObject.Scene;
     }
 
     // ENGINE CALLBACKS
@@ -43,6 +53,18 @@ abstract class Component implements IValid {
     **/
     function OnStart(): Void {
 
+    }
+
+    function OnEnable(): Void {
+
+    }
+
+    function OnDisable(): Void {
+        
+    }
+
+    function OnDestroy(): Void {
+        
     }
 
     /**
@@ -66,11 +88,13 @@ abstract class Component implements IValid {
 
     }
 
+    function OnPreRender(): Void {
+        
+    }
+
     // INTERNAL FUNCTIONS
-    public final function ME_Initialize(manager: ComponentManager): Void {
-        Components = manager;
-        GameObject = manager.GameObject;
-        Transform = manager.GameObject.Transform;
+    public final function ME_Initialize(obj: GameObject): Void {
+        GameObject = obj;
         Enabled = true;
     }
 }

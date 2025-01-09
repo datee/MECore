@@ -6,11 +6,11 @@
 
 namespace me::math {
     Vector3 Transform::EnterPoint(const Vector3& worldPoint) const {
-        return (rotation.Inverse() * (worldPoint - position)) / scale;
+        return (rotation.Inversed() * (worldPoint - position)) / scale;
     }
 
     Vector3 Transform::EnterDirection(const Vector3& worldDir) const {
-        return (rotation.Inverse() * worldDir) / scale;
+        return (rotation.Inversed() * worldDir) / scale;
     }
 
     Vector3 Transform::EnterVector(const Vector3& worldVector) const {
@@ -18,7 +18,7 @@ namespace me::math {
     }
 
     Quaternion Transform::EnterQuaternion(const Quaternion& worldRot) const {
-        return rotation.Inverse() * worldRot;
+        return rotation.Inversed() * worldRot;
     }
 
     Transform Transform::Enter(const Transform& world) const {
@@ -48,12 +48,12 @@ namespace me::math {
     Matrix4x4 Transform::ToTRS(const bool rightHanded) const {
         auto posPrime = position;
         posPrime *= (rightHanded ? -1.f : 1.f);
-        return Matrix4x4::Transform(posPrime, rotation.ToMatrix(), scale);
+        return Matrix4x4::sRotationTranslation(rotation, posPrime).PreScaled(scale);
     }
 
     Matrix4x4 Transform::ToSRT(const bool rightHanded) const {
         auto posPrime = position;
         posPrime *= (rightHanded ? -1.f : 1.f);
-        return Matrix4x4::FromScaleVector(scale) * Matrix4x4::FromRotationMatrix(rotation.ToMatrix()) * Matrix4x4::FromTranslationVector(position);
+        return Matrix4x4::sRotationTranslation(rotation, posPrime).PostScaled(scale);
     }
 }

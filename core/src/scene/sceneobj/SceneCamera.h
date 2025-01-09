@@ -5,7 +5,7 @@
 #ifndef SCENECAMERA_H
 #define SCENECAMERA_H
 
-#include "../../math/Types.h"
+#include "math/Types.h"
 #include "SceneObject.h"
 
 namespace me::scene {

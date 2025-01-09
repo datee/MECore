@@ -27,6 +27,12 @@ namespace me::scene {
         }
     }
 
+    void SceneSystem::PreRender() const {
+        for (const auto& pair : scenes) {
+            pair.second->PreRender();
+        }
+    }
+
     uint32_t SceneSystem::GetSceneCount() const {
         return scenes.size();
     }

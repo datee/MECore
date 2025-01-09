@@ -8,8 +8,8 @@
 #include "HaxeGlobals.h"
 
 namespace me::haxe {
-    HaxeEngineObject::HaxeEngineObject(HaxeType* type) {
-        object = type->CreateInstance();
+    HaxeEngineObject::HaxeEngineObject(HaxeType* type, const bool preserve) {
+        object = type->CreateInstance(preserve);
 
         // initialize object
         vdynamic ptr;
@@ -18,7 +18,7 @@ namespace me::haxe {
         object->CallVirtualMethod(u"ME_Initialize", { &ptr });
     }
 
-    HaxeEngineObject::HaxeEngineObject(const TypeName& typeName) : HaxeEngineObject(mainSystem->GetType(typeName)) {
+    HaxeEngineObject::HaxeEngineObject(const TypeName& typeName, const bool preserve) : HaxeEngineObject(mainSystem->GetType(typeName), preserve) {
 
     }
 

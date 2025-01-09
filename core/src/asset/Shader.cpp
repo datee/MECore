@@ -29,7 +29,7 @@ namespace me::asset {
         return nullptr;
     }
 
-    Shader::Shader(bool precompiled, ShaderType type, char* code, size_t codeLength) {
+    Shader::Shader(bool precompiled, ShaderType type, char* code, size_t codeLength) : AssetBase(u"me.asset.ShaderAsset") {
         this->precompiled = precompiled;
         this->type = type;
         this->code = code;

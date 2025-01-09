@@ -14,7 +14,7 @@ HL_PRIM me::math::Transform* HL_NAME(scene_sceneobj_transform_get_raw)(me::scene
 }
 
 HL_PRIM void HL_NAME(scene_sceneobj_transform_set_raw)(me::scene::SceneTransform* ptr, const me::math::Transform* value) {
-    auto transform = ptr->Raw();
+    auto& transform = ptr->Raw();
     transform.position = value->position;
     transform.rotation = value->rotation;
     transform.scale = value->scale;
@@ -28,7 +28,7 @@ HL_PRIM void HL_NAME(scene_sceneobj_transform_set_pos)(me::scene::SceneTransform
     ptr->SetPosition(*value);
 }
 
-DEFINE_PRIM(_STRUCT, scene_sceneobj_transform_get_raw, _PTR);
-DEFINE_PRIM(_VOID, scene_sceneobj_transform_set_raw, _PTR _STRUCT);
-DEFINE_PRIM(_STRUCT, scene_sceneobj_transform_get_pos, _PTR);
-DEFINE_PRIM(_VOID, scene_sceneobj_transform_set_pos, _PTR _STRUCT);
+DEFINE_PRIM(_TRANSFORM, scene_sceneobj_transform_get_raw, _PTR);
+DEFINE_PRIM(_VOID, scene_sceneobj_transform_set_raw, _PTR _TRANSFORM);
+DEFINE_PRIM(_VECTOR3, scene_sceneobj_transform_get_pos, _PTR);
+DEFINE_PRIM(_VOID, scene_sceneobj_transform_set_pos, _PTR _VECTOR3);

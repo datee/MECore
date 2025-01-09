@@ -23,6 +23,7 @@ namespace me::scene {
         void AddScene(const ScenePtr scene);
         void RemoveScene(ScenePtr scene);
         void Update() const;
+        void PreRender() const;
 
         [[nodiscard]] uint32_t GetSceneCount() const;
         [[nodiscard]] ScenePtr GetScene(uint32_t id) const;

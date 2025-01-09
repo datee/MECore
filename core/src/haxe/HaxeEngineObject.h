@@ -11,8 +11,8 @@ namespace me::haxe {
         protected:
         HaxeObject* object;
 
-        explicit HaxeEngineObject(HaxeType* type);
-        explicit HaxeEngineObject(const TypeName& typeName);
+        explicit HaxeEngineObject(HaxeType* type, const bool preserve);
+        explicit HaxeEngineObject(const TypeName& typeName, const bool preserve = true);
         virtual ~HaxeEngineObject();
 
         public:

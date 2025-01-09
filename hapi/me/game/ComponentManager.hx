@@ -9,21 +9,31 @@ final class ComponentManager extends GameObjectModule {
     var list: Array<Component>;
     var firstUpdates: Map<Component, Bool>;
 
-    @:generic
-    function Create<T: Component>(): T {
-        return null;
+    /**
+        Creates a new component of `T`
+    **/
+    public function Create<T: Component>(t: Class<T>): T {
+        var hlClass = cast(t, hl.BaseType.Class);
+        var comp = hlClass.__type__.allocObject();
+        SetupComponent(cast comp);
+        return cast comp;
+    }
+
+    // ENGINE CALLS
+    function ME_StartCheck(): Void {
+        for (comp in list) {
+            if (!comp.Enabled) continue;
+            if (!firstUpdates[comp]) {
+                comp.OnStart();
+                firstUpdates[comp] = true;
+            }
+        }
     }
 
     function ME_Update(): Void {
         for (comp in list) {
             if (!comp.Enabled) continue;
 
-            if (!firstUpdates[comp]) {
-                @:privateAccess
-                comp.OnStart();
-                firstUpdates[comp] = true;
-            }
-            @:privateAccess
             comp.OnUpdate();
         }
     }
@@ -32,7 +42,6 @@ final class ComponentManager extends GameObjectModule {
         for (comp in list) {
             if (!comp.Enabled) continue;
 
-            @:privateAccess
             comp.OnFixedUpdate();
         }
     }
@@ -41,8 +50,15 @@ final class ComponentManager extends GameObjectModule {
         for (comp in list) {
             if (!comp.Enabled) continue;
 
-            @:privateAccess
             comp.OnLateUpdate();
+        }
+    }
+
+    function ME_PreRender(): Void {
+        for (comp in list) {
+            if (!comp.Enabled) continue;
+
+            comp.OnPreRender();
         }
     }
 
@@ -54,14 +70,7 @@ final class ComponentManager extends GameObjectModule {
             return;
         }
         
-        @:privateAccess
-        object.ME_Initialize(this);
-
-        list.push(object);
-        firstUpdates[object] = false;
-
-        @:privateAccess
-        object.OnLoaded();
+        SetupComponent(object);
 
         Log.Info('Created ${type.getTypeName()}');
     }
@@ -76,5 +85,15 @@ final class ComponentManager extends GameObjectModule {
         list = null;
         firstUpdates = null;
         super.ME_Destroy();
+    }
+
+    // UTIL
+    function SetupComponent(comp: Component): Void {
+        comp.ME_Initialize(GameObject);
+
+        list.push(comp);
+        firstUpdates[comp] = false;
+
+        comp.OnLoaded();
     }
 }

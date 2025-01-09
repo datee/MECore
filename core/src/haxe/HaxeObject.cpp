@@ -13,11 +13,10 @@ namespace me::haxe {
         this->vmType = vmType;
         this->module = module;
         object = obj;
-        hl_add_root(obj);
     }
 
     HaxeObject::~HaxeObject() {
-        hl_remove_root(object);
+        StopPreserving();
     }
 
     vdynamic* HaxeObject::CallMethod(const FuncName& name, FuncArgs args) const {
@@ -58,5 +57,13 @@ namespace me::haxe {
             Util_PrintException(result);
         }
         return result;
+    }
+
+    void HaxeObject::Preserve() const {
+        hl_add_root(object);
+    }
+
+    void HaxeObject::StopPreserving() const {
+        hl_remove_root(object);
     }
 }

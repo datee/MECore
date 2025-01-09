@@ -18,7 +18,6 @@ if(MANIFOLD_VENDORED)
     add_subdirectory(vendor/SDL_shadercross EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/rapidjson EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/vfspp EXCLUDE_FROM_ALL)
-    add_subdirectory(vendor/mathfu EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/spdlog EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/hashlink EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
@@ -46,7 +45,6 @@ target_include_directories(MANIFOLDEngine
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
-mathfu_configure_flags(MANIFOLDEngine) # ADDS MATHFU INCLUDES
 
 target_link_libraries(MANIFOLDEngine PRIVATE SDL3::SDL3 SDL3_shadercross-shared Threads::Threads Jolt vfspp libhl HLVM spdlog::spdlog)
 

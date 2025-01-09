@@ -10,20 +10,26 @@
 #include "GameObject.h"
 
 namespace me::scene {
+    class Scene;
+
     using GameWorldList = std::vector<std::unique_ptr<GameObject>>;
 
     class GameWorld final : public haxe::HaxeEngineObject {
         private:
+        Scene* scene;
         GameWorldList objects; // TODO: figure out game object ids and change this to a map
 
         public:
-        GameWorld();
+        explicit GameWorld(Scene* scene);
 
+        [[nodiscard]] inline Scene* GetScene() const { return scene; }
         [[nodiscard]] std::vector<GameObject*> GetObjects();
 
+        void StartCheck();
         void Update();
         void FixedUpdate();
         void LateUpdate();
+        void OnPreRender();
 
         void AddObject(GameObject* obj);
     };

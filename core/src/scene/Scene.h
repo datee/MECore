@@ -31,6 +31,7 @@ namespace me::scene {
         void Internal_StopManage();
 
         void Update();
+        void PreRender();
     };
 
     typedef std::shared_ptr<Scene> ScenePtr;

@@ -4,16 +4,17 @@
 
 #ifndef SCENETRANSFORM_H
 #define SCENETRANSFORM_H
-#include "../../math/Transform.h"
+#include "haxe/HaxeEngineObject.h"
+#include "math/Transform.h"
 
 namespace me::scene {
-    class SceneTransform {
+    class SceneTransform : public haxe::HaxeEngineObject {
         private:
         math::Transform transform;
         math::Vector3 eulerAngles;
 
         public:
-        SceneTransform() {
+        SceneTransform() : HaxeEngineObject(u"me.scene.SceneTransform") {
             transform = math::Transform::identity;
             eulerAngles = math::Vector3(0, 0, 0);
         }
@@ -27,10 +28,10 @@ namespace me::scene {
         [[nodiscard]] inline math::Vector3 GetForward() const { return transform.Forward(); }
         [[nodiscard]] inline math::Transform& Raw() { return transform; }
 
-        inline void SetPosition(const math::Vector3 pos) { transform.position = pos; }
-        inline void SetRotation(const math::Quaternion rot) { transform.rotation = rot; eulerAngles = rot.ToEulerAngles(); }
-        inline void SetAngles(const math::Vector3 angles) { eulerAngles = angles; transform.rotation = math::Quaternion::FromEulerAngles(angles * mathfu::kDegreesToRadians); }
-        inline void SetScale(const math::Vector3 scale) { transform.scale = scale; }
+        inline void SetPosition(const math::Vector3& pos) { transform.position = pos; }
+        inline void SetRotation(const math::Quaternion& rot) { transform.rotation = rot; eulerAngles = rot.GetEulerAngles() * math::RAD_TO_DEG; }
+        inline void SetAngles(const math::Vector3& angles) { eulerAngles = angles; transform.rotation = math::Quaternion::sEulerAngles(angles * math::DEG_TO_RAD); }
+        inline void SetScale(const math::Vector3& scale) { transform.scale = scale; }
     };
 }
 

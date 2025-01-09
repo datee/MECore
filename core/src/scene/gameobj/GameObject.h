@@ -29,7 +29,7 @@ namespace me::scene {
         [[nodiscard]] inline GameComponentManager& GetComponents() { return components; }
         [[nodiscard]] inline std::string GetName() const { return name; }
 
-        inline void SetParent(GameObject* parent) { this->parent = parent; }
+        void SetParent(GameObject* parent);
 
         void Internal_AssignWorld(GameWorld* world);
     };

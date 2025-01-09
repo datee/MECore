@@ -5,8 +5,8 @@
 #include "GameWorld.h"
 
 namespace me::scene {
-    GameWorld::GameWorld() : HaxeEngineObject(u"me.game.GameWorld") {
-
+    GameWorld::GameWorld(Scene* scene) : HaxeEngineObject(u"me.game.GameWorld") {
+        this->scene = scene;
     }
 
     std::vector<GameObject*> GameWorld::GetObjects() {
@@ -15,6 +15,13 @@ namespace me::scene {
         std::ranges::transform(std::as_const(objects), std::back_inserter(raw), [](auto& ptr) { return ptr.get(); });
         return raw;
     }
+
+    void GameWorld::StartCheck() {
+        for (const auto& obj : objects) {
+            obj->GetComponents().StartCheck();
+        }
+    }
+
 
     void GameWorld::Update() {
         for (const auto& obj : objects) {
@@ -31,6 +38,12 @@ namespace me::scene {
     void GameWorld::LateUpdate() {
         for (const auto& obj : objects) {
             obj->GetComponents().LateUpdate();
+        }
+    }
+
+    void GameWorld::OnPreRender() {
+        for (const auto& obj : objects) {
+            obj->GetComponents().OnPreRender();
         }
     }
 

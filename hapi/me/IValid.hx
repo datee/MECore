@@ -1,6 +1,9 @@
 package me;
 
 interface IValid {
+    /**
+        Is this object valid?
+    **/
     public var IsValid(get, never): Bool;
 }
 

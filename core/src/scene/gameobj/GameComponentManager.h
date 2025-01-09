@@ -11,9 +11,11 @@ namespace me::scene {
         public:
         GameComponentManager(GameObject* obj);
 
+        void StartCheck() const;
         void Update() const;
         void LateUpdate() const;
         void FixedUpdate() const;
+        void OnPreRender() const;
 
         void CreateComponent(haxe::HaxeType* type) const;
     };

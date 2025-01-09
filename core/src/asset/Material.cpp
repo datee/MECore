@@ -11,7 +11,7 @@
 #include "render/Window.h"
 
 namespace me::asset {
-    Material::Material() {
+    Material::Material() : AssetBase(u"me.asset.MaterialAsset") {
         pipeline = nullptr;
     }
 
