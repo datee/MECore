@@ -8,11 +8,12 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/PhysicsSystem.h>
 
+#include "haxe/HaxeEngineObject.h"
 #include "physics/Layers.h"
 #include "physics/Filters.h"
 
 namespace me::scene {
-    class PhysicsWorld {
+    class PhysicsWorld : public haxe::HaxeEngineObject {
         private:
         physics::BPLayerInterface bpLayerInterface;
         physics::ObjectPairFilter objPairFilter;

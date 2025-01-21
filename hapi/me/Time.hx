@@ -1,7 +1,5 @@
 package me;
 
-import me.internal.bindings.TimeBindings;
-
 final class Time {
     public static var ElapsedAsDouble(get, never): Float;
     public static var DeltaAsDouble(get, never): Float;
@@ -70,4 +68,16 @@ final class Time {
     static function get_RealDelta(): Single {
         return RealDeltaAsDouble;
     }
+}
+
+@:allow(me.Time)
+@:hlNative("MECore")
+private extern class TimeBindings {
+    private static function time_game_get_elapsed(): Float;
+    private static function time_game_get_delta(): Float;
+    private static function time_game_get_scale(): Float;
+    private static function time_game_set_scale(scale: Float): Void;
+    
+    private static function time_real_get_elapsed(): Float;
+    private static function time_real_get_delta(): Float;
 }

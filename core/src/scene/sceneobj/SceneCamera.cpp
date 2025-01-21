@@ -18,6 +18,14 @@ namespace me::scene {
     }
 
     void SceneCamera::RegenerateMatrix() {
-        projection = math::Matrix4x4::sPerspective(fieldOfView * math::DEG_TO_RAD, render::mainWindow->GetAspect(), zNear, zFar);
+        float height = 1.0f / tanf((fieldOfView * math::DEG_TO_RAD) * 0.5f);
+        float width = height / render::mainWindow->GetAspect();
+        float range = zFar / (zFar - zNear);
+
+        projection = math::Matrix4x4(
+            math::Vector4(width, 0.0f, 0.0f, 0.0f),
+            math::Vector4(0.0f, height, 0.0f, 0.0f),
+            math::Vector4(0.0f, 0.0f, range, 1),
+            math::Vector4(0.0f, 0.0f, -zNear * range, 0.0f));
     }
 }

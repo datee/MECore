@@ -10,6 +10,8 @@ namespace me::scene {
     SceneWorld::SceneWorld(Scene* scene) : HaxeEngineObject(u"me.scene.SceneWorld") {
         this->scene = scene;
         AddObject(&camera);
+
+        object->SetPtr("Camera", camera.GetHaxeObject());
     }
 
     void SceneWorld::AddObject(SceneObject* obj) {

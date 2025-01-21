@@ -6,9 +6,8 @@ import me.internal.game.GameObjectModule;
 import me.Log;
 
 final class ComponentManager extends GameObjectModule {
-    var list: Array<Component>;
-    var firstUpdates: Map<Component, Bool>;
-
+    var components: Array<Component>;
+    var startRan: Array<Bool>;
     /**
         Creates a new component of `T`
     **/
@@ -21,17 +20,19 @@ final class ComponentManager extends GameObjectModule {
 
     // ENGINE CALLS
     function ME_StartCheck(): Void {
-        for (comp in list) {
+        for (i in new IntIterator(0, components.length)) {
+            var comp = components[i];
+
             if (!comp.Enabled) continue;
-            if (!firstUpdates[comp]) {
-                comp.OnStart();
-                firstUpdates[comp] = true;
-            }
+            if (startRan[i]) continue;
+
+            comp.OnStart();
+            startRan[i] = true;
         }
     }
 
     function ME_Update(): Void {
-        for (comp in list) {
+        for (comp in components) {
             if (!comp.Enabled) continue;
 
             comp.OnUpdate();
@@ -39,7 +40,7 @@ final class ComponentManager extends GameObjectModule {
     }
 
     function ME_FixedUpdate(): Void {
-        for (comp in list) {
+        for (comp in components) {
             if (!comp.Enabled) continue;
 
             comp.OnFixedUpdate();
@@ -47,7 +48,7 @@ final class ComponentManager extends GameObjectModule {
     }
 
     function ME_LateUpdate(): Void {
-        for (comp in list) {
+        for (comp in components) {
             if (!comp.Enabled) continue;
 
             comp.OnLateUpdate();
@@ -55,7 +56,7 @@ final class ComponentManager extends GameObjectModule {
     }
 
     function ME_PreRender(): Void {
-        for (comp in list) {
+        for (comp in components) {
             if (!comp.Enabled) continue;
 
             comp.OnPreRender();
@@ -63,36 +64,37 @@ final class ComponentManager extends GameObjectModule {
     }
 
     function ME_CreateComponent(type: hl.Type): Void {
-        Log.Info('Recieved type: ${type.getTypeName()}');
+        Log.Info('ME_CreateComponent: Recieved ${type.getTypeName()}');
         var object = cast(type.allocObject(), Component);
         if (object == null) {
-            Log.Error('Type ${type.getTypeName()} failed to cast.');
+            Log.Error('ME_CreateComponent: Type ${type.getTypeName()} failed to cast.');
             return;
         }
         
         SetupComponent(object);
 
-        Log.Info('Created ${type.getTypeName()}');
+        Log.Info('ME_CreateComponent: Created ${type.getTypeName()}');
     }
 
     override function ME_Initialize(ptr: Pointer) {
         super.ME_Initialize(ptr);
-        list = new Array<Component>();
-        firstUpdates = new Map<Component, Bool>();
+        components = new Array<Component>();
+        startRan = new Array<Bool>();
     }
 
     override function ME_Destroy() {
-        list = null;
-        firstUpdates = null;
+        components = null;
+        startRan = null;
         super.ME_Destroy();
     }
 
     // UTIL
     function SetupComponent(comp: Component): Void {
-        comp.ME_Initialize(GameObject);
+        comp.Enabled = true;
+        comp.GameObject = GameObject;
 
-        list.push(comp);
-        firstUpdates[comp] = false;
+        components.push(comp);
+        startRan.push(false);
 
         comp.OnLoaded();
     }

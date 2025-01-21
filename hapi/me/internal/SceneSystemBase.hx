@@ -1,6 +1,5 @@
 package me.internal;
 
-import me.internal.bindings.SceneSystemBindings;
 import me.internal.Pointer;
 import me.Scene;
 import me.internal.EngineObject;
@@ -26,4 +25,12 @@ abstract class SceneSystemBase extends EngineObject {
         cache[id] = result;
         return result;
     }
+}
+
+@:allow(me.internal.SceneSystemBase)
+@:hlNative("MECore")
+private extern class SceneSystemBindings {
+    // static function scene_system_get_main(): SceneSystemBase;
+    private static function scene_system_get_scene_count(ptr: Pointer): UInt;
+    private static function scene_system_get_scene_with_id(ptr: Pointer, id: UInt): Dynamic;
 }

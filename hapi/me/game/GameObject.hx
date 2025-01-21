@@ -4,9 +4,9 @@ import me.internal.EngineObject;
 import me.game.GameTransform;
 
 final class GameObject extends EngineObject {
-    public var Scene(default, null): Scene;
+    public var Scene(default, never): Scene;
 
-    public var Parent(default, null): GameObject;
-    public var Transform(default, null): GameTransform;
-    public var Components(default, null): ComponentManager;
+    public var Parent(default, never): GameObject;
+    public var Transform(default, never): GameTransform;
+    public var Components(default, never): ComponentManager;
 }

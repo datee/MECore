@@ -43,8 +43,7 @@ namespace me::math {
         [[nodiscard]] Quaternion ExitQuaternion(const Quaternion& localRot) const;
         [[nodiscard]] Transform Exit(const Transform& local) const;
 
-        [[nodiscard]] Matrix4x4 ToTRS(bool rightHanded = false) const;
-        [[nodiscard]] Matrix4x4 ToSRT(bool rightHanded = false) const;
+        [[nodiscard]] Matrix4x4 ToTRS() const;
     };
 
     inline Transform Transform::identity = Transform({}, Quaternion::sIdentity(), {1, 1, 1});

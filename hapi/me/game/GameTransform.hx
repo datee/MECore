@@ -1,9 +1,12 @@
 package me.game;
 
 import me.math.Transform;
-import me.internal.bindings.GameTransformBindings;
 import me.internal.game.GameObjectModule;
 import me.math.Vector3;
+import me.internal.math.BaseVec4;
+import me.internal.Pointer;
+import me.internal.math.BaseTransform;
+
 
 final class GameTransform extends GameObjectModule {
     public var World(get, set): Transform;
@@ -26,4 +29,13 @@ final class GameTransform extends GameObjectModule {
         GameTransformBindings.scene_gameobj_transform_set_pos(pointer, value);
         return value;
     }
+}
+
+@:allow(me.game.GameTransform)
+@:hlNative("MECore")
+private extern class GameTransformBindings {
+    private static function scene_gameobj_transform_get_raw(ptr: Pointer): BaseTransform;
+    private static function scene_gameobj_transform_set_raw(ptr: Pointer, v: BaseTransform): Void;
+    private static function scene_gameobj_transform_get_pos(ptr: Pointer): BaseVec4;
+    private static function scene_gameobj_transform_set_pos(ptr: Pointer, v: BaseVec4): Void;
 }

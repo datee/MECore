@@ -1,7 +1,5 @@
 package me;
 
-import me.internal.bindings.LogBindings;
-
 /**
     The engine's logger.
 **/ 
@@ -17,4 +15,12 @@ final class Log {
     public static function Error(msg: String): Void {
         LogBindings.log_error(msg);
     }
+}
+
+@:allow(me.Log)
+@:hlNative("MECore")
+private extern class LogBindings {
+    private static function log_info(msg: String): Void;
+    private static function log_warn(msg: String): Void;
+    private static function log_error(msg: String): Void;
 }

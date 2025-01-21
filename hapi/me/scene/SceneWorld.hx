@@ -4,6 +4,8 @@ import me.internal.EngineObject;
 import me.internal.Pointer;
 
 class SceneWorld extends EngineObject {
+    public var Camera(default, never): SceneCamera;
+
     public function AddObject(obj: SceneObject): Void {
         SceneWorldBindings.scene_sceneobj_world_assign(pointer, obj.pointer);
     }

@@ -1,5 +1,6 @@
 package me.game;
 
+import me.internal.UUID;
 import me.IValid;
 import me.game.ComponentManager;
 import me.game.GameTransform;
@@ -14,7 +15,9 @@ using me.IValid.IValidExt;
 @:allow(me.game)
 abstract class Component implements IValid {
     public var Enabled(default, default): Bool;
+
     public var GameObject(default, null): GameObject;
+    public var UUID(default, null): UUID;
 
     public var Transform(get, never): GameTransform;
     public var Components(get, never): ComponentManager;
@@ -92,9 +95,7 @@ abstract class Component implements IValid {
         
     }
 
-    // INTERNAL FUNCTIONS
-    public final function ME_Initialize(obj: GameObject): Void {
-        GameObject = obj;
-        Enabled = true;
+    public final function hashCode(): Int {
+        return 0;
     }
 }

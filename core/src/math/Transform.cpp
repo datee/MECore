@@ -45,15 +45,7 @@ namespace me::math {
         return { ExitPoint(local.position), ExitQuaternion(local.rotation), ExitVector(local.scale) };
     }
 
-    Matrix4x4 Transform::ToTRS(const bool rightHanded) const {
-        auto posPrime = position;
-        posPrime *= (rightHanded ? -1.f : 1.f);
-        return Matrix4x4::sRotationTranslation(rotation, posPrime).PreScaled(scale);
-    }
-
-    Matrix4x4 Transform::ToSRT(const bool rightHanded) const {
-        auto posPrime = position;
-        posPrime *= (rightHanded ? -1.f : 1.f);
-        return Matrix4x4::sRotationTranslation(rotation, posPrime).PostScaled(scale);
+    Matrix4x4 Transform::ToTRS() const {
+        return Matrix4x4::sRotationTranslation(rotation, position).PreScaled(scale);
     }
 }

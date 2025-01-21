@@ -8,7 +8,7 @@
 #include "time/TimeGlobal.h"
 
 namespace me::scene {
-    PhysicsWorld::PhysicsWorld(int stepsPerSecond) {
+    PhysicsWorld::PhysicsWorld(int stepsPerSecond) : HaxeEngineObject(u"me.physics.PhysicsWorld") {
         timeStep = 1.0F / stepsPerSecond;
         accumulator = 0;
         physicsSystem.Init(65536, 0, 65536, 10240, bpLayerInterface, objVBpFilter, objPairFilter);
