@@ -10,14 +10,15 @@ namespace me {
         None = 0,
         Log = 1,
         FS = Log << 1,
-        Haxe = FS << 1,
-        Job = Haxe << 1,
-        SDLRender = Job << 1,
-        Physics = Job << 1,
+        Job = FS << 1,
+        Input = Job << 1,
+        Haxe = Input << 1,
+        SDLRender = Haxe << 1,
+        Physics = SDLRender << 1,
         Scene = Physics << 1,
         Time = Scene << 1,
 
-        All = Log | SDLRender | Physics | FS | Scene | Time | Haxe,
+        All = Log | SDLRender | Physics | FS | Scene | Time | Haxe | Input,
     };
 
     // Initializes specified engine subsystems

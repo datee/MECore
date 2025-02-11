@@ -10,7 +10,7 @@ import me.internal.math.BaseVec4;
 @:notNull
 @:forward(x, y, Set, Copy)
 abstract Vector2(BaseVec4) from BaseVec4 to BaseVec4 {
-    public inline function new(x: Single, y: Single) {
+    public inline function new(x: Single = 0, y: Single = 0) {
         this = new BaseVec4(x, y, 1, 1);
     }
 
@@ -21,6 +21,22 @@ abstract Vector2(BaseVec4) from BaseVec4 to BaseVec4 {
 
     public inline static function One(): Vector2 {
         return new Vector2(1, 1);
+    }
+
+    public inline static function Right(): Vector2 {
+        return new Vector2(1, 0);
+    }
+
+    public inline static function Left(): Vector2 {
+        return new Vector2(-1, 0);
+    }
+
+    public inline static function Up(): Vector2 {
+        return new Vector2(0, 1);
+    }
+
+    public inline static function Down(): Vector2 {
+        return new Vector2(0, -1);
     }
 
     // COMPONENT

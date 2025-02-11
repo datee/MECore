@@ -1,5 +1,6 @@
 package me.game;
 
+import me.math.Quaternion;
 import me.math.Transform;
 import me.internal.game.GameObjectModule;
 import me.math.Vector3;
@@ -11,6 +12,7 @@ import me.internal.math.BaseTransform;
 final class GameTransform extends GameObjectModule {
     public var World(get, set): Transform;
     public var Position(get, set): Vector3;
+    public var Rotation(get, set): Quaternion;
 
     inline function get_World(): Transform {
         return GameTransformBindings.scene_gameobj_transform_get_raw(pointer).Copy();
@@ -29,6 +31,15 @@ final class GameTransform extends GameObjectModule {
         GameTransformBindings.scene_gameobj_transform_set_pos(pointer, value);
         return value;
     }
+
+    inline function get_Rotation(): Quaternion {
+        return GameTransformBindings.scene_gameobj_transform_get_rot(pointer).Copy();
+    }
+
+    inline function set_Rotation(value: Quaternion): Quaternion {
+        GameTransformBindings.scene_gameobj_transform_set_rot(pointer, value);
+        return value;
+    }
 }
 
 @:allow(me.game.GameTransform)
@@ -38,4 +49,6 @@ private extern class GameTransformBindings {
     private static function scene_gameobj_transform_set_raw(ptr: Pointer, v: BaseTransform): Void;
     private static function scene_gameobj_transform_get_pos(ptr: Pointer): BaseVec4;
     private static function scene_gameobj_transform_set_pos(ptr: Pointer, v: BaseVec4): Void;
+    private static function scene_gameobj_transform_get_rot(ptr: Pointer): BaseVec4;
+    private static function scene_gameobj_transform_set_rot(ptr: Pointer, v: BaseVec4): Void;
 }

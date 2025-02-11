@@ -1,5 +1,6 @@
 package me.game;
 
+import haxe.CallStack;
 import me.internal.Pointer;
 import me.game.Component;
 import me.internal.game.GameObjectModule;
@@ -26,7 +27,7 @@ final class ComponentManager extends GameObjectModule {
             if (!comp.Enabled) continue;
             if (startRan[i]) continue;
 
-            comp.OnStart();
+            WrapCall(function() comp.OnStart());
             startRan[i] = true;
         }
     }
@@ -35,7 +36,7 @@ final class ComponentManager extends GameObjectModule {
         for (comp in components) {
             if (!comp.Enabled) continue;
 
-            comp.OnUpdate();
+            WrapCall(function() comp.OnUpdate());
         }
     }
 
@@ -43,7 +44,7 @@ final class ComponentManager extends GameObjectModule {
         for (comp in components) {
             if (!comp.Enabled) continue;
 
-            comp.OnFixedUpdate();
+            WrapCall(function() comp.OnFixedUpdate());
         }
     }
 
@@ -51,7 +52,7 @@ final class ComponentManager extends GameObjectModule {
         for (comp in components) {
             if (!comp.Enabled) continue;
 
-            comp.OnLateUpdate();
+            WrapCall(function() comp.OnLateUpdate());
         }
     }
 
@@ -59,21 +60,21 @@ final class ComponentManager extends GameObjectModule {
         for (comp in components) {
             if (!comp.Enabled) continue;
 
-            comp.OnPreRender();
+            WrapCall(function() comp.OnPreRender());
         }
     }
 
     function ME_CreateComponent(type: hl.Type): Void {
-        Log.Info('ME_CreateComponent: Recieved ${type.getTypeName()}');
+        // Log.Info('ME_CreateComponent: Recieved ${type.getTypeName()}');
         var object = cast(type.allocObject(), Component);
         if (object == null) {
-            Log.Error('ME_CreateComponent: Type ${type.getTypeName()} failed to cast.');
+            // Log.Error('ME_CreateComponent: Type ${type.getTypeName()} failed to cast.');
             return;
         }
         
         SetupComponent(object);
 
-        Log.Info('ME_CreateComponent: Created ${type.getTypeName()}');
+        // Log.Info('ME_CreateComponent: Created ${type.getTypeName()}');
     }
 
     override function ME_Initialize(ptr: Pointer) {
@@ -97,5 +98,16 @@ final class ComponentManager extends GameObjectModule {
         startRan.push(false);
 
         comp.OnLoaded();
+    }
+
+    function WrapCall(call: () -> Void) {
+        call();
+        return;
+        try {
+            call();
+        } catch (ex) {
+            var stack = haxe.CallStack.exceptionStack();
+            Log.Error('Uncaught exception: ${ex.message}\n${haxe.CallStack.toString(stack)}');
+        }
     }
 }

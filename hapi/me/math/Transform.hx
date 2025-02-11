@@ -5,11 +5,14 @@ import me.math.Quaternion;
 import me.internal.math.BaseTransform;
 
 @:forward(Copy)
-@:forward.new
 abstract Transform(BaseTransform) from BaseTransform to BaseTransform {
     public var Position(get, set): Vector3;
     public var Rotation(get, set): Quaternion;
     public var Scale(get, set): Vector3;
+
+    public inline function new(position: Vector3, rotation: Quaternion, scale: Vector3) {
+        this = new BaseTransform(position, rotation, scale);
+    }
 
     public static inline function Identity(): Transform {
         return new Transform(Vector3.Zero(), Quaternion.Identity(), Vector3.One());

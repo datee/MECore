@@ -27,12 +27,24 @@ abstract Vector3(BaseVec4) from BaseVec4 to BaseVec4 {
         return new Vector3(1, 0, 0);
     }
 
+    public inline static function Left(): Vector3 {
+        return new Vector3(-1, 0, 0);
+    }
+
     public inline static function Up(): Vector3 {
         return new Vector3(0, 1, 0);
     }
 
+    public inline static function Down(): Vector3 {
+        return new Vector3(0, -1, 0);
+    }
+
     public inline static function Forward(): Vector3 {
         return new Vector3(0, 0, 1);
+    }
+
+    public inline static function Back(): Vector3 {
+        return new Vector3(0, 0, -1);
     }
 
     // COMPONENT
