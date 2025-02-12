@@ -1,7 +1,8 @@
 # this file exists purely for editing reasons. ignore.
 
 --class-path .
---macro include('me', true)
+
+--macro me.internal.macro.AddMeta.Add()
 
 --dce no
 --hl code.hl

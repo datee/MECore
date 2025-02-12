@@ -4,6 +4,7 @@ package me.internal.math;
     A four-dimensional vector.
 **/
 @:struct
+@:valueType
 class BaseVec4 {
     public var x: Single;
     public var y: Single;
