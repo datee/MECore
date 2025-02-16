@@ -5,7 +5,7 @@ package me.internal.macro;
 import haxe.macro.Compiler;
 import haxe.display.Display.MetadataTarget;
 
-class AddMeta {
+class Metadata {
     public static function Add() {
         Compiler.registerCustomMetadata({
             metadata: ":valueType",
@@ -15,7 +15,13 @@ class AddMeta {
 
         Compiler.registerCustomMetadata({
             metadata: ":ref",
-            doc: "Passes a value type class by reference",
+            doc: "Passes a value type by reference. Does nothing to reference types.",
+            targets: [ MetadataTarget.Expr ]
+        });
+
+        Compiler.registerCustomMetadata({
+            metadata: ":meIgnore",
+            doc: "Metadata that certain ME functions will ignore.",
             targets: [ MetadataTarget.Expr ]
         });
     }

@@ -2,7 +2,7 @@
 
 --class-path .
 
---macro me.internal.macro.AddMeta.Add()
+--macro me.internal.macro.Metadata.Add()
 
 --dce no
 --hl code.hl
