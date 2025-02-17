@@ -9,6 +9,7 @@ import me.internal.math.BaseVec4;
 **/
 @:notNull
 @:forward(x, y, z, Set, Copy)
+@:meIgnore
 abstract Vector3(BaseVec4) from BaseVec4 to BaseVec4 {
     public inline function new(x: Single = 0, y: Single = 0, z: Single = 0) {
         this = new BaseVec4(x, y, z, 1);
@@ -100,9 +101,14 @@ abstract Vector3(BaseVec4) from BaseVec4 to BaseVec4 {
         throw 'Invalid index when writing to Vector3';
     }
 
-    // STRING
+    // CAST
+    @:from
+    public static inline function FromSingle(value: Single): Vector3 {
+        return new Vector3(value, value, value);
+    }
+
     @:to
-    public inline function ToString(): String {
+    public inline function toString(): String {
         return '(${this.x}, ${this.y}, ${this.z})';
     }
 }

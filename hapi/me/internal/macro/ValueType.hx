@@ -15,6 +15,9 @@ import haxe.macro.Expr.ExprDef;
 // Made with help from SomeRanDev and PXshadow.
 // seriously i wouldve stopped using this language if it werent for you guys.
 
+// Add write check in function arg copies
+// if there are no writes ever to a value arg we can skip its copy
+
 class ValueType {
     static final VALUE_META: String = ":valueType";
     static final REF_META: String = ":ref";

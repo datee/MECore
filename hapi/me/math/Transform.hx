@@ -5,6 +5,7 @@ import me.math.Quaternion;
 import me.internal.math.BaseTransform;
 
 @:forward(Copy)
+@:meIgnore // Ignores all value type emulation
 abstract Transform(BaseTransform) from BaseTransform to BaseTransform {
     public var Position(get, set): Vector3;
     public var Rotation(get, set): Quaternion;
@@ -40,7 +41,7 @@ abstract Transform(BaseTransform) from BaseTransform to BaseTransform {
         return this.scale.Copy();
     }
 
-    inline function set_Scale(vec: Vector3): Vector3 {
+    inline function set_Scale(@:ref vec: Vector3): Vector3 {
         this.scale.Set(vec);
         return vec;
     }

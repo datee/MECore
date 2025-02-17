@@ -8,7 +8,7 @@ import me.internal.math.BaseVec4;
 import me.internal.Pointer;
 import me.internal.math.BaseTransform;
 
-
+@:meIgnore
 final class GameTransform extends GameObjectModule {
     public var World(get, set): Transform;
     public var Position(get, set): Vector3;

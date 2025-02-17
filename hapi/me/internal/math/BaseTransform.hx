@@ -9,7 +9,10 @@ import me.internal.math.BaseVec4;
     C-Style Transform.
     Please use me.math.Transform.
 **/
+@:noDoc
 @:struct
+@:valueType
+@:meIgnore
 class BaseTransform {
     @:packed public var position(default, never): BaseVec4;
     @:packed public var rotation(default, never): BaseVec4;

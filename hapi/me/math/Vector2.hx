@@ -9,6 +9,7 @@ import me.internal.math.BaseVec4;
 **/
 @:notNull
 @:forward(x, y, Set, Copy)
+@:meIgnore
 abstract Vector2(BaseVec4) from BaseVec4 to BaseVec4 {
     public inline function new(x: Single = 0, y: Single = 0) {
         this = new BaseVec4(x, y, 1, 1);

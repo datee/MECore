@@ -3,8 +3,10 @@ package me.internal.math;
 /**
     A four-dimensional vector.
 **/
+@:noDoc
 @:struct
 @:valueType
+@:meIgnore
 class BaseVec4 {
     public var x: Single;
     public var y: Single;
