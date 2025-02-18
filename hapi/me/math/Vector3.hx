@@ -48,7 +48,7 @@ abstract Vector3(BaseVec4) from BaseVec4 to BaseVec4 {
         return new Vector3(0, 0, -1);
     }
 
-    // COMPONENT
+    // COMPONENT OPERATORS
     @:commutative
     @:op(A + B)
     public inline function Add(other: Vector3): Vector3 {
@@ -72,7 +72,7 @@ abstract Vector3(BaseVec4) from BaseVec4 to BaseVec4 {
         return new Vector3(this.x / other.x, this.y / other.y, this.z / other.z);
     }
 
-    // SCALE
+    // SCALAR OPERATORS
     @:commutative
     @:op(A * B)
     public inline function MultiplyScale(other: Single): Vector3 {

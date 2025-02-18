@@ -1,5 +1,7 @@
 package me.internal.macro;
 
+import haxe.macro.Expr.Constant;
+import haxe.macro.Expr.Binop;
 #if macro
 
 import haxe.macro.Type;
@@ -70,7 +72,28 @@ class ValueType {
             if (arg.type == null) continue;
             if (MetadataIsRef(arg.meta)) continue;
             if (!IsValueType(arg.type)) continue;
-            argsToCopy.push(arg.name);
+            
+            var shouldCopy = false;
+
+            // Look for write operations
+            switch (func.expr.expr) {
+                case EBlock(exprs): {
+                    for (expr in exprs) {
+                        // Add checks for pure method calls
+                        switch (expr.expr) {
+                            case EBinop(Binop.OpAssign, EField(EConst(Constant.CIdent(ident)), _, _), _): {
+                                shouldCopy = ident == arg.name;
+                            }
+                            default:
+                        }
+                    }
+                }
+                default:
+            }
+
+            if (shouldCopy) {
+                argsToCopy.push(arg.name);
+            }
         }
 
         if (argsToCopy.length <= 0) return false;
