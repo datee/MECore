@@ -4,8 +4,6 @@
 
 #include "HaxeGlobals.h"
 
-#include "fs/FileSystem.h"
-
 namespace me::haxe {
     const char* file = "/assets/code.hl";
 
@@ -34,18 +32,4 @@ namespace me::haxe {
 
         hl_global_free();
     }
-
-    bool CreateMainSystem(const std::string& path) {
-        // TODO: allow file check before creation
-        auto system = new HaxeSystem(path);
-        if (!system->Load()) {
-            delete system;
-            return false;
-        }
-
-        mainSystem = std::unique_ptr<HaxeSystem>(system);
-        system->CallEntryPoint(); // Do not THINK of removing this call.
-        return true;
-    }
-
 }

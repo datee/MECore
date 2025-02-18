@@ -11,9 +11,6 @@ namespace me::haxe {
 
     void Initialize(int argc, void** argv);
     void Shutdown();
-
-    // Helper function to create the main Haxe system. Uses ME's filesystem.
-    bool CreateMainSystem(const std::string& path);
 }
 
 #endif //HAXEGLOBALS_H

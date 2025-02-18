@@ -6,24 +6,22 @@
 #define MECORE_H
 
 namespace me {
-    enum class MESystems {
+    enum class MECoreSystems {
         None = 0,
         Log = 1,
-        FS = Log << 1,
-        Job = FS << 1,
-        Input = Job << 1,
+        Input = Log << 1,
         Haxe = Input << 1,
         SDLRender = Haxe << 1,
         Physics = SDLRender << 1,
         Scene = Physics << 1,
         Time = Scene << 1,
 
-        All = Log | SDLRender | Physics | FS | Scene | Time | Haxe | Input,
+        All = Log | SDLRender | Physics | Scene | Time | Haxe | Input,
     };
 
     // Initializes specified engine subsystems
-    bool Initialize(const MESystems& systems);
-    void Shutdown();
+    bool Core_Initialize(const MECoreSystems& systems);
+    void Core_Shutdown();
 }
 
 #endif //MECORE_H

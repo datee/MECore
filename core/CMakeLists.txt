@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 cmake_policy(SET CMP0048 NEW)
 
-project(MECore VERSION 1.0.0 DESCRIPTION "ME Core")
+project(MECoreSource VERSION 1.0.0 DESCRIPTION "MANIFOLDEngine Core Source")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
@@ -16,12 +16,9 @@ set(WITH_VM OFF CACHE INTERNAL "" FORCE)
 if(MANIFOLD_VENDORED)
     add_subdirectory(vendor/SDL3 EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/SDL_shadercross EXCLUDE_FROM_ALL)
-    add_subdirectory(vendor/rapidjson EXCLUDE_FROM_ALL)
-    add_subdirectory(vendor/vfspp EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/spdlog EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/hashlink EXCLUDE_FROM_ALL)
     add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
-    add_subdirectory(vendor/stduuid EXCLUDE_FROM_ALL)
 endif() # add linking for non vendored lol
 
 find_package(Threads REQUIRED)

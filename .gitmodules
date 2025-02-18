@@ -4,12 +4,6 @@
 [submodule "vendor/SDL_shadercross"]
 	path = core/vendor/SDL_shadercross
 	url = https://github.com/libsdl-org/SDL_shadercross.git
-[submodule "vendor/rapidjson"]
-	path = core/vendor/rapidjson
-	url = https://github.com/Tencent/rapidjson.git
-[submodule "vendor/vfspp"]
-	path = core/vendor/vfspp
-	url = git@github.com:dotryen/vfspp.git
 [submodule "vendor/hashlink"]
 	path = core/vendor/hashlink
 	url = https://github.com/HaxeFoundation/hashlink.git
@@ -19,6 +13,3 @@
 [submodule "core/vendor/JoltPhysics"]
 	path = core/vendor/JoltPhysics
 	url = https://github.com/jrouwe/JoltPhysics.git
-[submodule "core/vendor/stduuid"]
-	path = core/vendor/stduuid
-	url = https://github.com/mariusbancila/stduuid.git

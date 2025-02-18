@@ -5,54 +5,46 @@
 #include "MECore.h"
 
 #include <SDL3/SDL.h>
+#include <spdlog/spdlog.h>
 
-#include "fs/FileSystem.h"
 #include "haxe/HaxeGlobals.h"
-#include "job/JobGlobals.h"
 #include "log/LogSystem.h"
 #include "physics/PhysicsGlobals.h"
 #include "render/RenderGlobals.h"
 #include "scene/SceneGlobals.h"
-#include "spdlog/spdlog.h"
 #include "time/TimeGlobal.h"
 
 namespace me {
-    static MESystems initialized;
+    static MECoreSystems initialized;
 
-    inline bool Has(MESystems value, MESystems flags) {
+    inline bool Has(MECoreSystems value, MECoreSystems flags) {
         int v = static_cast<int>(value);
         int f = static_cast<int>(flags);
         return (v & f) == f;
     }
 
-    bool Initialize(const MESystems& systems) {
-        if (Has(systems, MESystems::Log)) {
+    bool Core_Initialize(const MECoreSystems& systems) {
+        if (Has(systems, MECoreSystems::Log)) {
             log::Initialize();
         }
-        if (Has(systems, MESystems::FS)) {
-            fs::Initialize();
-        }
-        if (Has(systems, MESystems::Haxe)) {
+        if (Has(systems, MECoreSystems::Haxe)) {
             haxe::Initialize(0, nullptr);
             haxe::CreateMainSystem("/code.hl");
         }
-        if (Has(systems, MESystems::Job)) {
-            job::Initialize();
-        }
-        if (Has(systems, MESystems::SDLRender)) {
+        if (Has(systems, MECoreSystems::SDLRender)) {
             if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
                 spdlog::critical("Failed to initialize SDL video subsystem");
                 return false;
             }
             render::Initialize();
         }
-        if (Has(systems, MESystems::Physics)) {
+        if (Has(systems, MECoreSystems::Physics)) {
             physics::Initialize();
         }
-        if (Has(systems, MESystems::Scene)) {
+        if (Has(systems, MECoreSystems::Scene)) {
             scene::Initialize();
         }
-        if (Has(systems, MESystems::Time)) {
+        if (Has(systems, MECoreSystems::Time)) {
             time::Initialize();
         }
 
@@ -60,21 +52,18 @@ namespace me {
         return true;
     }
 
-    void Shutdown() {
-        if (Has(initialized, MESystems::Scene)) {
+    void Core_Shutdown() {
+        if (Has(initialized, MECoreSystems::Scene)) {
             scene::Shutdown();
         }
-        if (Has(initialized, MESystems::Physics)) {
+        if (Has(initialized, MECoreSystems::Physics)) {
             physics::Shutdown();
         }
-        if (Has(initialized, MESystems::SDLRender)) {
+        if (Has(initialized, MECoreSystems::SDLRender)) {
             render::Shutdown();
             SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
-        if (Has(initialized, MESystems::Job)) {
-            job::Shutdown();
-        }
-        if (Has(initialized, MESystems::Haxe)) {
+        if (Has(initialized, MECoreSystems::Haxe)) {
             haxe::Shutdown();
         }
 

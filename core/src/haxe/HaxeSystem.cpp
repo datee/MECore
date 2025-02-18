@@ -5,48 +5,34 @@
 #include "HaxeSystem.h"
 
 #include <map>
-
-#include "fs/FileSystem.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/fmt/bundled/ranges.h"
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/bundled/ranges.h>
 
 #include "HaxeUtils.cpp"
 
 namespace me::haxe {
-    HaxeSystem::HaxeSystem(const std::string& path) {
-        filePath = path;
-        code = nullptr;
-        module = nullptr;
+    bool HaxeSystem::LoadFromMemory(const std::vector<uint8_t>& data) {
+        return LoadFromMemory(data.data(), data.size());
     }
 
-    bool HaxeSystem::Load() {
-        auto file = fs::OpenFile(filePath, fs::FileMode::Read);
-        bool result = false;
-        if (file && file->IsOpened()) {
-            size_t size = file->Size();
-            unsigned char buffer[size];
-            memset(buffer, 0, size);
+    bool HaxeSystem::LoadFromMemory(const uint8_t* data, int size) {
+        char* msg;
+        code = hl_code_read(data, size, &msg);
 
-            file->Read(buffer, size);
-
-            char* msg;
-            code = hl_code_read(buffer, size, &msg);
-
-            if (code) {
-                module = hl_module_alloc(code);
-                if (hl_module_init(module, false, false)) {
-                    result = true;
-                } else {
-                    spdlog::error("Haxe Module Init Error");
-                }
-                hl_code_free(code);
-            } else {
-                spdlog::error("Haxe Code Load Error: %s", msg);
-            }
-
-            file->Close();
+        if (!code) {
+            spdlog::error("HaxeSystem::LoadFromMemory: failed to read code");
+            return false;
         }
-        return result;
+
+        module = hl_module_alloc(code);
+        hl_code_free(code);
+
+        if (!hl_module_init(module, false, false)) {
+            spdlog::error("HaxeSystem::LoadFromMemory: failed to initialize module");
+            return false;
+        }
+
+        return true;
     }
 
     void HaxeSystem::Release() {
@@ -56,6 +42,7 @@ namespace me::haxe {
         hl_free(&code->alloc);
 
         module = nullptr;
+        initialized = false;
     }
 
     HaxeType* HaxeSystem::GetType(const TypeName& name) {
@@ -108,8 +95,7 @@ namespace me::haxe {
         return std::move(result);
     }
 
-
-    void HaxeSystem::CallEntryPoint() {
+    void HaxeSystem::Initialize() {
         int entrypoint = module->code->entrypoint;
         vclosure closure;
         closure.t = code->functions[module->functions_indexes[entrypoint]].type;
@@ -120,8 +106,9 @@ namespace me::haxe {
         auto* result = hl_dyn_call_safe(&closure, NULL, 0, &except);
         if (except) {
             Util_PrintException(result);
+        } else {
+            initialized = true;
         }
-        spdlog::info("Haxe Entrypoint finished");
     }
 
 }
