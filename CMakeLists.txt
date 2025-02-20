@@ -6,7 +6,7 @@ project(MECore VERSION 1.0.0 DESCRIPTION "MANIFOLDEngine Core")
 add_subdirectory(core)
 add_subdirectory(extension)
 
-function(ME_configure target)
+function(MECore_configure target)
     target_link_libraries(${target} PRIVATE ME::Core ME::CoreExt)
     add_custom_command(TARGET ${target} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MECoreExt> "${CMAKE_CURRENT_BINARY_DIR}")
