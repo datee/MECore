@@ -2,12 +2,12 @@
 // Created by ryen on 12/24/24.
 //
 
-#include "HaxeObject.h"
+#include <spdlog/spdlog.h>
 
-#include "spdlog/spdlog.h"
+#include "MECore/haxe/HaxeObject.h"
 #include "HaxeUtils.cpp"
 
-namespace me::haxe {
+namespace ME::haxe {
     HaxeObject::HaxeObject(HaxeType* type, hl_type* vmType, hl_module* module, vdynamic* obj) {
         this->type = type;
         this->vmType = vmType;

@@ -2,10 +2,11 @@
 // Created by ryen on 12/26/24.
 //
 
-#include "HaxeCommon.h"
-#include "spdlog/spdlog.h"
+#include <spdlog/spdlog.h>
 
-namespace me::haxe {
+#include "MECore/haxe/HaxeCommon.h"
+
+namespace ME::haxe {
     inline hl_obj_proto* Util_FindMethod(const hl_type *type, const FuncName& name) {
         hl_obj_proto* target = nullptr;
         for (int i = 0; i < type->obj->nproto; i++) {

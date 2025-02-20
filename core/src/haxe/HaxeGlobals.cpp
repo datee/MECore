@@ -2,9 +2,10 @@
 // Created by ryen on 12/29/24.
 //
 
-#include "HaxeGlobals.h"
+#include "MECore/haxe/HaxeCommon.h"
+#include "MECore/haxe/HaxeGlobals.h"
 
-namespace me::haxe {
+namespace ME::haxe {
     const char* file = "/assets/code.hl";
 
     struct HaxeThreadStack {

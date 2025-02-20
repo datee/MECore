@@ -2,9 +2,9 @@
 // Created by ryen on 12/23/24.
 //
 
-#include "TimeGlobal.h"
+#include "MECore/time/TimeGlobal.h"
 
-namespace me::time {
+namespace ME::time {
     void Initialize() {
         mainGame = TimeSystem();
         mainReal = TimeSystem();

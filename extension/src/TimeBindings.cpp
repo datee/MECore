@@ -3,31 +3,33 @@
 //
 
 #include "Global.h"
-#include "time/TimeGlobal.h"
+#include "MECore/time/TimeGlobal.h"
+
+using namespace ME::time;
 
 HL_PRIM double HL_NAME(time_game_get_elapsed)() {
     hl_blocking(true);
-    return me::time::mainGame.GetElapsed();
+    return mainGame.GetElapsed();
 }
 
 HL_PRIM double HL_NAME(time_game_get_delta)() {
-    return me::time::mainGame.GetDelta();
+    return mainGame.GetDelta();
 }
 
 HL_PRIM double HL_NAME(time_game_get_scale)() {
-    return me::time::mainGame.GetScale();
+    return mainGame.GetScale();
 }
 
 HL_PRIM void HL_NAME(time_game_set_scale)(double value) {
-    me::time::mainGame.SetScale(value);
+    mainGame.SetScale(value);
 }
 
 HL_PRIM double HL_NAME(time_real_get_elapsed)() {
-    return me::time::mainReal.GetElapsed();
+    return mainReal.GetElapsed();
 }
 
 HL_PRIM double HL_NAME(time_real_get_delta)() {
-    return me::time::mainReal.GetDelta();
+    return mainReal.GetDelta();
 }
 
 DEFINE_PRIM(_F64, time_game_get_elapsed, _NO_ARG);

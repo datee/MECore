@@ -3,13 +3,17 @@
 //
 
 #include <nvrhi/vulkan.h>
+#include <nvrhi/validation.h>
+#include <vulkan/vulkan.hpp>
 #include <spdlog/spdlog.h>
 
-#include "RenderGlobals.h"
-#include "Window.h"
+#include "MECore/render/RenderGlobals.h"
+#include "MECore/render/Window.h"
 
-namespace me::render {
+namespace ME::render {
     bool Initialize() {
+
+
         nvrhi::vulkan::DeviceDesc deviceDesc;
 
         mainDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, NULL);

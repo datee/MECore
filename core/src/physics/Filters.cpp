@@ -2,10 +2,10 @@
 // Created by ryen on 12/31/24.
 //
 
-#include "Filters.h"
-#include "Layers.h"
+#include "MECore/physics/Filters.h"
+#include "MECore/physics/Layers.h"
 
-namespace me::physics {
+namespace ME::physics {
     bool ObjectPairFilter::ShouldCollide(JPH::ObjectLayer inLayer1, JPH::ObjectLayer inLayer2) const {
         switch (inLayer1) {
             case static_cast<int>(PhysicsLayer::Static):

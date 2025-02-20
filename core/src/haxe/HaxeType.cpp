@@ -2,12 +2,12 @@
 // Created by ryen on 12/24/24.
 //
 
-#include "HaxeType.h"
+#include <spdlog/spdlog.h>
 
-#include "spdlog/spdlog.h"
+#include "MECore/haxe/HaxeType.h"
 #include "HaxeUtils.cpp"
 
-namespace me::haxe {
+namespace ME::haxe {
     HaxeType::HaxeType(HaxeSystem* system, hl_module* module, hl_type* type) {
         this->system = system;
         this->module = module;

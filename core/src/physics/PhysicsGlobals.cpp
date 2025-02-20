@@ -2,17 +2,16 @@
 // Created by ryen on 12/31/24.
 //
 
-#include "PhysicsGlobals.h"
-
 #include <Jolt/Jolt.h>
 #include <Jolt/RegisterTypes.h>
 #include <Jolt/Core/Factory.h>
 #include <Jolt/Core/TempAllocator.h>
 #include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSettings.h>
 
-#include "Jolt/Physics/PhysicsSettings.h"
+#include "MECore/physics/PhysicsGlobals.h"
 
-namespace me::physics {
+namespace ME::physics {
     bool Initialize() {
         // this is irreversible lol
         JPH::RegisterDefaultAllocator();

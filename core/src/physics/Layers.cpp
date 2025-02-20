@@ -2,9 +2,9 @@
 // Created by ryen on 12/31/24.
 //
 
-#include "Layers.h"
+#include "MECore/physics/Layers.h"
 
-namespace me::physics {
+namespace ME::physics {
     BPLayerInterface::BPLayerInterface() {
         objToBP[static_cast<JPH::uint8>(PhysicsLayer::Static)] = JPH::BroadPhaseLayer{ static_cast<JPH::uint8>(PhysicsBPLayer::Static) };
         objToBP[static_cast<JPH::uint8>(PhysicsLayer::Dynamic)] = JPH::BroadPhaseLayer{ static_cast<JPH::uint8>(PhysicsBPLayer::Dynamic) };

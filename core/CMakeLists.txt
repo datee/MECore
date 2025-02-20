@@ -36,8 +36,8 @@ file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
 add_library(MECore SHARED)
 target_sources(MECore PRIVATE ${SOURCES})
 target_include_directories(MECore
-    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/src
-    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include
+    PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
 
 target_link_libraries(MECore PRIVATE Threads::Threads SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog)

@@ -2,11 +2,9 @@
 // Created by ryen on 12/22/24.
 //
 
-#include <codecvt>
-#include <locale>
+#include <spdlog/spdlog.h>
 
 #include "Global.h"
-#include "spdlog/spdlog.h"
 
 HL_PRIM void HL_NAME(log_info)(vstring* msg) {
     spdlog::info(hl_to_utf8(msg->bytes));

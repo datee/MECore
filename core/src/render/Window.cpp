@@ -2,12 +2,12 @@
 // Created by ryen on 12/5/24.
 //
 
-#include "Window.h"
+#include <spdlog/spdlog.h>
 
-#include "RenderGlobals.h"
-#include "spdlog/spdlog.h"
+#include "MECore/render/Window.h"
+#include "MECore/render/RenderGlobals.h"
 
-namespace me::render {
+namespace ME::render {
     Window::~Window() {
         SDL_DestroyWindow(window);
     }

@@ -2,15 +2,14 @@
 // Created by ryen on 12/22/24.
 //
 
-#include "HaxeSystem.h"
-
 #include <map>
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/bundled/ranges.h>
 
+#include "MECore/haxe/HaxeSystem.h"
 #include "HaxeUtils.cpp"
 
-namespace me::haxe {
+namespace ME::haxe {
     bool HaxeSystem::LoadFromMemory(const std::vector<uint8_t>& data) {
         return LoadFromMemory(data.data(), data.size());
     }

@@ -2,12 +2,11 @@
 // Created by ryen on 1/2/25.
 //
 
-#include "HaxeEngineObject.h"
+#include "MECore/haxe/HaxeEngineObject.h"
+#include "MECore/haxe/HaxeType.h"
+#include "MECore/haxe/HaxeGlobals.h"
 
-#include "HaxeType.h"
-#include "HaxeGlobals.h"
-
-namespace me::haxe {
+namespace ME::haxe {
     HaxeEngineObject::HaxeEngineObject(HaxeType* type, const bool preserve) {
         object = type->CreateInstance(preserve);
 

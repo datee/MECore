@@ -3,9 +3,9 @@
 //
 
 #include "Global.h"
-#include "math/Types.h"
+#include "MECore/math/Types.h"
 
-using namespace me::math;
+using namespace ME;
 
 HL_PRIM Quaternion* HL_NAME(math_quat_from_euler)(Vector3* angles) {
     return new Quaternion(Quaternion::sEulerAngles((*angles) * DEG_TO_RAD));

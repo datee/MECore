@@ -2,13 +2,12 @@
 // Created by ryen on 2/19/25.
 //
 
-#include "SceneNode.h"
+#include "MECore/node/SceneNode.h"
 
-namespace me::node {
+namespace ME::node {
     SceneNode::SceneNode() {
         parent = nullptr;
         game = new GameNode(this);
-        // render = new RenderRootNode(this);
     }
 
     SceneNode::~SceneNode() {
@@ -19,7 +18,6 @@ namespace me::node {
             parent->children.erase(std::ranges::find(parent->children, this));
         }
         delete game;
-        // delete render;
     }
 
     Node* SceneNode::GetParent() const {

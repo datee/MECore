@@ -4,9 +4,9 @@
 
 #include <SDL3/SDL_timer.h>
 
-#include "TimeSystem.h"
+#include "MECore/time/TimeSystem.h"
 
-namespace me::time {
+namespace ME::time {
     TimeSystem::TimeSystem() {
         Reset();
     }
