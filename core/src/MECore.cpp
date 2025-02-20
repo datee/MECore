@@ -6,12 +6,11 @@
 #include <spdlog/spdlog.h>
 
 #include "MECore/MECore.h"
-
 #include "MECore/haxe/HaxeGlobals.h"
 #include "MECore/log/LogSystem.h"
-#include "../include/MECore/physics/PhysicsGlobals.h"
-#include "../include/MECore/render/RenderGlobals.h"
-#include "../include/MECore/time/TimeGlobal.h"
+#include "MECore/physics/PhysicsGlobals.h"
+#include "MECore/render/RenderGlobals.h"
+#include "MECore/time/TimeGlobal.h"
 
 namespace ME {
     static MECoreSystems initialized;
