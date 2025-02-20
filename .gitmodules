@@ -1,9 +1,3 @@
-[submodule "vendor/SDL3"]
-	path = core/vendor/SDL3
-	url = https://github.com/libsdl-org/SDL.git
-[submodule "vendor/SDL_shadercross"]
-	path = core/vendor/SDL_shadercross
-	url = https://github.com/libsdl-org/SDL_shadercross.git
 [submodule "vendor/hashlink"]
 	path = core/vendor/hashlink
 	url = https://github.com/HaxeFoundation/hashlink.git
@@ -13,3 +7,15 @@
 [submodule "core/vendor/JoltPhysics"]
 	path = core/vendor/JoltPhysics
 	url = https://github.com/jrouwe/JoltPhysics.git
+[submodule "core/vendor/SDL3"]
+	path = core/vendor/SDL3
+	url = https://github.com/libsdl-org/SDL.git
+[submodule "core/vendor/nvrhi"]
+	path = core/vendor/nvrhi
+	url = https://github.com/NVIDIA-RTX/NVRHI.git
+[submodule "core/vendor/ozz-animation"]
+	path = core/vendor/ozz-animation
+	url = https://github.com/guillaumeblanc/ozz-animation.git
+[submodule "core/vendor/taskflow"]
+	path = core/vendor/taskflow
+	url = https://github.com/taskflow/taskflow.git

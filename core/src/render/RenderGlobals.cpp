@@ -2,12 +2,16 @@
 // Created by ryen on 12/29/24.
 //
 
+#include <nvrhi/vulkan.h>
+#include <spdlog/spdlog.h>
+
 #include "RenderGlobals.h"
 #include "Window.h"
-#include "spdlog/spdlog.h"
 
 namespace me::render {
     bool Initialize() {
+        nvrhi::vulkan::DeviceDesc deviceDesc;
+
         mainDevice = SDL_CreateGPUDevice(SDL_GPU_SHADERFORMAT_SPIRV, false, NULL);
         if (!mainDevice) {
             spdlog::critical("Failed to create GPU device. SDL_Error: {}", SDL_GetError());
