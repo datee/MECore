@@ -4,7 +4,7 @@
 
 #ifndef RENDERNODE_H
 #define RENDERNODE_H
-#include "Node.h"
+#include "../Node.h"
 
 namespace me::node {
     class RenderRootNode;

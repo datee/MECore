@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 cmake_policy(SET CMP0048 NEW)
 
-project(MECoreSource VERSION 1.0.0 DESCRIPTION "MECore Core Source")
+project(MECoreSource VERSION 1.0.0 DESCRIPTION "MANIFOLDEngine Core Source")
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)

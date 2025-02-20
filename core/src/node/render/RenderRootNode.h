@@ -6,7 +6,7 @@
 #define RENDERROOTNODE_H
 #include <vector>
 
-#include "Node.h"
+#include "../Node.h"
 #include "RenderNode.h"
 
 namespace me::node {

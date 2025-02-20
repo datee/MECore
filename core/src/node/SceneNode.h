@@ -6,8 +6,8 @@
 #define SCENENODE_H
 
 #include "./game/GameNode.h"
+#include "./render/RenderRootNode.h"
 #include "Node.h"
-#include "RenderRootNode.h"
 
 namespace me::node {
     // Figure out how to fit scene systems in here
