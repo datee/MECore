@@ -7,7 +7,7 @@ file(GLOB_RECURSE SOURCES src/*.cpp src/*.h)
 
 add_library(MECoreExt SHARED)
 target_sources(MECoreExt PRIVATE ${SOURCES})
-target_link_libraries(MECoreExt ME::Core SDL3::SDL3 Jolt libhl HLVM spdlog::spdlog stduuid)
+target_link_libraries(MECoreExt ME::Core SDL3::SDL3 Jolt libhl spdlog::spdlog)
 
 set_target_properties(MECoreExt PROPERTIES PREFIX "" OUTPUT_NAME MECore SUFFIX .hdll)
 

@@ -4,19 +4,11 @@
 
 #pragma once
 
-#include <memory>
-#include <SDL3/SDL_gpu.h>
-
-#include "Window.h"
-#include "MECore/math/Types.h"
+#include "RenderInterface.h"
 
 namespace ME::render {
-    inline SDL_GPUDevice* mainDevice;
-    inline std::unique_ptr<Window> mainWindow;
+    inline RenderInterface* interface;
 
     bool Initialize();
     void Shutdown();
-
-    // Helper function to create a main window
-    bool CreateMainWindow(const std::string& name, const IntVector2& res);
 }

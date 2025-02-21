@@ -1,5 +1,5 @@
 namespace ME {
-    Transform Transform::Identity() {
+    constexpr Transform Transform::Identity() {
         return {{ 0, 0, 0 }, Quaternion::sIdentity(), { 1, 1, 1 }};
     }
 

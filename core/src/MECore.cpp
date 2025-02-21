@@ -29,10 +29,6 @@ namespace ME {
             haxe::Initialize(0, nullptr);
         }
         if (Has(systems, MECoreSystems::Render)) {
-            if (!SDL_InitSubSystem(SDL_INIT_VIDEO)) {
-                spdlog::critical("Failed to initialize SDL video subsystem");
-                return false;
-            }
             render::Initialize();
         }
         if (Has(systems, MECoreSystems::Physics)) {

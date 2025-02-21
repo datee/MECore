@@ -9,6 +9,9 @@ set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 # DISABLE TROUBLESOME OPTIONS
 set(WITH_VM OFF CACHE INTERNAL "" FORCE)
 
+find_package(Threads REQUIRED)
+find_package(Vulkan REQUIRED)
+
 # VENDORED DEPENDENCIES
 add_subdirectory(vendor/SDL3 EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/hashlink EXCLUDE_FROM_ALL)
@@ -17,8 +20,6 @@ add_subdirectory(vendor/ozz-animation EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/nvrhi EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/spdlog EXCLUDE_FROM_ALL)
-
-find_package(Threads REQUIRED)
 
 # HAXE VM
 file(GLOB HAXE_EMBED_SOURCES
@@ -40,6 +41,6 @@ target_include_directories(MECore
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
 
-target_link_libraries(MECore PRIVATE Threads::Threads SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog)
+target_link_libraries(MECore PRIVATE Threads::Threads Vulkan::Vulkan SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog)
 
 add_library(ME::Core ALIAS MECore)

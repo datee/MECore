@@ -32,7 +32,7 @@ namespace ME::node {
         inline std::string GetName() const { return name; }
         inline void SetName(const std::string& name) { this->name = name; }
 
-        virtual Node* GetParent() const;
-        virtual std::vector<Node*> GetChildren() const;
+        virtual Node* GetParent() const = 0;
+        virtual std::vector<Node*> GetChildren() const = 0;
     };
 }

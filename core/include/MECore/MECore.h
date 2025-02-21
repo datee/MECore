@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <spdlog/spdlog.h>
+
 #include "math/Types.h"
 #include "math/Transform.h"
 
