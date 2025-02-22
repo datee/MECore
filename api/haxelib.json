@@ -1,9 +1,9 @@
 {
-    "name": "MEAPI",
-    "url" : "https://github.com/dotryen/mecore",
+    "name": "MECoreApi",
+    "url" : "https://github.com/dotryen/MECore",
     "license": "MIT",
-    "tags": ["api"],
-    "description": "MANIFOLD_ENGINE :: API",
+    "tags": ["engine", "framework", "api"],
+    "description": "MANIFOLD_ENGINE Core :: API",
     "version": "1.0.0",
     "releasenote": "Initial release, everything is working correctly.",
     "contributors": ["dotRYEN"]
