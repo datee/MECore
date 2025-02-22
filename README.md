@@ -7,9 +7,10 @@ I've had gripes/nitpicks with every engine I've used. So I'm making my own that 
 Contributions are welcome.
 
 ### Features
-- Uses the new SDL3 Framework
-- Vulkan 1.3
 - Scripting in Haxe using [HashLink](https://hashlink.haxe.org/)
+- Scene Node System
+- Vulkan 1.3 (Bindless/Raytracing support)
+- Physics via [Jolt Physics](https://github.com/jrouwe/JoltPhysics)
 
 ### Disclaimer
 - The engine isn't currently in a usable state.
@@ -20,7 +21,7 @@ Contributions are welcome.
 ### Usage
 Add this repository as a submodule and use CMake. **Make sure to update your submodules recursively.**
 ```cmake
-add_subdirectory(vendor/MANIFOLDEngine EXCLUDE_FROM_ALL)
+add_subdirectory(vendor/MECore EXCLUDE_FROM_ALL)
 
 add_executable(MyAwesomeGame src/game.cpp)
 MECore_configure(MyAwesomeGame) # This function adds dependencies and custom commands that are required.
