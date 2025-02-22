@@ -18,10 +18,12 @@ namespace ME::render {
         interface = new VulkanInterface();
         if (!interface->CreateInstance()) return false;
         if (!interface->CreateDevice()) return false;
+        if (!interface->CreateSwapchain()) return false;
         return true;
     }
 
     void Shutdown() {
+        interface->DestroySwapchain();
         interface->DestroyDevice();
         delete interface;
     }

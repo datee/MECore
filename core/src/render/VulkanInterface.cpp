@@ -2,18 +2,17 @@
 // Created by ryen on 2/21/25.
 //
 
-#include <nvrhi/vulkan.h>
-#include <nvrhi/validation.h>
 #include <SDL3/SDL_vulkan.h>
+#include <nvrhi/validation.h>
 #include <spdlog/spdlog.h>
 
 #include "MECore/render/VulkanInterface.h"
 
-#include <unordered_set>
-
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace ME::render {
+    static constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 2;
+
     static std::vector<const char *> StringSetToVector(const std::unordered_set<std::string>& set) {
         std::vector<const char *> ret;
         for(const auto& s : set)
@@ -159,6 +158,19 @@ namespace ME::render {
         return true;
     }
 
+    bool VulkanInterface::CreateSwapchain() {
+        if (!CreateSwapchainInternal()) return false;
+
+        presentSemaphores.reserve(MAX_FRAMES_IN_FLIGHT + 1);
+        acquireSemaphores.reserve(MAX_FRAMES_IN_FLIGHT + 1);
+        for (uint32_t i = 0; i < MAX_FRAMES_IN_FLIGHT + 1; i++) {
+            presentSemaphores.push_back(vkDevice.createSemaphore(vk::SemaphoreCreateInfo()));
+            acquireSemaphores.push_back(vkDevice.createSemaphore(vk::SemaphoreCreateInfo()));
+        }
+
+        return true;
+    }
+
     void VulkanInterface::DestroyDevice() {
         nvDevice = nullptr;
         nvValidationLayer = nullptr;
@@ -176,6 +188,104 @@ namespace ME::render {
             vkInstance.destroy();
             vkInstance = nullptr;
         }
+    }
+
+    void VulkanInterface::DestroySwapchain() {
+        DestroySwapchainInternal();
+
+        for (auto& semaphore : presentSemaphores) {
+            if (semaphore) {
+                vkDevice.destroySemaphore(semaphore);
+                semaphore = vk::Semaphore();
+            }
+        }
+        for (auto& semaphore : acquireSemaphores) {
+            if (semaphore) {
+                vkDevice.destroySemaphore(semaphore);
+                semaphore = vk::Semaphore();
+            }
+        }
+    }
+
+    void VulkanInterface::ResizeSwapchain() {
+        if (vkDevice) {
+            DestroySwapchainInternal();
+            CreateSwapchainInternal();
+        }
+    }
+
+    bool VulkanInterface::BeginFrame() {
+        const auto& semaphore = acquireSemaphores[acquireSemaphoreIndex];
+
+        vk::Result result;
+
+        const int maxAttempts = 3;
+        for (int attempt = 0; attempt < maxAttempts; ++attempt) {
+            // This line is causing some issues for some reason?
+            // result = vkDevice.acquireNextImageKHR(vkSwapchain, std::numeric_limits<uint64_t>::max(), semaphore, vk::Fence(), swapchainIndex).result;
+            result = vk::Result(vkAcquireNextImageKHR(vkDevice, vkSwapchain, UINT64_MAX, semaphore, VkFence(), &swapchainIndex));
+            if (result == vk::Result::eErrorOutOfDateKHR && attempt < maxAttempts) {
+                auto surfaceCaps = vkPhysicalDevice.getSurfaceCapabilitiesKHR(vkSurface);
+
+                spdlog::warn("Vulkan swapchain out of date!");
+                // Set buffer sizes
+
+                ResizeSwapchain();
+            } else {
+                break;
+            }
+        }
+
+        acquireSemaphoreIndex = (acquireSemaphoreIndex + 1) % acquireSemaphores.size();
+
+        if (result == vk::Result::eSuccess) {
+            nvDevice->queueWaitForSemaphore(nvrhi::CommandQueue::Graphics, semaphore, 0);
+            return true;
+        }
+        return false;
+    }
+
+    bool VulkanInterface::Present() {
+        const auto& semaphore = presentSemaphores[presentSemaphoreIndex];
+        nvDevice->queueSignalSemaphore(nvrhi::CommandQueue::Graphics, semaphore, 0);
+
+        // This captures the semaphore apparently
+        nvDevice->executeCommandLists(nullptr, 0);
+
+        vk::PresentInfoKHR info = vk::PresentInfoKHR()
+        .setWaitSemaphoreCount(1)
+        .setPWaitSemaphores(&semaphore)
+        .setSwapchainCount(1)
+        .setPSwapchains(&vkSwapchain)
+        .setPImageIndices(&swapchainIndex);
+
+        const vk::Result result = presentQueue.presentKHR(&info);
+        if (!(result == vk::Result::eSuccess || result == vk::Result::eErrorOutOfDateKHR)) {
+            return false;
+        }
+
+        presentSemaphoreIndex = (presentSemaphoreIndex + 1) % presentSemaphores.size();
+
+        while (framesInFlight.size() >= MAX_FRAMES_IN_FLIGHT) {
+            auto query = framesInFlight.front();
+            framesInFlight.pop();
+
+            nvDevice->waitEventQuery(query);
+            queryPool.push_back(query);
+        }
+
+        nvrhi::EventQueryHandle query;
+        if (!queryPool.empty()) {
+            query = queryPool.back();
+            queryPool.pop_back();
+        } else {
+            query = nvDevice->createEventQuery();
+        }
+
+        nvDevice->resetEventQuery(query);
+        nvDevice->setEventQuery(query, nvrhi::CommandQueue::Graphics);
+        framesInFlight.push(query);
+        return true;
     }
 
     bool VulkanInterface::PickPhysicalDevice() {
@@ -257,7 +367,7 @@ namespace ME::render {
             // TODO: check for device features (raytracing and stuff)
         }
 
-        std::unordered_set<int> uniqueQueueFamilies = { graphicsQueueFamily, computeQueueFamily, transferQueueFamily, presentQueueFamily };
+        std::unordered_set<uint32_t> uniqueQueueFamilies = { graphicsQueueFamily, computeQueueFamily, transferQueueFamily, presentQueueFamily };
 
         float priority = 1.0f;
         std::vector<vk::DeviceQueueCreateInfo> queueDesc;
@@ -338,4 +448,97 @@ namespace ME::render {
 
         return SDL_Vulkan_CreateSurface(window, vkInstance, nullptr, &vkSurface);
     }
+
+    bool VulkanInterface::CreateSwapchainInternal() {
+        auto nvFormat = nvrhi::Format::RGBA8_UNORM; // TODO: make this adjustable
+        auto vkFormat = vk::Format(nvrhi::vulkan::convertFormat(nvFormat));
+        auto colorSpace = vk::ColorSpaceKHR::eSrgbNonlinear;
+
+        vk::Extent2D extent = { 1280, 720 };
+
+        std::vector<uint32_t> queues = { graphicsQueueFamily, presentQueueFamily };
+        const bool enableSharing = queues.size() > 1;
+
+        auto desc = vk::SwapchainCreateInfoKHR()
+            .setSurface(vkSurface)
+            .setMinImageCount(2) // TODO: allow this to be adjustable
+            .setImageFormat(vkFormat)
+            .setImageColorSpace(colorSpace)
+            .setImageExtent(extent)
+            .setImageArrayLayers(1)
+            .setImageUsage(vk::ImageUsageFlagBits::eColorAttachment | vk::ImageUsageFlagBits::eTransferDst | vk::ImageUsageFlagBits::eSampled)
+            .setImageSharingMode(enableSharing ? vk::SharingMode::eConcurrent : vk::SharingMode::eExclusive)
+            .setFlags(vk::SwapchainCreateFlagBitsKHR::eMutableFormat) // TODO: deepnds on mutable swapchain, add check.
+            .setQueueFamilyIndexCount(enableSharing ? queues.size() : 0)
+            .setPQueueFamilyIndices(enableSharing ? queues.data() : nullptr)
+            .setPreTransform(vk::SurfaceTransformFlagBitsKHR::eIdentity)
+            .setCompositeAlpha(vk::CompositeAlphaFlagBitsKHR::eOpaque)
+            .setPresentMode(vk::PresentModeKHR::eImmediate) // TODO: Immediate means no vsync, FIFO means vsync. Allow this to be set
+            .setClipped(true)
+            .setOldSwapchain(nullptr);
+
+        std::vector<vk::Format> imageFormats = { vkFormat };
+        switch(vkFormat) {
+            case vk::Format::eR8G8B8A8Unorm:
+                imageFormats.push_back(vk::Format::eR8G8B8A8Srgb);
+            break;
+            case vk::Format::eR8G8B8A8Srgb:
+                imageFormats.push_back(vk::Format::eR8G8B8A8Unorm);
+            break;
+            case vk::Format::eB8G8R8A8Unorm:
+                imageFormats.push_back(vk::Format::eB8G8R8A8Srgb);
+            break;
+            case vk::Format::eB8G8R8A8Srgb:
+                imageFormats.push_back(vk::Format::eB8G8R8A8Unorm);
+            break;
+            default:
+                break;
+        }
+
+        auto imageFormatListCreateInfo = vk::ImageFormatListCreateInfo()
+        .setViewFormats(imageFormats);
+
+        // TODO: depends on mutable swapchain. add check.
+        desc.pNext = &imageFormatListCreateInfo;
+
+        const vk::Result result = vkDevice.createSwapchainKHR(&desc, nullptr, &vkSwapchain);
+        if (result != vk::Result::eSuccess) {
+            spdlog::error("Failed to create swapchain! Error: {}", nvrhi::vulkan::resultToString(VkResult(result)));
+            return false;
+        }
+
+        auto images = vkDevice.getSwapchainImagesKHR(vkSwapchain);
+        for (auto image : images) {
+            SwapChainImage sci;
+            sci.image = image;
+
+            nvrhi::TextureDesc textureDesc{};
+            textureDesc.width = extent.width;
+            textureDesc.height = extent.height;
+            textureDesc.format = nvFormat;
+            textureDesc.debugName = "Swapchain Image";
+            textureDesc.initialState = nvrhi::ResourceStates::Present;
+            textureDesc.keepInitialState = true;
+            textureDesc.isRenderTarget = true;
+
+            sci.rhiHandle = nvDevice->createHandleForNativeTexture(nvrhi::ObjectTypes::VK_Image, nvrhi::Object(sci.image), textureDesc);
+            swapChainImages.push_back(sci);
+        }
+
+        swapchainIndex = 0;
+        return true;
+    }
+
+    void VulkanInterface::DestroySwapchainInternal() {
+        if (vkDevice) {
+            vkDevice.waitIdle();
+        }
+        if (vkSwapchain) {
+            vkDevice.destroySwapchainKHR(vkSwapchain);
+            vkSwapchain = nullptr;
+        }
+
+        swapChainImages.clear();
+    }
+
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include <unordered_set>
+#include <queue>
 
 #ifndef VULKAN_HPP_DISPATCH_LOADER_DYNAMIC
 #define VULKAN_HPP_DISPATCH_LOADER_DYNAMIC 1
@@ -24,6 +25,11 @@ namespace ME::render {
             std::unordered_set<std::string> instance;
             std::unordered_set<std::string> layers;
             std::unordered_set<std::string> device;
+        };
+
+        struct SwapChainImage {
+            vk::Image image;
+            nvrhi::TextureHandle rhiHandle;
         };
 
         VulkanExtensionSet enabledExtensions = {
@@ -53,10 +59,10 @@ namespace ME::render {
         // Vulkan Device
         vk::Instance vkInstance;
         vk::PhysicalDevice vkPhysicalDevice;
-        int graphicsQueueFamily = -1;
-        int computeQueueFamily = -1;
-        int transferQueueFamily = -1;
-        int presentQueueFamily = -1;
+        uint32_t graphicsQueueFamily = -1;
+        uint32_t computeQueueFamily = -1;
+        uint32_t transferQueueFamily = -1;
+        uint32_t presentQueueFamily = -1;
 
         vk::Device vkDevice;
         vk::Queue graphicsQueue;
@@ -68,6 +74,19 @@ namespace ME::render {
         SDL_Window* window;
         VkSurfaceKHR vkSurface;
 
+        // Swapchain
+        vk::SwapchainKHR vkSwapchain;
+        std::vector<SwapChainImage> swapChainImages;
+        uint32_t swapchainIndex;
+
+        std::vector<vk::Semaphore> presentSemaphores;
+        std::vector<vk::Semaphore> acquireSemaphores;
+        uint32_t presentSemaphoreIndex;
+        uint32_t acquireSemaphoreIndex;
+
+        std::queue<nvrhi::EventQueryHandle> framesInFlight;
+        std::vector<nvrhi::EventQueryHandle> queryPool;
+
         // NVRHI
         nvrhi::vulkan::DeviceHandle nvDevice;
         nvrhi::DeviceHandle nvValidationLayer;
@@ -77,13 +96,23 @@ namespace ME::render {
         bool CreateVulkanDevice();
         bool CreateVulkanSurface();
 
+        bool CreateSwapchainInternal();
+        void DestroySwapchainInternal();
+
         public:
         VulkanInterface() = default;
         ~VulkanInterface() override = default;
 
         bool CreateInstance() override;
         bool CreateDevice() override;
+        bool CreateSwapchain() override;
 
         void DestroyDevice() override;
+        void DestroySwapchain() override;
+
+        void ResizeSwapchain() override;
+
+        bool BeginFrame() override;
+        bool Present() override;
     };
 }

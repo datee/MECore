@@ -19,7 +19,14 @@ namespace ME::render {
 
         virtual bool CreateInstance() = 0;
         virtual bool CreateDevice() = 0;
+        virtual bool CreateSwapchain() = 0;
 
         virtual void DestroyDevice() = 0;
+        virtual void DestroySwapchain() = 0;
+
+        virtual void ResizeSwapchain() = 0;
+
+        virtual bool BeginFrame() = 0;
+        virtual bool Present() = 0;
     };
 }
