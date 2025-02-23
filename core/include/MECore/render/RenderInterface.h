@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <SDL3/SDL.h>
 #include <nvrhi/nvrhi.h>
 
 namespace ME::render {
@@ -26,7 +27,16 @@ namespace ME::render {
 
         virtual void ResizeSwapchain() = 0;
 
+        virtual nvrhi::IDevice* GetDevice() = 0;
         virtual bool BeginFrame() = 0;
         virtual bool Present() = 0;
+
+        virtual Uint32 GetSwapchainCount() = 0;
+        virtual Uint32 GetCurrentSwapchainIndex() = 0;
+        virtual nvrhi::ITexture* GetSwapchainTexture(Uint32 index) = 0;
+        virtual nvrhi::ITexture* GetCurrentSwapchainTexture() = 0;
+
+        // Plan to eventually remove this. Windows will be a different class for multiple viewports.
+        virtual SDL_Window* GetWindow() = 0;
     };
 }

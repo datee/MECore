@@ -39,7 +39,7 @@ target_sources(MECore PRIVATE ${SOURCES})
 target_include_directories(MECore
     PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR})
+           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_link_libraries(MECore PRIVATE Threads::Threads Vulkan::Vulkan SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog)
 

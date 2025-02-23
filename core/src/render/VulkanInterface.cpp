@@ -253,11 +253,11 @@ namespace ME::render {
         nvDevice->executeCommandLists(nullptr, 0);
 
         vk::PresentInfoKHR info = vk::PresentInfoKHR()
-        .setWaitSemaphoreCount(1)
-        .setPWaitSemaphores(&semaphore)
-        .setSwapchainCount(1)
-        .setPSwapchains(&vkSwapchain)
-        .setPImageIndices(&swapchainIndex);
+            .setWaitSemaphoreCount(1)
+            .setPWaitSemaphores(&semaphore)
+            .setSwapchainCount(1)
+            .setPSwapchains(&vkSwapchain)
+            .setPImageIndices(&swapchainIndex);
 
         const vk::Result result = presentQueue.presentKHR(&info);
         if (!(result == vk::Result::eSuccess || result == vk::Result::eErrorOutOfDateKHR)) {
@@ -450,7 +450,7 @@ namespace ME::render {
     }
 
     bool VulkanInterface::CreateSwapchainInternal() {
-        auto nvFormat = nvrhi::Format::RGBA8_UNORM; // TODO: make this adjustable
+        auto nvFormat = nvrhi::Format::BGRA8_UNORM; // TODO: make this adjustable
         auto vkFormat = vk::Format(nvrhi::vulkan::convertFormat(nvFormat));
         auto colorSpace = vk::ColorSpaceKHR::eSrgbNonlinear;
 
@@ -496,7 +496,7 @@ namespace ME::render {
         }
 
         auto imageFormatListCreateInfo = vk::ImageFormatListCreateInfo()
-        .setViewFormats(imageFormats);
+            .setViewFormats(imageFormats);
 
         // TODO: depends on mutable swapchain. add check.
         desc.pNext = &imageFormatListCreateInfo;

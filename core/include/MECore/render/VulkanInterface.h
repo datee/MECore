@@ -33,7 +33,7 @@ namespace ME::render {
         };
 
         VulkanExtensionSet enabledExtensions = {
-            { VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME },
+            { VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME, VK_EXT_DEBUG_REPORT_EXTENSION_NAME },
             { },
             { VK_KHR_MAINTENANCE1_EXTENSION_NAME }
         };
@@ -41,7 +41,7 @@ namespace ME::render {
         VulkanExtensionSet optionalExtensions = {
             {
                 VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
-                VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME
+                VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME,
             },
             { },
             {
@@ -114,5 +114,30 @@ namespace ME::render {
 
         bool BeginFrame() override;
         bool Present() override;
+
+        nvrhi::IDevice* GetDevice() override {
+            if (nvValidationLayer) return nvValidationLayer;
+            return nvDevice;
+        }
+
+        Uint32 GetSwapchainCount() override {
+            return swapChainImages.size();
+        }
+        Uint32 GetCurrentSwapchainIndex() override {
+            return swapchainIndex;
+        }
+        nvrhi::ITexture* GetSwapchainTexture(Uint32 index) override {
+            if (index < swapChainImages.size()) {
+                return swapChainImages[index].rhiHandle;
+            }
+            return nullptr;
+        }
+        nvrhi::ITexture* GetCurrentSwapchainTexture() override {
+            return swapChainImages[swapchainIndex].rhiHandle;
+        }
+
+        SDL_Window* GetWindow() override {
+            return window;
+        }
     };
 }

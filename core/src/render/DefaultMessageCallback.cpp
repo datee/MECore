@@ -34,5 +34,4 @@ namespace ME::render {
         }
         spdlog::log(level, messageText);
     }
-
 }

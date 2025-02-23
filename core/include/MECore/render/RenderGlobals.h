@@ -8,7 +8,12 @@
 
 namespace ME::render {
     inline RenderInterface* interface;
+    inline std::vector<nvrhi::FramebufferHandle> framebuffers;
 
     bool Initialize();
     void Shutdown();
+
+    bool BeginFrame();
+    nvrhi::FramebufferHandle GetFramebuffer();
+    bool Present();
 }
