@@ -8,6 +8,7 @@ namespace ME::node {
     SceneNode::SceneNode() {
         parent = nullptr;
         game = new GameNode(this);
+        render = new RenderRootNode(this);
     }
 
     SceneNode::~SceneNode() {
@@ -18,6 +19,7 @@ namespace ME::node {
             parent->children.erase(std::ranges::find(parent->children, this));
         }
         delete game;
+        delete render;
     }
 
     Node* SceneNode::GetParent() const {
@@ -27,7 +29,7 @@ namespace ME::node {
     std::vector<Node*> SceneNode::GetChildren() const {
         auto vec = std::vector<Node*>();
         vec.reserve(children.size() + 2);
-        vec.insert(vec.end(), { game });
+        vec.insert(vec.end(), { game, render });
         vec.insert(vec.end(), children.begin(), children.end());
         return vec;
     }

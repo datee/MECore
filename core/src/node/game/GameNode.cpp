@@ -7,22 +7,28 @@
 #include <algorithm>
 
 namespace ME::node {
-    GameNode::GameNode() {
+    GameNode::GameNode() : transform(this) {
         isRoot = false;
         parent = nullptr;
     }
 
-    GameNode::GameNode(Node* parent) {
+    GameNode::GameNode(Node* parent) : transform(this) {
         isRoot = true;
         this->parent = parent;
     }
 
-    Node* GameNode::GetParent() const {
-        return parent;
-    }
-
     std::vector<Node*> GameNode::GetChildren() const {
         return std::vector<Node*>(children.begin(), children.end());
+    }
+
+    std::vector<GameNode*> GameNode::GetGameChildren() const {
+        return children;
+    }
+
+    std::vector<GameNode*> GameNode::GetGameDescendants() const {
+        std::vector<GameNode*> descendants;
+        GetDescendantsInternal(descendants);
+        return descendants;
     }
 
     void GameNode::SetParent(GameNode* parent) {
@@ -41,4 +47,10 @@ namespace ME::node {
         }
     }
 
+    void GameNode::GetDescendantsInternal(std::vector<GameNode*>& descendants) const {
+        descendants.insert(descendants.end(), children.begin(), children.end());
+        for (auto child : children) {
+            child->GetDescendantsInternal(descendants);
+        }
+    }
 }

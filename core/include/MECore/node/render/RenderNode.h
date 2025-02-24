@@ -4,22 +4,31 @@
 
 #pragma once
 
+#include "MECore/math/Transform.h"
 #include "../Node.h"
 
 namespace ME::node {
     class RenderRootNode;
-
     class RenderNode : public Node {
         protected:
         RenderRootNode* root;
-        // TODO: add transform and enabled flag
+        Transform transform;
+        bool enabled;
 
         public:
         RenderNode();
         ~RenderNode() override;
 
         Node* GetParent() const override;
+        std::vector<Node*> GetChildren() const override {
+            return std::vector<Node*>();
+        }
+        int GetChildCount() const override { return 0; }
 
+        Transform& GetTransform() { return transform; }
+        bool IsEnabled() const { return enabled; }
+
+        void SetEnabled(bool val) { enabled = val; }
         void SetRoot(RenderRootNode* root);
     };
 }

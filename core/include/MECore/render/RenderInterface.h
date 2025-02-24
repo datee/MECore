@@ -38,5 +38,6 @@ namespace ME::render {
 
         // Plan to eventually remove this. Windows will be a different class for multiple viewports.
         virtual SDL_Window* GetWindow() = 0;
+        virtual float GetWindowAspect() = 0;
     };
 }

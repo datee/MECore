@@ -11,14 +11,20 @@
 
 namespace ME::node {
     class RenderRootNode final : public Node {
+        friend RenderNode;
         protected:
         Node* parent;
         std::vector<RenderNode*> children;
 
         public:
-        explicit RenderRootNode(Node* parent);
+        explicit RenderRootNode(Node* parent) {
+            this->parent = parent;
+            this->name = "RenderRoot";
+        }
 
-        Node* GetParent() const override;
+        Node* GetParent() const override { return parent; }
         std::vector<Node*> GetChildren() const override;
+        int GetChildCount() const override { return children.size(); }
+        std::vector<RenderNode*> GetRenderChildren() const { return children; }
     };
 }

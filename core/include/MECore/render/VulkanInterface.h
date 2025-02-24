@@ -139,5 +139,10 @@ namespace ME::render {
         SDL_Window* GetWindow() override {
             return window;
         }
+        float GetWindowAspect() override {
+            int width, height;
+            SDL_GetWindowSize(window, &width, &height);
+            return static_cast<float>(width) / static_cast<float>(height);
+        }
     };
 }

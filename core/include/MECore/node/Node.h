@@ -34,5 +34,6 @@ namespace ME::node {
 
         virtual Node* GetParent() const = 0;
         virtual std::vector<Node*> GetChildren() const = 0;
+        virtual int GetChildCount() const = 0;
     };
 }
