@@ -19,17 +19,13 @@
 #include "RenderInterface.h"
 
 namespace ME::render {
+    class VulkanWindow;
     class VulkanInterface : public RenderInterface {
         protected:
         struct VulkanExtensionSet {
             std::unordered_set<std::string> instance;
             std::unordered_set<std::string> layers;
             std::unordered_set<std::string> device;
-        };
-
-        struct SwapChainImage {
-            vk::Image image;
-            nvrhi::TextureHandle rhiHandle;
         };
 
         VulkanExtensionSet enabledExtensions = {
@@ -70,22 +66,8 @@ namespace ME::render {
         vk::Queue transferQueue;
         vk::Queue presentQueue;
 
-        // Surface
-        SDL_Window* window;
-        VkSurfaceKHR vkSurface;
-
-        // Swapchain
-        vk::SwapchainKHR vkSwapchain;
-        std::vector<SwapChainImage> swapChainImages;
-        uint32_t swapchainIndex;
-
-        std::vector<vk::Semaphore> presentSemaphores;
-        std::vector<vk::Semaphore> acquireSemaphores;
-        uint32_t presentSemaphoreIndex;
-        uint32_t acquireSemaphoreIndex;
-
-        std::queue<nvrhi::EventQueryHandle> framesInFlight;
-        std::vector<nvrhi::EventQueryHandle> queryPool;
+        // Windows
+        std::unordered_set<VulkanWindow*> windows;
 
         // NVRHI
         nvrhi::vulkan::DeviceHandle nvDevice;
@@ -94,55 +76,28 @@ namespace ME::render {
         bool PickPhysicalDevice();
         bool FindQueueFamilies(vk::PhysicalDevice physicalDevice);
         bool CreateVulkanDevice();
-        bool CreateVulkanSurface();
-
-        bool CreateSwapchainInternal();
-        void DestroySwapchainInternal();
 
         public:
         VulkanInterface() = default;
         ~VulkanInterface() override = default;
 
-        bool CreateInstance() override;
-        bool CreateDevice() override;
-        bool CreateSwapchain() override;
-
-        void DestroyDevice() override;
-        void DestroySwapchain() override;
-
-        void ResizeSwapchain() override;
-
-        bool BeginFrame() override;
-        bool Present() override;
-
         nvrhi::IDevice* GetDevice() override {
             if (nvValidationLayer) return nvValidationLayer;
             return nvDevice;
         }
+        nvrhi::vulkan::DeviceHandle GetNvDevice() { return nvDevice; }
+        vk::Instance GetVkInstance() { return vkInstance; }
+        vk::Device GetVkDevice() { return vkDevice; }
 
-        Uint32 GetSwapchainCount() override {
-            return swapChainImages.size();
-        }
-        Uint32 GetCurrentSwapchainIndex() override {
-            return swapchainIndex;
-        }
-        nvrhi::ITexture* GetSwapchainTexture(Uint32 index) override {
-            if (index < swapChainImages.size()) {
-                return swapChainImages[index].rhiHandle;
-            }
-            return nullptr;
-        }
-        nvrhi::ITexture* GetCurrentSwapchainTexture() override {
-            return swapChainImages[swapchainIndex].rhiHandle;
-        }
+        int GetGraphicsQueueFamily() const { return graphicsQueueFamily; }
+        int GetPresentQueueFamily() const { return presentQueueFamily; }
 
-        SDL_Window* GetWindow() override {
-            return window;
-        }
-        float GetWindowAspect() override {
-            int width, height;
-            SDL_GetWindowSize(window, &width, &height);
-            return static_cast<float>(width) / static_cast<float>(height);
-        }
+        bool CreateInstance() override;
+        bool CreateDevice() override;
+        void DestroyDevice() override;
+
+        Window* CreateWindow(WindowParameters* params) override;
+
+        vk::Result QueuePresent(vk::PresentInfoKHR* info);
     };
 }

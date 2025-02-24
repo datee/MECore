@@ -5,15 +5,9 @@
 #pragma once
 
 #include "RenderInterface.h"
+#include "Window.h"
 
 namespace ME::render {
-    inline RenderInterface* interface;
-    inline std::vector<nvrhi::FramebufferHandle> framebuffers;
-
-    bool Initialize();
-    void Shutdown();
-
-    bool BeginFrame();
-    nvrhi::FramebufferHandle GetFramebuffer();
-    bool Present();
+    // TODO: replace with some kind of viewport data. this is only here for the camera to get aspect ratios
+    inline Window* mainWindow;
 }

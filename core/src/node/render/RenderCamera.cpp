@@ -15,7 +15,7 @@ namespace ME::node {
 
     void RenderCamera::RegenerateMatrix() {
         float height = 1.0f / tanf((fieldOfView * DEG_TO_RAD) * 0.5f);
-        float width = height / render::interface->GetWindowAspect();
+        float width = height / render::mainWindow->GetAspect();
         float range = zFar / (zFar - zNear);
 
         projectionMatrix = Matrix4x4(

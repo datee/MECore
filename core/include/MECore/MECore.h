@@ -30,11 +30,10 @@ namespace ME {
         Log = 1,
         Input = Log << 1,
         Haxe = Input << 1,
-        Render = Haxe << 1,
-        Physics = Render << 1,
+        Physics = Haxe << 1,
         Time = Physics << 1,
 
-        All = Log | Render | Physics | Time | Haxe | Input,
+        All = Log | Physics | Time | Haxe | Input,
     };
 
     // Initializes specified engine subsystems

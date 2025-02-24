@@ -28,9 +28,6 @@ namespace ME {
         if (Has(systems, MECoreSystems::Haxe)) {
             haxe::Initialize(0, nullptr);
         }
-        if (Has(systems, MECoreSystems::Render)) {
-            render::Initialize();
-        }
         if (Has(systems, MECoreSystems::Physics)) {
             physics::Initialize();
         }
@@ -45,10 +42,6 @@ namespace ME {
     void Core_Shutdown() {
         if (Has(initialized, MECoreSystems::Physics)) {
             physics::Shutdown();
-        }
-        if (Has(initialized, MECoreSystems::Render)) {
-            render::Shutdown();
-            SDL_QuitSubSystem(SDL_INIT_VIDEO);
         }
         if (Has(initialized, MECoreSystems::Haxe)) {
             haxe::Shutdown();
