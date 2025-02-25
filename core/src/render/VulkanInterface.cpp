@@ -173,7 +173,7 @@ namespace ME::render {
     }
 
     Window* VulkanInterface::CreateWindow(WindowParameters* params) {
-        auto window = SDL_CreateWindow(params->title.c_str(), params->width, params->height, SDL_WINDOW_VULKAN);
+        auto window = SDL_CreateWindow(params->title.c_str(), params->width, params->height, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
         if (!window) {
             spdlog::error("Failed to create Vulkan window.");
             return nullptr;
@@ -186,7 +186,7 @@ namespace ME::render {
             return nullptr;
         }
 
-        auto windowWrapper = new VulkanWindow(this, window, surface);
+        auto windowWrapper = new VulkanWindow(params, this, window, surface);
         windows.insert(windowWrapper);
         return windowWrapper;
     }

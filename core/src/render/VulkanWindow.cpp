@@ -3,6 +3,7 @@
 //
 
 #include <spdlog/spdlog.h>
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
 
 #include "MECore/render/VulkanWindow.h"
@@ -10,13 +11,21 @@
 namespace ME::render {
     static constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 2;
 
-    VulkanWindow::VulkanWindow(VulkanInterface* interface, SDL_Window* window, VkSurfaceKHR vkSurface) {
+    VulkanWindow::VulkanWindow(WindowParameters* params, VulkanInterface* interface, SDL_Window* window, VkSurfaceKHR vkSurface) {
+        title = params->title;
+        width = params->width;
+        height = params->height;
+
         this->interface = interface;
         this->window = window;
         this->surface = vkSurface;
         swapchainIndex = 0;
         acquireSemaphoreIndex = 0;
         presentSemaphoreIndex = 0;
+    }
+
+    VulkanWindow::~VulkanWindow() {
+
     }
 
     bool VulkanWindow::IsValid() const {
@@ -54,6 +63,15 @@ namespace ME::render {
         }
     }
 
+    void VulkanWindow::RefreshSwapchain() {
+        if (vkSwapchain) {
+            beforeRefresh();
+            DestroySwapchainInternal();
+            CreateSwapchainInternal();
+            afterRefresh();
+        }
+    }
+
     void VulkanWindow::Destroy() {
         DestroySwapchain();
 
@@ -74,9 +92,13 @@ namespace ME::render {
             // result = vkDevice.acquireNextImageKHR(vkSwapchain, std::numeric_limits<uint64_t>::max(), semaphore, vk::Fence(), swapchainIndex).result;
             result = vk::Result(vkAcquireNextImageKHR(interface->GetVkDevice(), vkSwapchain, UINT64_MAX, semaphore, VkFence(), &swapchainIndex));
             if (result == vk::Result::eErrorOutOfDateKHR && attempt < maxAttempts) {
-                // auto surfaceCaps = vkPhysicalDevice.getSurfaceCapabilitiesKHR(vkSurface);
+                auto caps = interface->GetVkPhysicalDevice().getSurfaceCapabilitiesKHR(surface);
+                width = caps.currentExtent.width;
+                height = caps.currentExtent.height;
 
-                spdlog::warn("Vulkan swapchain out of date!");
+                RefreshSwapchain();
+
+                spdlog::warn("Vulkan swapchain out of date! Refreshing...");
             } else {
                 break;
             }
@@ -141,7 +163,7 @@ namespace ME::render {
         auto vkFormat = vk::Format(nvrhi::vulkan::convertFormat(nvFormat));
         auto colorSpace = vk::ColorSpaceKHR::eSrgbNonlinear;
 
-        vk::Extent2D extent = { 1280, 720 };
+        vk::Extent2D extent = { (uint32_t)width, (uint32_t)height };
 
         std::vector<uint32_t> queues = { interface->GetGraphicsQueueFamily(), interface->GetPresentQueueFamily() };
         const bool enableSharing = queues.size() > 1;
@@ -228,5 +250,4 @@ namespace ME::render {
 
         swapChainImages.clear();
     }
-
 }

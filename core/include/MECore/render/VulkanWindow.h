@@ -21,6 +21,11 @@ namespace ME::render {
         };
 
         VulkanInterface* interface;
+
+        std::string title;
+        int width, height;
+        bool fullscreen;
+
         SDL_Window* window;
         VkSurfaceKHR surface;
 
@@ -40,14 +45,18 @@ namespace ME::render {
         void DestroySwapchainInternal();
 
         public:
-        VulkanWindow(VulkanInterface* interface, SDL_Window* window, VkSurfaceKHR vkSurface);
+        VulkanWindow(WindowParameters* params, VulkanInterface* interface, SDL_Window* window, VkSurfaceKHR vkSurface);
+        ~VulkanWindow();
 
         bool IsValid() const override;
 
         SDL_Window* GetWindow() const override { return window; }
+        std::string GetTitle() const override { return title; }
         void GetSize(int* width, int* height) const override {
-            SDL_GetWindowSize(window, width, height);
+            *width = this->width;
+            *height = this->height;
         }
+        bool GetFullscreen() const override { return fullscreen; }
 
         Uint32 GetSwapchainCount() override {
             return swapChainImages.size();
@@ -65,8 +74,24 @@ namespace ME::render {
             return swapChainImages[swapchainIndex].rhiHandle;
         }
 
+        void SetTitle(const std::string& title) override {
+            this->title = title;
+            SDL_SetWindowTitle(window, this->title.c_str());
+        }
+        void SetSize(int width, int height) override {
+            this->width = width;
+            this->height = height;
+            SDL_SetWindowSize(window, width, height);
+            RefreshSwapchain();
+        }
+        void SetFullscreen(bool fullscreen) override {
+            this->fullscreen = fullscreen;
+            SDL_SetWindowFullscreen(window, fullscreen);
+        }
+
         bool CreateSwapchain() override;
         void DestroySwapchain() override;
+        void RefreshSwapchain() override;
         void Destroy() override;
 
         bool BeginFrame() override;

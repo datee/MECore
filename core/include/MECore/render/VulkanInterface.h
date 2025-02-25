@@ -87,6 +87,7 @@ namespace ME::render {
         }
         nvrhi::vulkan::DeviceHandle GetNvDevice() { return nvDevice; }
         vk::Instance GetVkInstance() { return vkInstance; }
+        vk::PhysicalDevice GetVkPhysicalDevice() { return vkPhysicalDevice; }
         vk::Device GetVkDevice() { return vkDevice; }
 
         int GetGraphicsQueueFamily() const { return graphicsQueueFamily; }
