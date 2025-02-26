@@ -9,7 +9,6 @@
 #include "MECore/haxe/HaxeGlobals.h"
 #include "MECore/log/LogSystem.h"
 #include "MECore/physics/PhysicsGlobals.h"
-#include "MECore/render/RenderGlobals.h"
 #include "MECore/time/TimeGlobal.h"
 
 namespace ME {

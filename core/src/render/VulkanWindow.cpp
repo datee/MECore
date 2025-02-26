@@ -96,9 +96,8 @@ namespace ME::render {
                 width = caps.currentExtent.width;
                 height = caps.currentExtent.height;
 
-                RefreshSwapchain();
-
                 spdlog::warn("Vulkan swapchain out of date! Refreshing...");
+                RefreshSwapchain();
             } else {
                 break;
             }

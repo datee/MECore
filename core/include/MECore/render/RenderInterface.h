@@ -16,14 +16,10 @@ namespace ME::render {
         void message(nvrhi::MessageSeverity severity, const char* messageText) override;
     };
 
-    struct WindowParameters {
-        std::string title;
-        int width;
-        int height;
-    };
-
     class RenderInterface {
         public:
+        static inline RenderInterface* instance;
+
         virtual ~RenderInterface() = default;
 
         virtual nvrhi::IDevice* GetDevice() = 0;

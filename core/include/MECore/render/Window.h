@@ -8,8 +8,16 @@
 #include <SDL3/SDL.h>
 #include <nvrhi/nvrhi.h>
 
+#include "Viewport.h"
+
 namespace ME::render {
-    class Window {
+    struct WindowParameters {
+        std::string title;
+        int width;
+        int height;
+    };
+
+    class Window : public Viewport {
         public:
         std::function<void()> beforeRefresh;
         std::function<void()> afterRefresh;
@@ -18,12 +26,6 @@ namespace ME::render {
 
         virtual SDL_Window* GetWindow() const = 0;
         virtual std::string GetTitle() const = 0;
-        virtual void GetSize(int* width, int* height) const = 0;
-        inline float GetAspect() const {
-            int width, height;
-            GetSize(&width, &height);
-            return (float)width / (float)height;
-        }
         virtual bool GetFullscreen() const = 0;
 
         virtual uint32_t GetSwapchainCount() = 0;

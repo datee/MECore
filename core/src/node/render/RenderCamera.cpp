@@ -3,7 +3,7 @@
 //
 
 #include "MECore/node/render/RenderCamera.h"
-#include "MECore/render/RenderGlobals.h"
+#include "MECore/render/RenderTarget.h"
 
 namespace ME::node {
     RenderCamera::RenderCamera() {
@@ -15,7 +15,7 @@ namespace ME::node {
 
     void RenderCamera::RegenerateMatrix() {
         float height = 1.0f / tanf((fieldOfView * DEG_TO_RAD) * 0.5f);
-        float width = height / render::mainWindow->GetAspect();
+        float width = height / render::RenderTarget::current->GetAspect();
         float range = zFar / (zFar - zNear);
 
         projectionMatrix = Matrix4x4(
