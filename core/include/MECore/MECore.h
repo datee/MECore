@@ -27,13 +27,12 @@
 namespace ME {
     enum class MECoreSystems {
         None = 0,
-        Log = 1,
-        Input = Log << 1,
+        Input = 1,
         Haxe = Input << 1,
         Physics = Haxe << 1,
         Time = Physics << 1,
 
-        All = Log | Physics | Time | Haxe | Input,
+        All =  Physics | Time | Haxe | Input,
     };
 
     // Initializes specified engine subsystems

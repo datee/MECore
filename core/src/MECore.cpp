@@ -21,9 +21,6 @@ namespace ME {
     }
 
     bool Core_Initialize(const MECoreSystems& systems) {
-        if (Has(systems, MECoreSystems::Log)) {
-            log::Initialize();
-        }
         if (Has(systems, MECoreSystems::Haxe)) {
             haxe::Initialize(0, nullptr);
         }
