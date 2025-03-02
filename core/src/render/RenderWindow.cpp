@@ -10,8 +10,8 @@
 namespace ME::render {
     RenderWindow::RenderWindow(Window* window) {
         this->window = window;
-        this->window->beforeRefresh = [this](){ spdlog::info("nuking buffers"); DestroyFramebuffers(); };
-        this->window->afterRefresh = [this](){ spdlog::info("making buffers"); CreateFramebuffers(); };
+        this->window->beforeRefresh = [this](){ DestroyFramebuffers(); };
+        this->window->afterRefresh = [this](){ CreateFramebuffers(); };
         CreateFramebuffers();
     }
 

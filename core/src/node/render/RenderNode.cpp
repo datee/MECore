@@ -6,10 +6,6 @@
 #include "MECore/node/render/RenderRootNode.h"
 
 namespace ME::node {
-    RenderNode::RenderNode() {
-        root = nullptr;
-    }
-
     RenderNode::~RenderNode() {
         SetRoot(nullptr);
     }
@@ -20,11 +16,11 @@ namespace ME::node {
 
     void RenderNode::SetRoot(RenderRootNode* root) {
         if (this->root != nullptr) {
-            this->root->children.erase(std::find(this->root->children.begin(), this->root->children.end(), this));
+            this->root->RemoveChild(this);
         }
         this->root = root;
         if (this->root != nullptr) {
-            this->root->children.push_back(this);
+            this->root->AddChild(this);
         }
     }
 

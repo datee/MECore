@@ -7,7 +7,6 @@
 
 #include "MECore/MECore.h"
 #include "MECore/haxe/HaxeGlobals.h"
-#include "MECore/log/LogSystem.h"
 #include "MECore/physics/PhysicsGlobals.h"
 #include "MECore/time/TimeGlobal.h"
 

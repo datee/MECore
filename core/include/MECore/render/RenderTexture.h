@@ -26,8 +26,14 @@ namespace ME::render {
             *width = this->width;
             *height = this->height;
         }
+        bool CanRender() const override {
+            return framebuffer != nullptr;
+        }
         nvrhi::FramebufferHandle GetFramebuffer() const override {
             return framebuffer;
+        }
+        nvrhi::ITexture* GetTexture() const {
+            return texture;
         }
 
         void SetSize(uint32_t width, uint32_t height);
