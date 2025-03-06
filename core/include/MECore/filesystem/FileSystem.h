@@ -4,15 +4,17 @@
 
 #pragma once
 
-#include <vfspp/VFS.h>
+#include "RootFileSystem.h"
+#include "NativeFileSystem.h"
+#include "RelativeFileSystem.h"
 
 namespace ME {
     // Shortcut to filesystem::vfs
-    inline vfspp::VirtualFileSystemPtr fs;
+    inline filesystem::RootFileSystem* fs;
 }
 
 namespace ME::filesystem {
-    inline vfspp::VirtualFileSystemPtr vfs;
+    inline RootFileSystem* root;
 
     void Initialize();
     void Shutdown();

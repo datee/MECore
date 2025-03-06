@@ -20,7 +20,6 @@ add_subdirectory(vendor/ozz-animation EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/JoltPhysics/Build EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/nvrhi EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/spdlog EXCLUDE_FROM_ALL)
-add_subdirectory(vendor/vfspp EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/stduuid EXCLUDE_FROM_ALL)
 add_subdirectory(vendor/cereal EXCLUDE_FROM_ALL)
 
@@ -65,6 +64,6 @@ target_include_directories(MECore
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
-target_link_libraries(MECore PRIVATE Threads::Threads Vulkan::Vulkan SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog imgui vfspp stduuid cereal::cereal)
+target_link_libraries(MECore PRIVATE Threads::Threads Vulkan::Vulkan SDL3::SDL3 libhl MECoreVM Taskflow Jolt nvrhi ozz_base ozz_animation spdlog::spdlog imgui stduuid cereal::cereal)
 
 add_library(ME::Core ALIAS MECore)

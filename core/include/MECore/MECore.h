@@ -8,7 +8,7 @@
 
 #include "math/Types.h"
 #include "math/Transform.h"
-#include "fs/FileSystem.h"
+#include "filesystem/FileSystem.h"
 
 // Platform defines derived from WickedEngine. Thank you turanszkij.
 // WickedEngine is licensed under the MIT license.

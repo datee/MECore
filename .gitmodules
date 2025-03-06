@@ -26,9 +26,6 @@
 	path = core/vendor/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
-[submodule "core/vendor/vfspp"]
-	path = core/vendor/vfspp
-	url = https://github.com/dotryen/vfspp.git
 [submodule "core/vendor/cereal"]
 	path = core/vendor/cereal
 	url = https://github.com/USCiLab/cereal.git

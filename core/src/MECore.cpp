@@ -9,7 +9,7 @@
 #include "MECore/haxe/HaxeSystem.h"
 #include "MECore/physics/PhysicsGlobals.h"
 #include "MECore/time/TimeGlobal.h"
-#include "MECore/fs/FileSystem.h"
+#include "MECore/filesystem/FileSystem.h"
 
 namespace ME {
     static MECoreSystems initialized;
