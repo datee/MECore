@@ -6,7 +6,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
 
-#include "MECore/render/VulkanWindow.h"
+#include "../../../include/MECore/render/vulkan/VulkanWindow.h"
 
 namespace ME::render {
     static constexpr uint32_t MAX_FRAMES_IN_FLIGHT = 2;

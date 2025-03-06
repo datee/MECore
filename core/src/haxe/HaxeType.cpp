@@ -8,7 +8,7 @@
 #include "HaxeUtils.cpp"
 
 namespace ME::haxe {
-    HaxeType::HaxeType(HaxeSystem* system, hl_module* module, hl_type* type) {
+    HaxeType::HaxeType(HaxeModule* system, hl_module* module, hl_type* type) {
         this->system = system;
         this->module = module;
         this->type = type;

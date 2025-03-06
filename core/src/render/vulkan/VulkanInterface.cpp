@@ -6,8 +6,8 @@
 #include <nvrhi/validation.h>
 #include <spdlog/spdlog.h>
 
-#include "MECore/render/VulkanInterface.h"
-#include "MECore/render/VulkanWindow.h"
+#include "../../../include/MECore/render/vulkan/VulkanInterface.h"
+#include "../../../include/MECore/render/vulkan/VulkanWindow.h"
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 

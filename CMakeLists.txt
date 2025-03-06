@@ -7,7 +7,7 @@ add_subdirectory(core)
 add_subdirectory(extension)
 
 function(MECore_configure target)
-    target_link_libraries(${target} PRIVATE ME::Core ME::CoreExt nvrhi Jolt::Jolt spdlog::spdlog)
+    target_link_libraries(${target} PRIVATE ME::Core ME::CoreExt nvrhi Jolt::Jolt spdlog::spdlog vfspp stduuid imgui)
     add_custom_command(TARGET ${target} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:MECoreExt> "${CMAKE_CURRENT_BINARY_DIR}")
 endfunction()

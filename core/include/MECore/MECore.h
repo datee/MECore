@@ -8,6 +8,7 @@
 
 #include "math/Types.h"
 #include "math/Transform.h"
+#include "fs/FileSystem.h"
 
 // Platform defines derived from WickedEngine. Thank you turanszkij.
 // WickedEngine is licensed under the MIT license.
@@ -25,17 +26,27 @@
 #endif
 
 namespace ME {
+    struct MEAppData {
+        std::string name;
+        std::string company;
+        std::string version;
+    };
+
     enum class MECoreSystems {
         None = 0,
         Input = 1,
-        Haxe = Input << 1,
+        Filesystem = Input << 1,
+        Haxe = Filesystem << 1,
         Physics = Haxe << 1,
         Time = Physics << 1,
+        Render = Physics << 1,
 
-        All =  Physics | Time | Haxe | Input,
+        All = ~0,
     };
 
+    inline MEAppData appData;
+
     // Initializes specified engine subsystems
-    bool Core_Initialize(const MECoreSystems& systems);
+    bool Core_Initialize(const MECoreSystems& systems = MECoreSystems::All);
     void Core_Shutdown();
 }

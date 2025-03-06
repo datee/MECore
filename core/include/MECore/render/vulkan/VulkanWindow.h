@@ -9,7 +9,7 @@
 #include <nvrhi/vulkan.h>
 #include <vulkan/vulkan.hpp>
 
-#include "Window.h"
+#include "../Window.h"
 #include "VulkanInterface.h"
 
 namespace ME::render {

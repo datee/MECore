@@ -10,21 +10,21 @@
 #include "HaxeObject.h"
 
 namespace ME::haxe {
-    class HaxeSystem;
+    class HaxeModule;
 
     // Represents a Haxe Object Type
     class HaxeType {
         private:
-        HaxeSystem* system;
+        HaxeModule* system;
         hl_module* module;
         hl_type* type;
 
         std::vector<std::unique_ptr<HaxeObject>> instances;
 
         public:
-        HaxeType(HaxeSystem* system, hl_module* module, hl_type* type);
+        HaxeType(HaxeModule* system, hl_module* module, hl_type* type);
 
-        inline HaxeSystem* GetSystem() const { return system; }
+        inline HaxeModule* GetSystem() const { return system; }
         inline hl_type* GetType() const { return type; }
 
         inline void SetPtr(const FieldName& name, HaxeObject* value) const { hl_dyn_setp(*reinterpret_cast<vdynamic**>(type->obj->global_value), hl_hash_utf8(name.c_str()), type, value->GetDynamic()); }

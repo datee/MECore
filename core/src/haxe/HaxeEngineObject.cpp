@@ -4,7 +4,7 @@
 
 #include "MECore/haxe/HaxeEngineObject.h"
 #include "MECore/haxe/HaxeType.h"
-#include "MECore/haxe/HaxeGlobals.h"
+#include "MECore/haxe/HaxeSystem.h"
 
 namespace ME::haxe {
     HaxeEngineObject::HaxeEngineObject(HaxeType* type, const bool preserve) {

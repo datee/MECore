@@ -6,9 +6,10 @@
 #include <spdlog/spdlog.h>
 
 #include "MECore/MECore.h"
-#include "MECore/haxe/HaxeGlobals.h"
+#include "MECore/haxe/HaxeSystem.h"
 #include "MECore/physics/PhysicsGlobals.h"
 #include "MECore/time/TimeGlobal.h"
+#include "MECore/fs/FileSystem.h"
 
 namespace ME {
     static MECoreSystems initialized;
@@ -20,6 +21,9 @@ namespace ME {
     }
 
     bool Core_Initialize(const MECoreSystems& systems) {
+        if (Has(systems, MECoreSystems::Filesystem)) {
+            filesystem::Initialize();
+        }
         if (Has(systems, MECoreSystems::Haxe)) {
             haxe::Initialize(0, nullptr);
         }
@@ -29,17 +33,26 @@ namespace ME {
         if (Has(systems, MECoreSystems::Time)) {
             time::Initialize();
         }
+        if (Has(systems, MECoreSystems::Render)) {
+            SDL_InitSubSystem(SDL_INIT_VIDEO);
+        }
 
         initialized = systems;
         return true;
     }
 
     void Core_Shutdown() {
+        if (Has(initialized, MECoreSystems::Render)) {
+            SDL_QuitSubSystem(SDL_INIT_VIDEO);
+        }
         if (Has(initialized, MECoreSystems::Physics)) {
             physics::Shutdown();
         }
         if (Has(initialized, MECoreSystems::Haxe)) {
             haxe::Shutdown();
+        }
+        if (Has(initialized, MECoreSystems::Filesystem)) {
+            filesystem::Shutdown();
         }
 
         SDL_Quit();
