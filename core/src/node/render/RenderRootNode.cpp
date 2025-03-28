@@ -5,6 +5,7 @@
 #include "MECore/node/render/RenderRootNode.h"
 
 namespace ME::node {
+    // Do not call. Used internally.
     void RenderRootNode::AddChild(RenderNode* child) {
         if (child == nullptr) return;
 
@@ -14,6 +15,7 @@ namespace ME::node {
         }
     }
 
+    // Do not call. Used internally.
     void RenderRootNode::RemoveChild(RenderNode* child) {
         if (child == nullptr) return;
 

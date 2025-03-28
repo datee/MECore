@@ -6,8 +6,8 @@
 #include <nvrhi/validation.h>
 #include <spdlog/spdlog.h>
 
-#include "../../../include/MECore/render/vulkan/VulkanInterface.h"
-#include "../../../include/MECore/render/vulkan/VulkanWindow.h"
+#include "MECore/render/vulkan/VulkanInterface.h"
+#include "MECore/render/vulkan/VulkanWindow.h"
 
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
@@ -274,6 +274,20 @@ namespace ME::render {
             // TODO: check for device features (raytracing and stuff)
         }
 
+        #define APPEND_EXTENSION(condition, desc) if (condition) { (desc).pNext = pNext; pNext = &(desc); }
+        void* pNext = nullptr;
+
+        vk::PhysicalDeviceFeatures2 physicalDeviceFeatures2;
+        auto bufferDeviceAddressFeatures = vk::PhysicalDeviceBufferDeviceAddressFeatures();
+        auto maintenance4Features = vk::PhysicalDeviceMaintenance4Features();
+
+        APPEND_EXTENSION(true, bufferDeviceAddressFeatures);
+        APPEND_EXTENSION(true, maintenance4Features);
+
+        physicalDeviceFeatures2.pNext = pNext;
+        vkPhysicalDevice.getFeatures2(&physicalDeviceFeatures2);
+
+        // TODO: graphics should be the only default. check for compute queue, transfer queue, and headless mode in the future
         std::unordered_set<uint32_t> uniqueQueueFamilies = { graphicsQueueFamily, computeQueueFamily, transferQueueFamily, presentQueueFamily };
 
         float priority = 1.0f;
@@ -285,6 +299,21 @@ namespace ME::render {
                 .setQueueCount(1)
                 .setPQueuePriorities(&priority));
         }
+
+        // TODO: in donut there is a giant features check here, i only have vk1.3 here
+
+        auto vk13Features = vk::PhysicalDeviceVulkan13Features()
+            .setSynchronization2(true)
+            .setMaintenance4(maintenance4Features.maintenance4);
+
+        pNext = nullptr;
+        // TODO: check if api is at least 1.3
+        APPEND_EXTENSION(true,  vk13Features);
+        APPEND_EXTENSION(maintenance4Features.maintenance4, maintenance4Features)
+
+        #undef APPEND_EXTENSION
+
+        // VULKAN 1.0 - 1.2 FEATURES
 
         auto deviceFeatures = vk::PhysicalDeviceFeatures()
             .setShaderImageGatherExtended(true)
@@ -300,7 +329,7 @@ namespace ME::render {
             .setVertexPipelineStoresAndAtomics(true);
 
         auto vk11Features = vk::PhysicalDeviceVulkan11Features()
-            .setPNext(nullptr);
+            .setPNext(pNext);
 
         auto vk12Features = vk::PhysicalDeviceVulkan12Features()
             .setDescriptorIndexing(true)

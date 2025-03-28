@@ -61,5 +61,10 @@ namespace ME {
     // Matrix
     Matrix4x4 Transform::ToTRS() const {
         return Matrix4x4::sRotationTranslation(rotation, position).PreScaled(scale);
+        // return Matrix4x4::sRotationTranslation(rotation, position);
+    }
+
+    Matrix4x4 Transform::ToInverseTRS() const {
+        return Matrix4x4::sInverseRotationTranslation(rotation, position).PreScaled(scale);
     }
 }

@@ -19,24 +19,22 @@ namespace ME::resource {
 
     class Shader : public Resource {
         private:
+        nvrhi::ShaderType type;
         nvrhi::ShaderHandle shader;
         nvrhi::BindingLayoutHandle bindingLayout;
         nvrhi::InputLayoutHandle inputLayout;
 
         public:
-        nvrhi::ShaderType type;
-        // only needed for vertex shaders
-        std::vector<nvrhi::VertexAttributeDesc> vertexAttributes;
-        nvrhi::BindingLayoutDesc bindings;
-        // doesnt need to persist, only needed for creation
-        std::vector<uint8_t> bytecode;
-
         Shader() = default;
+        Shader(nvrhi::ShaderType type, nvrhi::ShaderHandle shader, nvrhi::BindingLayoutHandle bindingLayout, nvrhi::InputLayoutHandle inputLayout) {
+            this->type = type;
+            this->shader = shader;
+            this->bindingLayout = bindingLayout;
+            this->inputLayout = inputLayout;
+        }
 
         nvrhi::ShaderHandle GetGPUShader() const { return shader; }
         nvrhi::BindingLayoutHandle GetBindingLayout() const { return bindingLayout; }
         nvrhi::InputLayoutHandle GetInputLayout() const { return inputLayout; }
-
-        bool CreateGPUShader();
     };
 }

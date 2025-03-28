@@ -20,6 +20,8 @@ namespace ME::render {
 
         virtual ~RenderPipeline() = default;
 
+        virtual nvrhi::BindingLayoutHandle GetGlobalBindings() = 0;
+
         // Order: Zero is a valid option but it happens AFTER the stage.
         virtual void AddPass(RenderPass* pass, RenderStage stage, int order) = 0;
         virtual void Render(const node::RenderRootNode* root, node::RenderCamera* camera) = 0;

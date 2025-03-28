@@ -32,9 +32,13 @@ namespace ME::resource {
                 .setCullBack()
                 .setDepthClipEnable(true);
             auto depthStencilState = nvrhi::DepthStencilState()
-                .enableDepthTest()
-                .enableDepthWrite()
-                .setDepthFunc(nvrhi::ComparisonFunc::GreaterOrEqual);
+                .disableDepthTest()
+                .disableDepthWrite()
+                .disableStencil();
+            // auto depthStencilState = nvrhi::DepthStencilState()
+            //     .enableDepthTest()
+            //     .enableDepthWrite()
+            //     .setDepthFunc(nvrhi::ComparisonFunc::GreaterOrEqual);
 
             material.pipelineDesc.primType = nvrhi::PrimitiveType::TriangleList;
             material.pipelineDesc.renderState.rasterState = rasterState;
@@ -73,7 +77,12 @@ namespace ME::resource {
         }
 
         nvrhi::GraphicsPipelineHandle GetPipeline() const { return pipeline; }
-        nvrhi::BindingSetVector GetBindings() const { return { vertexBindings, pixelBindings }; }
+        nvrhi::BindingSetVector GetBindings() const {
+            nvrhi::BindingSetVector bindings;
+            if (vertexBindings) bindings.push_back(vertexBindings);
+            if (pixelBindings) bindings.push_back(pixelBindings);
+            return bindings;
+        }
 
         bool CreateGPUPipeline(nvrhi::IFramebuffer* framebuffer);
         bool UpdateBindings();

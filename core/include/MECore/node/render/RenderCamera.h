@@ -26,6 +26,6 @@ namespace ME::node {
         inline float GetFOV() const { return fieldOfView; }
         inline Matrix4x4 GetProjectionMatrix() const { return projectionMatrix; }
 
-        inline void SetFOV(float value) { fieldOfView = value;  }
+        inline void SetFOV(float value) { fieldOfView = value; RegenerateMatrix(); }
     };
 }

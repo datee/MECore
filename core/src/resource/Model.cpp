@@ -5,10 +5,16 @@
 #include "MECore/resource/Model.h"
 
 namespace ME::resource {
-    void Model::TryAddUpload(nvrhi::ICommandList* commandList) const {
+    void Model::UpdateBuffers() {
         for (const auto mesh : meshes) {
-            if (!mesh->WantsUpload()) continue;
-            mesh->AddUpload(commandList);
+            if (!mesh->IsDirty()) continue;
+            mesh->UpdateBuffers();
+        }
+    }
+
+    void Model::UploadBuffers(nvrhi::ICommandList* cmd) {
+        for (const auto mesh : meshes) {
+            mesh->UploadBuffers(cmd);
         }
     }
 }

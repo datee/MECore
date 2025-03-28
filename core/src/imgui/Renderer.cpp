@@ -261,7 +261,6 @@ namespace ME::imgui {
         if (iter != bindingsCache.end()) return iter->second;
 
         nvrhi::BindingSetDesc desc;
-
         desc.bindings = {
             nvrhi::BindingSetItem::PushConstants(0, sizeof(float) * 2),
             nvrhi::BindingSetItem::Texture_SRV(0, texture),

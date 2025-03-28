@@ -9,10 +9,17 @@ namespace ME::render {
         private:
         nvrhi::CommandListHandle commandList;
         nvrhi::BufferHandle worldBuffer;
-        nvrhi::BindingSetHandle bindingSet;
+
+        nvrhi::BindingLayoutHandle globalBindingLayout;
+        nvrhi::BindingSetHandle globalBindingSet;
+
+        void CreateGlobalBindingLayout();
+        void CreateGlobalBindingSet();
 
         public:
         ExamplePipeline();
+
+        nvrhi::BindingLayoutHandle GetGlobalBindings() override { return globalBindingLayout; }
 
         void AddPass(RenderPass* pass, RenderStage, int order) override;
         void Render(const node::RenderRootNode* root, node::RenderCamera* camera) override;

@@ -44,6 +44,7 @@ namespace ME {
         inline Transform Exit(const Transform& local) const;
 
         inline Matrix4x4 ToTRS() const;
+        inline Matrix4x4 ToInverseTRS() const;
     };
 }
 

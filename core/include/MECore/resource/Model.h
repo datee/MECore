@@ -20,6 +20,7 @@ namespace ME::resource {
 
         Model() = default;
 
-        void TryAddUpload(nvrhi::ICommandList* commandList) const;
+        void UpdateBuffers();
+        void UploadBuffers(nvrhi::ICommandList* cmd);
     };
 }

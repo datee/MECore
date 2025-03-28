@@ -2,47 +2,55 @@
 // Created by ryen on 2/25/25.
 //
 
+#include <spdlog/spdlog.h>
+
 #include "MECore/resource/Mesh.h"
 #include "MECore/render/RenderInterface.h"
 
 namespace ME::resource {
-    inline void CreateBuffer(nvrhi::IDevice* device, nvrhi::BufferHandle& buffer, uint64_t size, bool indexBuffer) {
+    bool Mesh::ReallocateBuffer(nvrhi::BufferHandle& buffer, IMeshStream* stream) {
+        if (buffer != nullptr) {
+            if (buffer->getDesc().byteSize >= stream->GetSize()) return true;
+        }
+
+        bool isIndex = stream->GetStreamType() == StreamType::Index;
+
         nvrhi::BufferDesc desc;
-        desc.byteSize = size;
+        desc.byteSize = stream->GetSize();
         desc.structStride = 0;
         desc.canHaveUAVs = false;
-        desc.isVertexBuffer = !indexBuffer;
-        desc.isIndexBuffer = indexBuffer;
+        desc.isVertexBuffer = !isIndex;
+        desc.isIndexBuffer = isIndex;
         desc.isDrawIndirectArgs = false;
         desc.isVolatile = false;
-        desc.initialState = indexBuffer ? nvrhi::ResourceStates::IndexBuffer : nvrhi::ResourceStates::VertexBuffer;
+        desc.initialState = isIndex ? nvrhi::ResourceStates::IndexBuffer : nvrhi::ResourceStates::VertexBuffer;
         desc.keepInitialState = true;
+        desc.debugName = stream->GetName().c_str();
 
-        buffer = device->createBuffer(desc);
+        buffer = render::RenderInterface::instance->GetDevice()->createBuffer(desc);
+        return buffer != nullptr;
     }
 
-    bool Mesh::CreateGPUBuffers() {
-        auto nvDevice = render::RenderInterface::instance->GetDevice();
+    bool Mesh::UpdateBuffers() {
+        if (!IsDirty()) return true;
 
-        if (!gpuVertexBuffer) {
-            CreateBuffer(nvDevice, gpuVertexBuffer, vertices.size(), false);
-        }
-        if (!gpuIndexBuffer) {
-            CreateBuffer(nvDevice, gpuIndexBuffer, indexes.size() * sizeof(uint32_t), true);
+        for (const auto& stream : streams) {
+            if (!gpuBuffers.contains(stream.get()) || stream->IsDirty()) {
+                nvrhi::BufferHandle buffer;
+                if (!ReallocateBuffer(buffer, stream.get())) return false;
+                gpuBuffers[stream.get()] = buffer;
+            }
         }
 
         return true;
     }
 
-    void Mesh::DestroyGPUBuffers() {
-        wantsUpload = false;
-        gpuVertexBuffer = nullptr;
-        gpuIndexBuffer = nullptr;
-    }
-
-    // Command list should be open btw.
-    void Mesh::AddUpload(nvrhi::ICommandList* commandList) const {
-        commandList->writeBuffer(gpuVertexBuffer, vertices.data(), vertices.size());
-        commandList->writeBuffer(gpuIndexBuffer, indexes.data(), indexes.size() * sizeof(uint32_t));
+    void Mesh::UploadBuffers(nvrhi::ICommandList* cmd) {
+        for (const auto& stream : streams) {
+            if (!stream->IsDirty()) continue;
+            nvrhi::BufferHandle buffer = gpuBuffers[stream.get()];
+            cmd->writeBuffer(buffer, stream->GetData(), stream->GetSize());
+            stream->ClearDirty();
+        }
     }
 }

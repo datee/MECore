@@ -11,12 +11,16 @@ namespace ME::node {
     class RenderRootNode;
     class RenderNode : public Node {
         protected:
-        RenderRootNode* root = nullptr;
-        Transform transform{};
-        bool enabled = true;
+        RenderRootNode* root;
+        Transform transform;
+        bool enabled;
 
         public:
-        RenderNode() = default;
+        RenderNode() {
+            root = nullptr;
+            transform = Transform::Identity();
+            enabled = true;
+        }
         ~RenderNode() override;
 
         Node* GetParent() const override;

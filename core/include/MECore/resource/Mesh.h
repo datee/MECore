@@ -5,64 +5,167 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include <nvrhi/nvrhi.h>
 
 #include "MECore/math/Types.h"
 
 namespace ME::resource {
-    struct MeshStream {
-        std::string name;
-        nvrhi::Format format;
+    enum class StreamType { Vertex, Index };
 
-        virtual ~MeshStream() = default;
+    class IMeshStream {
+        public:
+        virtual ~IMeshStream() = default;
+
+        virtual const std::string& GetName() const = 0;
+        virtual const std::string& GetSemantic() const = 0;
+        virtual StreamType GetStreamType() const = 0;
+        virtual nvrhi::Format GetFormat() const = 0;
 
         virtual const void* GetData() const = 0;
         virtual size_t GetSize() const = 0;
         virtual size_t GetStride() const = 0;
+        size_t GetCount() const { return GetSize() / GetStride(); }
+
+        virtual bool IsDirty() const = 0;
+        virtual void ClearDirty() = 0;
+    };
+
+    class RawMeshStream : public IMeshStream {
+        private:
+        std::string name;
+        std::string semantic;
+        StreamType streamType;
+        nvrhi::Format format;
+
+        public:
+        void* data;
+        size_t size;
+        bool isDirty;
+
+        RawMeshStream(const std::string& name, const std::string& semantic, StreamType type, nvrhi::Format format) {
+            this->name = name;
+            this->semantic = semantic;
+            this->streamType = type;
+            this->format = format;
+
+            data = nullptr;
+            size = 0;
+            isDirty = false;
+        }
+        RawMeshStream(const std::string& semantic, StreamType type, nvrhi::Format format) : RawMeshStream(semantic, semantic, type, format) { }
+
+        const std::string& GetName() const override { return name; }
+        const std::string& GetSemantic() const override { return semantic; }
+        StreamType GetStreamType() const override { return streamType; }
+        nvrhi::Format GetFormat() const override { return format; }
+
+        const void* GetData() const override { return data; }
+        size_t GetSize() const override { return size; }
+        size_t GetStride() const override { auto info = nvrhi::getFormatInfo(format); return info.blockSize * info.bytesPerBlock; }
+
+        bool IsDirty() const override { return isDirty; }
+        void ClearDirty() override { isDirty = false; }
     };
 
     template<typename T>
-    struct Stream final : public MeshStream {
+    class MeshStreamTemplate : public IMeshStream {
+        private:
+        std::string name;
+        std::string semantic;
+
+        public:
         std::vector<T> data;
+        bool isDirty;
+
+        MeshStreamTemplate(const std::string& semantic) {
+            this->name = semantic;
+            this->semantic = semantic;
+            isDirty = false;
+        }
+        MeshStreamTemplate(const std::string& name, const std::string& semantic) {
+            this->name = name;
+            this->semantic = semantic;
+            isDirty = false;
+        }
+
+        const std::string& GetName() const override { return name; }
+        const std::string& GetSemantic() const override { return semantic; }
 
         const void* GetData() const override { return data.data(); }
         size_t GetSize() const override { return data.size() * GetStride(); }
         size_t GetStride() const override { return sizeof(T); }
+
+        bool IsDirty() const override { return isDirty; }
+        void ClearDirty() override { isDirty = false; }
     };
 
-    class VertexBuffer {
-        friend class Mesh;
-        bool needsUpdate = false;
-        std::vector<MeshStream*> streams;
-        nvrhi::BufferHandle buffer;
-
+    class Vec3MeshStream final : public MeshStreamTemplate<PackedVector3> {
         public:
-        VertexBuffer() = default;
+        Vec3MeshStream(const std::string& semantic) : MeshStreamTemplate(semantic) { }
+        Vec3MeshStream(const std::string& name, const std::string& semantic) : MeshStreamTemplate(name, semantic) { }
 
-        void Upload(nvrhi::ICommandList* commandList) const;
+        StreamType GetStreamType() const override { return StreamType::Vertex; }
+        nvrhi::Format GetFormat() const override { return nvrhi::Format::RGB32_FLOAT; }
+    };
+
+    class IndexMeshStream final : public MeshStreamTemplate<uint32_t> {
+        public:
+        IndexMeshStream(const std::string& semantic) : MeshStreamTemplate(semantic) { }
+        IndexMeshStream(const std::string& name, const std::string& semantic) : MeshStreamTemplate(name, semantic) { }
+
+        StreamType GetStreamType() const override { return StreamType::Index; }
+        nvrhi::Format GetFormat() const override { return nvrhi::Format::R32_UINT; }
     };
 
     // A single mesh.
     class Mesh {
         private:
-        bool wantsUpload = false;
-        nvrhi::BufferHandle gpuVertexBuffer;
-        nvrhi::BufferHandle gpuIndexBuffer;
+        std::unordered_map<IMeshStream*, nvrhi::BufferHandle> gpuBuffers;
+
+        bool ReallocateBuffer(nvrhi::BufferHandle& buffer, IMeshStream* stream);
 
         public:
-        std::vector<PackedVector3> vertices;
-        std::vector<uint32_t> indexes;
+        std::vector<std::unique_ptr<IMeshStream>> streams;
 
         Mesh() = default;
 
-        bool WantsUpload() const { return wantsUpload; }
-        void WantUpload() { wantsUpload = true; }
+        bool IsDirty() const {
+            if (gpuBuffers.size() != streams.size()) return true; // quick check but could be wrong when quick swaps happen
+            for (const auto& stream : streams) {
+                if (stream->IsDirty()) return true;
+            }
+            return false;
+        }
+        IMeshStream* GetStreamBySemantic(const std::string& semantic) const {
+            for (const auto& stream : streams) {
+                if (stream->GetSemantic() == semantic) return stream.get();
+            }
+            return nullptr;
+        }
+        nvrhi::BufferHandle GetBufferBySemantic(const std::string& semantic) const {
+            for (const auto& stream : streams) {
+                if (stream->GetSemantic() == semantic) return gpuBuffers.at(stream.get());
+            }
+            return nullptr;
+        }
 
-        nvrhi::BufferHandle GetVertexBuffer() const { return gpuVertexBuffer; }
-        nvrhi::BufferHandle GetIndexBuffer() const { return gpuIndexBuffer; }
+        // COMMON STREAMS AND BUFFERS
+        IMeshStream* GetPositionStream() const {
+            return GetStreamBySemantic("POSITION");
+        }
+        nvrhi::BufferHandle GetPositionBuffer() const {
+            return GetBufferBySemantic("POSITION");
+        }
 
-        bool CreateGPUBuffers();
-        void DestroyGPUBuffers();
-        void AddUpload(nvrhi::ICommandList* commandList) const;
+        IMeshStream* GetIndexStream() const {
+            return GetStreamBySemantic("INDEX");
+        }
+        nvrhi::BufferHandle GetIndexBuffer() const {
+            return GetBufferBySemantic("INDEX");
+        }
+
+        bool UpdateBuffers();
+        void UploadBuffers(nvrhi::ICommandList* cmd);
     };
 }
