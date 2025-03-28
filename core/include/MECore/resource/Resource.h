@@ -9,7 +9,7 @@ namespace ME::resource {
         public:
         virtual ~Resource() = default;
 
-        bool IsValid() const { return true; }
-        void Clone() const { }
+        virtual bool IsValid() const { return true; }
+        virtual void Clone() const { }
     };
 }

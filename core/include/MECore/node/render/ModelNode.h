@@ -12,7 +12,6 @@
 namespace ME::node {
     class ModelNode : public RenderNode {
         public:
-        // Might change this to a shared pointer later
-        resource::Model* model;
+        std::shared_ptr<resource::Model> model;
     };
 }

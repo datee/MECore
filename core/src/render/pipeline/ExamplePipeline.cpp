@@ -2,6 +2,7 @@
 
 #include "MECore/MECore.h"
 #include "MECore/render/RenderTarget.h"
+#include "MECore/render/RenderInterface.h"
 #include "MECore/render/pipeline/ExamplePipeline.h"
 
 namespace ME::render {
@@ -19,14 +20,6 @@ namespace ME::render {
 
         commandList = device->createCommandList();
         worldBuffer = device->createBuffer(nvrhi::utils::CreateVolatileConstantBufferDesc(sizeof(WorldData), "WorldData", 8));
-        // worldBuffer = device->createBuffer(nvrhi::BufferDesc()
-        //     .setByteSize(sizeof(WorldData))
-        //     .setIsConstantBuffer(true)
-        //     .setIsVolatile(true)
-        //     .setMaxVersions(16)
-        //     // .setInitialState(nvrhi::ResourceStates::CopyDest)
-        //     // .setKeepInitialState(true)
-        //     .setDebugName("WorldBuffer"));
 
         CreateGlobalBindingLayout();
         CreateGlobalBindingSet();
@@ -67,7 +60,7 @@ namespace ME::render {
                 auto material = model->model->materials[meshIndex];
 
                 if (!material->GetPipeline()) {
-                    material->CreateGPUPipeline(framebuffer);
+                    material->CreatePipeline(framebuffer);
                 }
 
                 nvrhi::GraphicsState graphicsState = nvrhi::GraphicsState()
@@ -76,9 +69,13 @@ namespace ME::render {
                     .setViewport(nvrhi::ViewportState().addViewportAndScissorRect(nvrhi::Viewport(bufferWidth, bufferHeight)))
                     .addBindingSet(globalBindingSet);
 
-                auto attrCount = material->vertexShader->GetInputLayout()->getNumAttributes();
+                for (const auto set : material->GetBindings()) {
+                    graphicsState.addBindingSet(set);
+                }
+
+                auto attrCount = material->GetVertexShader()->GetInputLayout()->getNumAttributes();
                 for (int attrIndex = 0; attrIndex < attrCount; attrIndex++) {
-                    auto attr = material->vertexShader->GetInputLayout()->getAttributeDesc(attrIndex);
+                    auto attr = material->GetVertexShader()->GetInputLayout()->getAttributeDesc(attrIndex);
                     auto buffer = mesh->GetBufferBySemantic(attr->name);
                     if (buffer == nullptr) continue;
 

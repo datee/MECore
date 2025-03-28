@@ -4,21 +4,28 @@
 
 #pragma once
 
+#include <memory>
 #include <nvrhi/nvrhi.h>
 
-#include "MECore/render/RenderInterface.h"
 #include "MECore/resource/Shader.h"
+#include "MECore/resource/Texture.h"
 
 namespace ME::resource {
     class Material {
         private:
+        std::shared_ptr<Shader> vertexShader;
+        std::shared_ptr<Shader> pixelShader;
+
         nvrhi::GraphicsPipelineHandle pipeline;
         nvrhi::BindingSetHandle vertexBindings;
         nvrhi::BindingSetHandle pixelBindings;
 
+        // TODO: shaders can only have resource properties for now. change later
+        std::vector<nvrhi::IResource*> vertexResources;
+        std::vector<nvrhi::IResource*> pixelResources;
+        bool resourcesDirty;
+
         public:
-        Shader* vertexShader;
-        Shader* pixelShader;
         nvrhi::GraphicsPipelineDesc pipelineDesc;
         nvrhi::BindingSetDesc bindingsDesc;
 
@@ -84,7 +91,30 @@ namespace ME::resource {
             return bindings;
         }
 
-        bool CreateGPUPipeline(nvrhi::IFramebuffer* framebuffer);
+        std::shared_ptr<Shader> GetVertexShader() const { return vertexShader; }
+        std::shared_ptr<Shader> GetPixelShader() const { return pixelShader; }
+
+        void SetVertexShader(const std::shared_ptr<Shader>& shader) {
+            if (vertexShader != shader) {
+                vertexResources.clear();
+            }
+            vertexShader = shader;
+            vertexResources.resize(shader->GetProperties().size());
+            resourcesDirty = true;
+        }
+        void SetPixelShader(const std::shared_ptr<Shader>& shader) {
+            if (pixelShader != shader) {
+                pixelResources.clear();
+            }
+            pixelShader = shader;
+            pixelResources.resize(shader->GetProperties().size());
+            resourcesDirty = true;
+        }
+
+        bool SetProperty(const std::string& property, const std::shared_ptr<Texture>& texture);
+        bool SetProperty(const std::string& property, const nvrhi::SamplerHandle& sampler);
+
+        bool CreatePipeline(nvrhi::IFramebuffer* framebuffer);
         bool UpdateBindings();
     };
 }

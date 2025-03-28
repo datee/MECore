@@ -9,12 +9,15 @@
 #include "Resource.h"
 
 namespace ME::resource {
-    enum class AttributeType {
-        Float
+    enum class PropertyType {
+        Block, Binding
     };
 
-    struct ShaderAttribute {
+    struct ShaderProperty {
         std::string name;
+        int index;
+        nvrhi::ResourceType type;
+        uint32_t slot;
     };
 
     class Shader : public Resource {
@@ -24,6 +27,10 @@ namespace ME::resource {
         nvrhi::BindingLayoutHandle bindingLayout;
         nvrhi::InputLayoutHandle inputLayout;
 
+        // TODO: add support for constant buffer properties (floats, vectors)
+        std::vector<ShaderProperty> properties;
+        std::vector<ShaderProperty> globalProperties;
+
         public:
         Shader() = default;
         Shader(nvrhi::ShaderType type, nvrhi::ShaderHandle shader, nvrhi::BindingLayoutHandle bindingLayout, nvrhi::InputLayoutHandle inputLayout) {
@@ -32,9 +39,18 @@ namespace ME::resource {
             this->bindingLayout = bindingLayout;
             this->inputLayout = inputLayout;
         }
+        Shader(nvrhi::ShaderType type, nvrhi::ShaderHandle shader, nvrhi::BindingLayoutHandle bindingLayout, nvrhi::InputLayoutHandle inputLayout, std::vector<ShaderProperty> properties, std::vector<ShaderProperty> globalProperties) {
+            this->type = type;
+            this->shader = shader;
+            this->bindingLayout = bindingLayout;
+            this->inputLayout = inputLayout;
+            this->properties = properties;
+            this->globalProperties = globalProperties;
+        }
 
         nvrhi::ShaderHandle GetGPUShader() const { return shader; }
         nvrhi::BindingLayoutHandle GetBindingLayout() const { return bindingLayout; }
         nvrhi::InputLayoutHandle GetInputLayout() const { return inputLayout; }
+        const std::vector<ShaderProperty>& GetProperties() const { return properties; }
     };
 }
