@@ -37,15 +37,16 @@ namespace ME::resource {
             auto rasterState = nvrhi::RasterState()
                 .setFillSolid()
                 .setCullBack()
+                .setFrontCounterClockwise(true)
                 .setDepthClipEnable(true);
-            auto depthStencilState = nvrhi::DepthStencilState()
-                .disableDepthTest()
-                .disableDepthWrite()
-                .disableStencil();
             // auto depthStencilState = nvrhi::DepthStencilState()
-            //     .enableDepthTest()
-            //     .enableDepthWrite()
-            //     .setDepthFunc(nvrhi::ComparisonFunc::GreaterOrEqual);
+            //     .disableDepthTest()
+            //     .disableDepthWrite()
+            //     .disableStencil();
+            auto depthStencilState = nvrhi::DepthStencilState()
+                .enableDepthTest()
+                .enableDepthWrite()
+                .setDepthFunc(nvrhi::ComparisonFunc::LessOrEqual);
 
             material.pipelineDesc.primType = nvrhi::PrimitiveType::TriangleList;
             material.pipelineDesc.renderState.rasterState = rasterState;

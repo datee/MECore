@@ -23,15 +23,31 @@ namespace ME::render {
     }
 
     void RenderWindow::CreateFramebuffers() {
+        int width, height;
+        window->GetSize(&width, &height);
+
+        auto nvDevice = RenderInterface::instance->GetDevice();
+        auto depthDesc = nvrhi::TextureDesc()
+            .setWidth(width)
+            .setHeight(height)
+            .setFormat(nvrhi::Format::D24S8)
+            .setIsRenderTarget(true)
+            .setInitialState(nvrhi::ResourceStates::DepthWrite)
+            .setKeepInitialState(true);
+        depthBuffer = nvDevice->createTexture(depthDesc);
+
         auto count = window->GetSwapchainCount();
         framebuffers.resize(count);
         for (int i = 0; i < count ; i++) {
-            auto desc = nvrhi::FramebufferDesc().addColorAttachment(window->GetSwapchainTexture(i));
-            framebuffers[i] = RenderInterface::instance->GetDevice()->createFramebuffer(desc);
+            auto frameBufferDesc = nvrhi::FramebufferDesc()
+                .addColorAttachment(window->GetSwapchainTexture(i))
+                .setDepthAttachment(depthBuffer);
+            framebuffers[i] = nvDevice->createFramebuffer(frameBufferDesc);
         }
     }
 
     void RenderWindow::DestroyFramebuffers() {
         framebuffers.clear();
+        depthBuffer = nullptr;
     }
 }

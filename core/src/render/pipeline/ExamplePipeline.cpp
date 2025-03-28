@@ -44,6 +44,7 @@ namespace ME::render {
         commandList->writeBuffer(worldBuffer, &worldData, sizeof(WorldData));
 
         nvrhi::utils::ClearColorAttachment(commandList, framebuffer, 0, nvrhi::Color(0.2f));
+        nvrhi::utils::ClearDepthStencilAttachment(commandList, framebuffer, 1, 0);
 
         commandList->beginMarker("Meshes");
 

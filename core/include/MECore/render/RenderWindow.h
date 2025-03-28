@@ -12,6 +12,7 @@ namespace ME::render {
         private:
         Window* window;
         std::vector<nvrhi::FramebufferHandle> framebuffers;
+        nvrhi::TextureHandle depthBuffer;
 
         void CreateFramebuffers();
         void DestroyFramebuffers();
