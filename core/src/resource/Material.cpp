@@ -2,31 +2,46 @@
 // Created by ryen on 3/1/25.
 //
 
+#include <spdlog/spdlog.h>
+
 #include "MECore/resource/Material.h"
+
 #include "MECore/render/RenderInterface.h"
 #include "MECore/render/pipeline/RenderPipeline.h"
 
 namespace ME::resource {
+    #define ADD_LAYOUT(cond, source) \
+    if (cond) { \
+        if (auto layout = source; layout != nullptr) { \
+            desc.bindingLayouts.push_back(layout); \
+        } \
+    } \
+
     bool Material::CreatePipeline(nvrhi::IFramebuffer* framebuffer) {
         if (!pipeline) {
+            if (!vertexShader || !pixelShader) {
+                spdlog::error("Failed material is missing vertex or pixel shader!");
+                return false;
+            }
+
             auto nvDevice = render::RenderInterface::instance->GetDevice();
             auto desc = pipelineDesc;
             desc.inputLayout = vertexShader->GetInputLayout();
             desc.VS = vertexShader->GetGPUShader();
+            if (geometryShader) desc.GS = geometryShader->GetGPUShader();
             desc.PS = pixelShader->GetGPUShader();
-            if (auto layout = render::RenderPipeline::instance->GetGlobalBindings(); layout != nullptr) {
-                desc.bindingLayouts.push_back(layout);
-            }
-            if (auto layout = vertexShader->GetBindingLayout(); layout != nullptr) {
-                desc.bindingLayouts.push_back(layout);
-            }
-            if (auto layout = pixelShader->GetBindingLayout(); layout != nullptr) {
-                desc.bindingLayouts.push_back(layout);
-            }
+
+            ADD_LAYOUT(true, render::RenderPipeline::instance->GetGlobalBindings())
+            ADD_LAYOUT(vertexShader, vertexShader->GetBindingLayout())
+            ADD_LAYOUT(geometryShader, geometryShader->GetBindingLayout())
+            ADD_LAYOUT(pixelShader, pixelShader->GetBindingLayout())
+
             pipeline = nvDevice->createGraphicsPipeline(desc, framebuffer);
         }
         return pipeline;
     }
+
+    #undef ADD_LAYOUT
 
     inline void PropertiesToBindings(nvrhi::IDevice* device, const Shader* shader, nvrhi::BindingSetHandle& handle, std::vector<nvrhi::IResource*>& resources) {
         if (!shader->GetBindingLayout()) return;
@@ -63,10 +78,9 @@ namespace ME::resource {
 
     bool Material::UpdateBindings() {
         auto nvDevice = render::RenderInterface::instance->GetDevice();
-
-        PropertiesToBindings(nvDevice, vertexShader.get(), vertexBindings, vertexResources);
-        PropertiesToBindings(nvDevice, pixelShader.get(), pixelBindings, pixelResources);
-
+        if (vertexShader) PropertiesToBindings(nvDevice, vertexShader.get(), vertexBindings, vertexResources);
+        if (geometryShader) PropertiesToBindings(nvDevice, geometryShader.get(), geometryBindings, geometryResources);
+        if (pixelShader) PropertiesToBindings(nvDevice, pixelShader.get(), pixelBindings, pixelResources);
         resourcesDirty = false;
         return true;
     }
@@ -81,19 +95,25 @@ namespace ME::resource {
         return false;
     }
 
+    #define PROPRETY_SET(type, prop) if (type##Shader) changed |= SearchAndSet(type##Shader->GetProperties(), type##Resources, property, prop)
+
     bool Material::SetProperty(const std::string& property, const std::shared_ptr<Texture>& texture) {
         bool changed = false;
-        changed |= SearchAndSet(vertexShader->GetProperties(), vertexResources, property, texture->GetGPUTexture());
-        changed |= SearchAndSet(pixelShader->GetProperties(), pixelResources, property, texture->GetGPUTexture());
+        PROPRETY_SET(vertex, texture->GetGPUTexture());
+        PROPRETY_SET(geometry, texture->GetGPUTexture());
+        PROPRETY_SET(pixel, texture->GetGPUTexture());
         resourcesDirty |= changed;
         return changed;
     }
 
     bool Material::SetProperty(const std::string& property, const nvrhi::SamplerHandle& sampler) {
         bool changed = false;
-        changed |= SearchAndSet(vertexShader->GetProperties(), vertexResources, property, sampler);
-        changed |= SearchAndSet(pixelShader->GetProperties(), pixelResources, property, sampler);
+        PROPRETY_SET(vertex, sampler);
+        PROPRETY_SET(geometry, sampler);
+        PROPRETY_SET(pixel, sampler);
         resourcesDirty |= changed;
         return changed;
     }
+
+    #undef PROPRETY_SET
 }

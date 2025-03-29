@@ -14,14 +14,17 @@ namespace ME::resource {
     class Material {
         private:
         std::shared_ptr<Shader> vertexShader;
+        std::shared_ptr<Shader> geometryShader;
         std::shared_ptr<Shader> pixelShader;
 
         nvrhi::GraphicsPipelineHandle pipeline;
         nvrhi::BindingSetHandle vertexBindings;
+        nvrhi::BindingSetHandle geometryBindings;
         nvrhi::BindingSetHandle pixelBindings;
 
         // TODO: shaders can only have resource properties for now. change later
         std::vector<nvrhi::IResource*> vertexResources;
+        std::vector<nvrhi::IResource*> geometryResources;
         std::vector<nvrhi::IResource*> pixelResources;
         bool resourcesDirty;
 
@@ -88,29 +91,34 @@ namespace ME::resource {
         nvrhi::BindingSetVector GetBindings() const {
             nvrhi::BindingSetVector bindings;
             if (vertexBindings) bindings.push_back(vertexBindings);
+            if (geometryBindings) bindings.push_back(geometryBindings);
             if (pixelBindings) bindings.push_back(pixelBindings);
             return bindings;
         }
 
         std::shared_ptr<Shader> GetVertexShader() const { return vertexShader; }
+        std::shared_ptr<Shader> GetGeometryShader() const { return geometryShader; }
         std::shared_ptr<Shader> GetPixelShader() const { return pixelShader; }
 
+        #define SHADER_SET(type) \
+        if (type##Shader != shader) { \
+            type##Resources.clear(); \
+        } \
+        type##Shader = shader; \
+        type##Resources.resize(shader->GetProperties().size()); \
+        resourcesDirty = true; \
+
         void SetVertexShader(const std::shared_ptr<Shader>& shader) {
-            if (vertexShader != shader) {
-                vertexResources.clear();
-            }
-            vertexShader = shader;
-            vertexResources.resize(shader->GetProperties().size());
-            resourcesDirty = true;
+            SHADER_SET(vertex)
+        }
+        void SetGeometryShader(const std::shared_ptr<Shader>& shader) {
+            SHADER_SET(geometry)
         }
         void SetPixelShader(const std::shared_ptr<Shader>& shader) {
-            if (pixelShader != shader) {
-                pixelResources.clear();
-            }
-            pixelShader = shader;
-            pixelResources.resize(shader->GetProperties().size());
-            resourcesDirty = true;
+            SHADER_SET(pixel)
         }
+
+        #undef SHADER_SET
 
         bool SetProperty(const std::string& property, const std::shared_ptr<Texture>& texture);
         bool SetProperty(const std::string& property, const nvrhi::SamplerHandle& sampler);
