@@ -109,13 +109,13 @@ namespace ME::resource {
         nvrhi::Format GetFormat() const override { return nvrhi::Format::RGB32_FLOAT; }
     };
 
-    class IndexMeshStream final : public MeshStreamTemplate<uint32_t> {
+    class IndexMeshStream final : public MeshStreamTemplate<uint16_t> {
         public:
         IndexMeshStream(const std::string& semantic) : MeshStreamTemplate(semantic) { }
         IndexMeshStream(const std::string& name, const std::string& semantic) : MeshStreamTemplate(name, semantic) { }
 
         StreamType GetStreamType() const override { return StreamType::Index; }
-        nvrhi::Format GetFormat() const override { return nvrhi::Format::R32_UINT; }
+        nvrhi::Format GetFormat() const override { return nvrhi::Format::R16_UINT; }
     };
 
     // A single mesh.
