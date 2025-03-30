@@ -10,39 +10,6 @@
 #include "MECore/render/pipeline/RenderPipeline.h"
 
 namespace ME::resource {
-    #define ADD_LAYOUT(cond, source) \
-    if (cond) { \
-        if (auto layout = source; layout != nullptr) { \
-            desc.bindingLayouts.push_back(layout); \
-        } \
-    } \
-
-    bool Material::CreatePipeline(nvrhi::IFramebuffer* framebuffer) {
-        if (!pipeline) {
-            if (!vertexShader || !pixelShader) {
-                spdlog::error("Failed material is missing vertex or pixel shader!");
-                return false;
-            }
-
-            auto nvDevice = render::RenderInterface::instance->GetDevice();
-            auto desc = pipelineDesc;
-            desc.inputLayout = vertexShader->GetInputLayout();
-            desc.VS = vertexShader->GetGPUShader();
-            if (geometryShader) desc.GS = geometryShader->GetGPUShader();
-            desc.PS = pixelShader->GetGPUShader();
-
-            ADD_LAYOUT(true, render::RenderPipeline::instance->GetGlobalBindings())
-            ADD_LAYOUT(vertexShader, vertexShader->GetBindingLayout())
-            ADD_LAYOUT(geometryShader, geometryShader->GetBindingLayout())
-            ADD_LAYOUT(pixelShader, pixelShader->GetBindingLayout())
-
-            pipeline = nvDevice->createGraphicsPipeline(desc, framebuffer);
-        }
-        return pipeline;
-    }
-
-    #undef ADD_LAYOUT
-
     inline void PropertiesToBindings(nvrhi::IDevice* device, const Shader* shader, nvrhi::BindingSetHandle& handle, std::vector<nvrhi::IResource*>& resources) {
         if (!shader->GetBindingLayout()) return;
 
@@ -116,4 +83,48 @@ namespace ME::resource {
     }
 
     #undef PROPRETY_SET
+
+    #define ADD_LAYOUT(cond, source) \
+    if (cond) { \
+        if (auto layout = source; layout != nullptr) { \
+        desc.bindingLayouts.push_back(layout); \
+        } \
+    } \
+
+    nvrhi::GraphicsPipelineDesc Material::GetGPUPipelineDesc() const {
+        auto rasterState = nvrhi::RasterState()
+            .setFillSolid()
+            .setCullMode(drawSettings.culling)
+            .setFrontCounterClockwise(true)
+            .setDepthClipEnable(true);
+        auto depthStencilState = nvrhi::DepthStencilState()
+            .setDepthTestEnable(depthSettings.testEnabled)
+            .setDepthWriteEnable(depthSettings.writeEnabled)
+            .setDepthFunc(depthSettings.comparison)
+            .setStencilEnable(stencilSettings.enabled)
+            .setFrontFaceStencil(stencilSettings.front)
+            .setBackFaceStencil(stencilSettings.back);
+
+        auto renderState = nvrhi::RenderState()
+            .setRasterState(rasterState)
+            .setDepthStencilState(depthStencilState);
+
+        auto desc = nvrhi::GraphicsPipelineDesc()
+            .setPrimType(nvrhi::PrimitiveType::TriangleList)
+            .setRenderState(renderState)
+            .setInputLayout(vertexShader->GetInputLayout());
+
+        desc.VS = vertexShader->GetGPUShader();
+        if (geometryShader) desc.GS = geometryShader->GetGPUShader();
+        desc.PS = pixelShader->GetGPUShader();
+
+        ADD_LAYOUT(true, render::RenderPipeline::instance->GetGlobalBindings())
+        ADD_LAYOUT(vertexShader, vertexShader->GetBindingLayout())
+        ADD_LAYOUT(geometryShader, geometryShader->GetBindingLayout())
+        ADD_LAYOUT(pixelShader, pixelShader->GetBindingLayout())
+
+        return desc;
+    }
+
+    #undef ADD_LAYOUT
 }

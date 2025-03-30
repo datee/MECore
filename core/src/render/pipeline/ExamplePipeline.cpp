@@ -48,63 +48,63 @@ namespace ME::render {
 
         commandList->beginMarker("Meshes");
 
-        for (auto model : node->GetModels()) {
-            if (!model->IsEnabled()) continue;
-            if (model->model == nullptr) continue;
-
-            model->model->UploadBuffers(commandList);
-            auto objectData = ObjectData();
-            model->GetTransform().ToTRS().StoreFloat4x4(objectData.transform);
-
-            for (int meshIndex = 0; meshIndex < model->model->meshes.size(); meshIndex++) {
-                auto mesh = model->model->meshes[meshIndex];
-                auto material = model->model->materials[meshIndex];
-
-                if (!material->GetPipeline()) {
-                    material->CreatePipeline(framebuffer);
-                }
-
-                nvrhi::GraphicsState graphicsState = nvrhi::GraphicsState()
-                    .setPipeline(material->GetPipeline())
-                    .setFramebuffer(framebuffer)
-                    .setViewport(nvrhi::ViewportState().addViewportAndScissorRect(nvrhi::Viewport(bufferWidth, bufferHeight)))
-                    .addBindingSet(globalBindingSet);
-
-                for (const auto set : material->GetBindings()) {
-                    graphicsState.addBindingSet(set);
-                }
-
-                auto attrCount = material->GetVertexShader()->GetInputLayout()->getNumAttributes();
-                for (int attrIndex = 0; attrIndex < attrCount; attrIndex++) {
-                    auto attr = material->GetVertexShader()->GetInputLayout()->getAttributeDesc(attrIndex);
-                    auto buffer = mesh->GetBufferBySemantic(attr->name);
-                    if (buffer == nullptr) continue;
-
-                    graphicsState.addVertexBuffer(nvrhi::VertexBufferBinding().setBuffer(buffer).setSlot(attr->bufferIndex));
-                }
-
-                if (auto indexStream = mesh->GetIndexStream(); indexStream != nullptr) {
-                    graphicsState.setIndexBuffer(nvrhi::IndexBufferBinding().setBuffer(mesh->GetIndexBuffer()).setFormat(indexStream->GetFormat()));
-
-                    nvrhi::DrawArguments drawArgs;
-                    drawArgs.vertexCount = indexStream->GetCount();
-                    drawArgs.startVertexLocation = 0;
-                    drawArgs.startIndexLocation = 0;
-
-                    commandList->setGraphicsState(graphicsState);
-                    commandList->setPushConstants(&objectData, sizeof(objectData));
-                    commandList->drawIndexed(drawArgs);
-                } else {
-                    nvrhi::DrawArguments drawArgs;
-                    drawArgs.vertexCount = mesh->GetPositionStream()->GetCount();
-                    drawArgs.startVertexLocation = 0;
-
-                    commandList->setGraphicsState(graphicsState);
-                    commandList->setPushConstants(&objectData, sizeof(objectData));
-                    commandList->draw(drawArgs);
-                }
-            }
-        }
+        // for (auto model : node->GetModels()) {
+        //     if (!model->IsEnabled()) continue;
+        //     if (model->model == nullptr) continue;
+//
+        //     model->model->UploadBuffers(commandList);
+        //     auto objectData = ObjectData();
+        //     model->GetTransform().ToTRS().StoreFloat4x4(objectData.transform);
+//
+        //     for (int meshIndex = 0; meshIndex < model->model->meshes.size(); meshIndex++) {
+        //         auto mesh = model->model->meshes[meshIndex];
+        //         auto material = model->model->materials[meshIndex];
+//
+        //         if (!material->GetPipeline()) {
+        //             material->CreatePipeline(framebuffer);
+        //         }
+//
+        //         nvrhi::GraphicsState graphicsState = nvrhi::GraphicsState()
+        //             .setPipeline(material->GetPipeline())
+        //             .setFramebuffer(framebuffer)
+        //             .setViewport(nvrhi::ViewportState().addViewportAndScissorRect(nvrhi::Viewport(bufferWidth, bufferHeight)))
+        //             .addBindingSet(globalBindingSet);
+//
+        //         for (const auto set : material->GetGPUBindings()) {
+        //             graphicsState.addBindingSet(set);
+        //         }
+//
+        //         auto attrCount = material->GetVertexShader()->GetInputLayout()->getNumAttributes();
+        //         for (int attrIndex = 0; attrIndex < attrCount; attrIndex++) {
+        //             auto attr = material->GetVertexShader()->GetInputLayout()->getAttributeDesc(attrIndex);
+        //             auto buffer = mesh->GetBufferBySemantic(attr->name);
+        //             if (buffer == nullptr) continue;
+//
+        //             graphicsState.addVertexBuffer(nvrhi::VertexBufferBinding().setBuffer(buffer).setSlot(attr->bufferIndex));
+        //         }
+//
+        //         if (auto indexStream = mesh->GetIndexStream(); indexStream != nullptr) {
+        //             graphicsState.setIndexBuffer(nvrhi::IndexBufferBinding().setBuffer(mesh->GetIndexBuffer()).setFormat(indexStream->GetFormat()));
+//
+        //             nvrhi::DrawArguments drawArgs;
+        //             drawArgs.vertexCount = indexStream->GetCount();
+        //             drawArgs.startVertexLocation = 0;
+        //             drawArgs.startIndexLocation = 0;
+//
+        //             commandList->setGraphicsState(graphicsState);
+        //             commandList->setPushConstants(&objectData, sizeof(objectData));
+        //             commandList->drawIndexed(drawArgs);
+        //         } else {
+        //             nvrhi::DrawArguments drawArgs;
+        //             drawArgs.vertexCount = mesh->GetPositionStream()->GetCount();
+        //             drawArgs.startVertexLocation = 0;
+//
+        //             commandList->setGraphicsState(graphicsState);
+        //             commandList->setPushConstants(&objectData, sizeof(objectData));
+        //             commandList->draw(drawArgs);
+        //         }
+        //     }
+        // }
 
         commandList->endMarker();
         commandList->close();
