@@ -10,16 +10,19 @@ namespace ME::render {
     class RenderTexture : public RenderTarget {
         private:
         uint32_t width, height;
-        nvrhi::Format format;
+        nvrhi::Format colorFormat;
+        nvrhi::Format depthFormat;
 
-        nvrhi::TextureHandle texture;
+        nvrhi::TextureHandle colorTexture;
+        nvrhi::TextureHandle depthTexture;
+
         nvrhi::FramebufferHandle framebuffer;
 
         void CreateResources();
 
         public:
         RenderTexture() = default;
-        RenderTexture(uint32_t width, uint32_t height, nvrhi::Format format);
+        RenderTexture(uint32_t width, uint32_t height, nvrhi::Format colorFormat = nvrhi::Format::BGRA8_UNORM, nvrhi::Format depthFormat = nvrhi::Format::D16);
         ~RenderTexture() override;
 
         void GetSize(int* width, int* height) const override {
@@ -32,8 +35,11 @@ namespace ME::render {
         nvrhi::FramebufferHandle GetFramebuffer() const override {
             return framebuffer;
         }
-        nvrhi::ITexture* GetTexture() const {
-            return texture;
+        nvrhi::ITexture* GetColorTexture() const {
+            return colorTexture;
+        }
+        nvrhi::ITexture* GetDepthTexture() const {
+            return depthTexture;
         }
 
         void SetSize(uint32_t width, uint32_t height);

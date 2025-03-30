@@ -104,10 +104,13 @@ namespace ME::resource {
             .setStencilEnable(stencilSettings.enabled)
             .setFrontFaceStencil(stencilSettings.front)
             .setBackFaceStencil(stencilSettings.back);
+        auto blendState = nvrhi::BlendState()
+            .setRenderTarget(0, nvrhi::BlendState::RenderTarget().setColorWriteMask(static_cast<nvrhi::ColorMask>(drawSettings.colorMask)));
 
         auto renderState = nvrhi::RenderState()
             .setRasterState(rasterState)
-            .setDepthStencilState(depthStencilState);
+            .setDepthStencilState(depthStencilState)
+            .setBlendState(blendState);
 
         auto desc = nvrhi::GraphicsPipelineDesc()
             .setPrimType(nvrhi::PrimitiveType::TriangleList)

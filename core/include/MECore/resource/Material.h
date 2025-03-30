@@ -12,12 +12,22 @@
 #include "MECore/resource/Texture.h"
 
 namespace ME::resource {
+    enum class ColorMask : uint8_t {
+        None = 0,
+        Red = 1,
+        Green = 2,
+        Blue = 4,
+        Alpha = 8,
+        All = 0xF
+    };
+
     struct MaterialDrawSettings {
-        nvrhi::RasterCullMode culling;
+        nvrhi::RasterCullMode culling = nvrhi::RasterCullMode::Back;
+        ColorMask colorMask = ColorMask::All;
     };
 
     struct MaterialBlendSettings {
-
+        // TODO: add blending settings
     };
 
     struct MaterialDepthSettings {
@@ -34,7 +44,7 @@ namespace ME::resource {
     };
 
     struct MaterialStencilSettings {
-        bool enabled;
+        bool enabled = false;
         nvrhi::DepthStencilState::StencilOpDesc front;
         nvrhi::DepthStencilState::StencilOpDesc back;
     };

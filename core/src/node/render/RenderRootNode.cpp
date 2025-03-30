@@ -13,6 +13,9 @@ namespace ME::node {
         if (auto model = dynamic_cast<ModelNode*>(child)) {
             models.insert(model);
         }
+        if (auto light = dynamic_cast<LightNode*>(child)) {
+            lights.insert(light);
+        }
     }
 
     // Do not call. Used internally.
@@ -22,6 +25,9 @@ namespace ME::node {
         children.erase(std::ranges::find(children, child));
         if (auto model = dynamic_cast<ModelNode*>(child)) {
             models.erase(model);
+        }
+        if (auto light = dynamic_cast<LightNode*>(child)) {
+            lights.erase(light);
         }
     }
 

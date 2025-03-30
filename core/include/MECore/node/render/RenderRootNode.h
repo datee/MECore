@@ -10,6 +10,7 @@
 #include "../Node.h"
 #include "RenderNode.h"
 #include "ModelNode.h"
+#include "LightNode.h"
 
 namespace ME::node {
     class RenderRootNode final : public Node {
@@ -18,6 +19,7 @@ namespace ME::node {
         std::vector<RenderNode*> children;
 
         std::unordered_set<ModelNode*> models;
+        std::unordered_set<LightNode*> lights;
 
         public:
         explicit RenderRootNode(Node* parent) {
@@ -31,6 +33,7 @@ namespace ME::node {
         std::vector<RenderNode*> GetRenderChildren() const { return children; }
 
         std::unordered_set<ModelNode*> GetModels() const { return models; }
+        std::unordered_set<LightNode*> GetLights() const { return lights; }
 
         void AddChild(RenderNode* child);
         void RemoveChild(RenderNode* child);
