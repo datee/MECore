@@ -88,7 +88,7 @@ namespace ME::imgui {
     bool Renderer::UpdateFontTexture() {
         ImGuiIO& io = ImGui::GetIO();
 
-        if (fontTexture && io.Fonts->TexID) return true;
+        if (fontTexture && io.Fonts->TexID.GetTexID()) return true;
 
         unsigned char* pixels;
         int width, height;
@@ -163,7 +163,7 @@ namespace ME::imgui {
                 if (drawCmd->UserCallback) {
                     drawCmd->UserCallback(cmdList, drawCmd);
                 } else {
-                    drawState.bindings = { GetBindingSet((nvrhi::ITexture*)drawCmd->TextureId) };
+                    drawState.bindings = { GetBindingSet((nvrhi::ITexture*)drawCmd->GetTexID()) };
                     assert(drawState.bindings[0]);
 
                     drawState.viewport.scissorRects[0] = nvrhi::Rect(int(drawCmd->ClipRect.x),

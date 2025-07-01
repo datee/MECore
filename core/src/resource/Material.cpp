@@ -32,15 +32,25 @@ namespace ME::resource {
             setItem.type = item.type;
             setItem.slot = item.slot;
             setItem.subresources = nvrhi::AllSubresources;
+            setItem.arrayElement = 0;
 
             if (indexes[i] != -1) {
-                setItem.resourceHandle = resources[indexes[i]];
+                auto resource = resources[indexes[i]];
+                setItem.resourceHandle = resource;
+
+                if (setItem.type == nvrhi::ResourceType::Texture_SRV || setItem.type == nvrhi::ResourceType::Texture_UAV) {
+                    auto casted = reinterpret_cast<nvrhi::ITexture*>(resource);
+                    const auto& texDesc = casted->getDesc();
+                    setItem.dimension = texDesc.dimension;
+                    setItem.format = texDesc.format;
+                }
             }
 
             setDesc.addItem(setItem);
         }
 
-        handle = device->createBindingSet(setDesc, shader->GetBindingLayout());
+        auto temp = device->createBindingSet(setDesc, shader->GetBindingLayout());
+        handle = temp;
     }
 
     bool Material::UpdateBindings() {

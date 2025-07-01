@@ -17,6 +17,7 @@ Contributions are welcome.
 - This is my excuse to learn both languages.
 - There might be a lot of amateur/beginner mistakes. Both in Haxe and C++.
 - No documentation whatsoever.
+- **!! WINDOWS USERS** - I develop on Linux and have no clue on how to compile on windows or for windows. I tried it once and immediately got issues getting it to work. One day this engine will compile for windows but that is currently not a priority (not from me anyway)
 
 ### Usage
 Add this repository as a submodule and use CMake. **Make sure to update your submodules recursively.**
