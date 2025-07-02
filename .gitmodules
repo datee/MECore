@@ -22,10 +22,6 @@
 [submodule "core/vendor/stduuid"]
 	path = core/vendor/stduuid
 	url = https://github.com/mariusbancila/stduuid.git
-[submodule "core/vendor/imgui"]
-	path = core/vendor/imgui
-	url = https://github.com/ocornut/imgui.git
-	branch = docking
 [submodule "core/vendor/cereal"]
 	path = core/vendor/cereal
 	url = https://github.com/USCiLab/cereal.git
