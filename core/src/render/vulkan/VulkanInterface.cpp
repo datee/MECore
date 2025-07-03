@@ -173,7 +173,11 @@ namespace ME::render {
     }
 
     Window* VulkanInterface::CreateWindow(WindowParameters* params) {
-        auto window = SDL_CreateWindow(params->title.c_str(), params->width, params->height, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
+        auto flags = SDL_WINDOW_VULKAN;
+        if (params->borderless) flags |= SDL_WINDOW_BORDERLESS;
+        if (params->resizeable) flags |= SDL_WINDOW_RESIZABLE;
+        if (params->transparent) flags |= SDL_WINDOW_TRANSPARENT;
+        auto window = SDL_CreateWindow(params->title.c_str(), params->width, params->height, flags);
         if (!window) {
             spdlog::error("Failed to create Vulkan window.");
             return nullptr;

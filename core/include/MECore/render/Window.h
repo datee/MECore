@@ -15,6 +15,9 @@ namespace ME::render {
         std::string title;
         int width;
         int height;
+        bool borderless;
+        bool resizeable;
+        bool transparent;
     };
 
     class Window : public Viewport {
@@ -25,8 +28,11 @@ namespace ME::render {
         virtual bool IsValid() const = 0;
 
         virtual SDL_Window* GetWindow() const = 0;
-        virtual std::string GetTitle() const = 0;
+        virtual const std::string& GetTitle() const = 0;
         virtual bool GetFullscreen() const = 0;
+        virtual bool GetBorderless() const = 0;
+        virtual bool GetResizeable() const = 0;
+        virtual bool GetTransparent() const = 0;
 
         virtual uint32_t GetSwapchainCount() = 0;
         virtual uint32_t GetCurrentSwapchainIndex() = 0;
@@ -36,6 +42,8 @@ namespace ME::render {
         virtual void SetTitle(const std::string& name) = 0;
         virtual void SetSize(int width, int height) = 0;
         virtual void SetFullscreen(bool fullscreen) = 0;
+        virtual void SetBorderless(bool borderless) = 0;
+        virtual void SetResizeable(bool resizeable) = 0;
 
         virtual bool CreateSwapchain() = 0;
         virtual void DestroySwapchain() = 0;

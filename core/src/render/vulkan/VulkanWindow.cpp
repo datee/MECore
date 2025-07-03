@@ -15,6 +15,9 @@ namespace ME::render {
         title = params->title;
         width = params->width;
         height = params->height;
+        borderless = params->borderless;
+        resizeable = params->resizeable;
+        transparent = params->transparent;
 
         this->interface = interface;
         this->window = window;
@@ -180,7 +183,7 @@ namespace ME::render {
             .setQueueFamilyIndexCount(enableSharing ? queues.size() : 0)
             .setPQueueFamilyIndices(enableSharing ? queues.data() : nullptr)
             .setPreTransform(vk::SurfaceTransformFlagBitsKHR::eIdentity)
-            .setCompositeAlpha(vk::CompositeAlphaFlagBitsKHR::eOpaque)
+            .setCompositeAlpha(transparent ? vk::CompositeAlphaFlagBitsKHR::ePostMultiplied : vk::CompositeAlphaFlagBitsKHR::eOpaque)
             .setPresentMode(vk::PresentModeKHR::eImmediate) // TODO: Immediate means no vsync, FIFO means vsync. Allow this to be set
             .setClipped(true)
             .setOldSwapchain(nullptr);

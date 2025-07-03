@@ -25,6 +25,9 @@ namespace ME::render {
         std::string title;
         int width, height;
         bool fullscreen;
+        bool borderless;
+        bool resizeable;
+        bool transparent;
 
         SDL_Window* window;
         VkSurfaceKHR surface;
@@ -51,12 +54,15 @@ namespace ME::render {
         bool IsValid() const override;
 
         SDL_Window* GetWindow() const override { return window; }
-        std::string GetTitle() const override { return title; }
+        const std::string& GetTitle() const override { return title; }
         void GetSize(int* width, int* height) const override {
             *width = this->width;
             *height = this->height;
         }
         bool GetFullscreen() const override { return fullscreen; }
+        bool GetBorderless() const override { return borderless; }
+        bool GetResizeable() const override { return resizeable; }
+        bool GetTransparent() const override { return transparent; }
 
         Uint32 GetSwapchainCount() override {
             return swapChainImages.size();
@@ -87,6 +93,14 @@ namespace ME::render {
         void SetFullscreen(bool fullscreen) override {
             this->fullscreen = fullscreen;
             SDL_SetWindowFullscreen(window, fullscreen);
+        }
+        void SetBorderless(bool borderless) override {
+            this->borderless = borderless;
+            SDL_SetWindowBordered(window, !borderless);
+        }
+        void SetResizeable(bool resizeable) override {
+            this->resizeable = resizeable;
+            SDL_SetWindowResizable(window, resizeable);
         }
 
         bool CreateSwapchain() override;
