@@ -29,9 +29,16 @@ namespace ME::render {
         };
 
         VulkanExtensionSet enabledExtensions = {
-            { VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME, VK_EXT_DEBUG_REPORT_EXTENSION_NAME },
-            { },
-            { VK_KHR_MAINTENANCE1_EXTENSION_NAME }
+            {
+                VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
+                VK_EXT_DEBUG_REPORT_EXTENSION_NAME
+            },
+            {
+                "VK_LAYER_KHRONOS_validation"
+            },
+            {
+                
+            }
         };
 
         VulkanExtensionSet optionalExtensions = {
@@ -45,10 +52,7 @@ namespace ME::render {
                 VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME,
                 VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME,
                 VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME,
-                VK_KHR_MAINTENANCE_4_EXTENSION_NAME,
                 VK_KHR_SWAPCHAIN_MUTABLE_FORMAT_EXTENSION_NAME,
-                VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME,
-                VK_NV_MESH_SHADER_EXTENSION_NAME,
             }
         };
 

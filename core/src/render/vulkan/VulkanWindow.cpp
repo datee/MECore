@@ -161,18 +161,28 @@ namespace ME::render {
     }
 
     bool VulkanWindow::CreateSwapchainInternal() {
+        auto vkPhysicalDevice = interface->GetVkPhysicalDevice();
+        auto capabilities = vkPhysicalDevice.getSurfaceCapabilitiesKHR(surface);
+        
         auto nvFormat = nvrhi::Format::BGRA8_UNORM; // TODO: make this adjustable
         auto vkFormat = vk::Format(nvrhi::vulkan::convertFormat(nvFormat));
         auto colorSpace = vk::ColorSpaceKHR::eSrgbNonlinear;
 
         vk::Extent2D extent = { (uint32_t)width, (uint32_t)height };
-
-        std::vector<uint32_t> queues = { interface->GetGraphicsQueueFamily(), interface->GetPresentQueueFamily() };
+        
+        std::vector<uint32_t> queues{};
+        queues.reserve(2);
+        queues.push_back(interface->GetGraphicsQueueFamily());
+        int nextFamily = interface->GetPresentQueueFamily();
+        if (std::ranges::find(queues, nextFamily) == queues.end()) {
+            queues.push_back(nextFamily);
+        }
+        
         const bool enableSharing = queues.size() > 1;
 
         auto desc = vk::SwapchainCreateInfoKHR()
             .setSurface(surface)
-            .setMinImageCount(2) // TODO: allow this to be adjustable
+            .setMinImageCount(capabilities.minImageCount)
             .setImageFormat(vkFormat)
             .setImageColorSpace(colorSpace)
             .setImageExtent(extent)
@@ -183,7 +193,7 @@ namespace ME::render {
             .setQueueFamilyIndexCount(enableSharing ? queues.size() : 0)
             .setPQueueFamilyIndices(enableSharing ? queues.data() : nullptr)
             .setPreTransform(vk::SurfaceTransformFlagBitsKHR::eIdentity)
-            .setCompositeAlpha(transparent ? vk::CompositeAlphaFlagBitsKHR::ePostMultiplied : vk::CompositeAlphaFlagBitsKHR::eOpaque)
+            .setCompositeAlpha(transparent ? vk::CompositeAlphaFlagBitsKHR::ePreMultiplied : vk::CompositeAlphaFlagBitsKHR::eOpaque)
             .setPresentMode(vk::PresentModeKHR::eImmediate) // TODO: Immediate means no vsync, FIFO means vsync. Allow this to be set
             .setClipped(true)
             .setOldSwapchain(nullptr);

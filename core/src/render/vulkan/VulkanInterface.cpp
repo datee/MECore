@@ -201,14 +201,38 @@ namespace ME::render {
 
     bool VulkanInterface::PickPhysicalDevice() {
         auto devices = vkInstance.enumeratePhysicalDevices();
-        vkPhysicalDevice = devices[0]; // dont care just select the first for now
 
-        return true;
+        std::vector<vk::PhysicalDevice> discreteGPUs;
+        std::vector<vk::PhysicalDevice> otherGPUs;
+
+        // TODO: add more physical device checks
+        for (auto device : devices) {
+            vk::PhysicalDeviceProperties prop = device.getProperties();
+
+            if (prop.deviceType == vk::PhysicalDeviceType::eDiscreteGpu) {
+                discreteGPUs.push_back(device);
+            } else {
+                otherGPUs.push_back(device);
+            }
+        }
+
+        if (!discreteGPUs.empty()) {
+            vkPhysicalDevice = discreteGPUs[0];
+            return true;
+        }
+
+        if (!otherGPUs.empty()) {
+            vkPhysicalDevice = otherGPUs[0];
+            return true;
+        }
+
+        return false;
     }
 
     bool VulkanInterface::FindQueueFamilies(vk::PhysicalDevice physicalDevice) {
         auto props = physicalDevice.getQueueFamilyProperties();
 
+        // Look for dedicated queues
         for(int i = 0; i < props.size(); i++) {
             const auto& queueFamily = props[i];
 
@@ -244,13 +268,24 @@ namespace ME::render {
             }
         }
 
+        // Fallback for no dedicated transfer queues
+        if (transferQueueFamily == -1) {
+            for (int i = 0; i < props.size(); i++) {
+                const auto& queueFamily = props[i];
+                if (queueFamily.queueCount > 0 && (queueFamily.queueFlags & vk::QueueFlagBits::eTransfer)) {
+                    transferQueueFamily = i;
+                    break;
+                }
+            }
+        }
+
         // no parameters yet
-        // if (m_GraphicsQueueFamily == -1 ||
-        //     (m_PresentQueueFamily == -1 && !m_DeviceParams.headlessDevice) ||
-        //     (m_ComputeQueueFamily == -1 && m_DeviceParams.enableComputeQueue) ||
-        //     (m_TransferQueueFamily == -1 && m_DeviceParams.enableCopyQueue)) {
-        //     return false;
-        // }
+        if (graphicsQueueFamily == -1 ||
+            (presentQueueFamily == -1) ||
+            (computeQueueFamily == -1) ||
+            (transferQueueFamily == -1)) {
+            return false;
+        }
 
         return true;
     }
@@ -283,10 +318,8 @@ namespace ME::render {
 
         vk::PhysicalDeviceFeatures2 physicalDeviceFeatures2;
         auto bufferDeviceAddressFeatures = vk::PhysicalDeviceBufferDeviceAddressFeatures();
-        auto maintenance4Features = vk::PhysicalDeviceMaintenance4Features();
 
         APPEND_EXTENSION(true, bufferDeviceAddressFeatures);
-        APPEND_EXTENSION(true, maintenance4Features);
 
         physicalDeviceFeatures2.pNext = pNext;
         vkPhysicalDevice.getFeatures2(&physicalDeviceFeatures2);
@@ -308,12 +341,11 @@ namespace ME::render {
 
         auto vk13Features = vk::PhysicalDeviceVulkan13Features()
             .setSynchronization2(true)
-            .setMaintenance4(maintenance4Features.maintenance4);
+            .setMaintenance4(true);
 
         pNext = nullptr;
         // TODO: check if api is at least 1.3
         APPEND_EXTENSION(true,  vk13Features);
-        APPEND_EXTENSION(maintenance4Features.maintenance4, maintenance4Features)
 
         #undef APPEND_EXTENSION
 
@@ -330,9 +362,13 @@ namespace ME::render {
             .setFillModeNonSolid(true)
             .setFragmentStoresAndAtomics(true)
             .setDualSrcBlend(true)
-            .setVertexPipelineStoresAndAtomics(true);
+            .setVertexPipelineStoresAndAtomics(true)
+            .setShaderInt64(true)
+            .setShaderStorageImageWriteWithoutFormat(true)
+            .setShaderStorageImageReadWithoutFormat(true);
 
         auto vk11Features = vk::PhysicalDeviceVulkan11Features()
+            .setStorageBuffer16BitAccess(true)
             .setPNext(pNext);
 
         auto vk12Features = vk::PhysicalDeviceVulkan12Features()
@@ -343,20 +379,22 @@ namespace ME::render {
             .setTimelineSemaphore(true)
             .setShaderSampledImageArrayNonUniformIndexing(true)
             .setBufferDeviceAddress(true) // TODO: keep track of buffer device address
+            .setShaderSubgroupExtendedTypes(true)
+            .setScalarBlockLayout(true)
             .setPNext(&vk11Features);
 
         auto layerVec = StringSetToVector(enabledExtensions.layers);
         auto deviceVec = StringSetToVector(enabledExtensions.device);
 
         auto deviceDesc = vk::DeviceCreateInfo()
-        .setPQueueCreateInfos(queueDesc.data())
-        .setQueueCreateInfoCount(queueDesc.size())
-        .setPEnabledFeatures(&deviceFeatures)
-        .setEnabledExtensionCount(deviceVec.size())
-        .setPpEnabledExtensionNames(deviceVec.data())
-        .setEnabledLayerCount(layerVec.size())
-        .setPpEnabledLayerNames(layerVec.data())
-        .setPNext(&vk12Features);
+            .setPQueueCreateInfos(queueDesc.data())
+            .setQueueCreateInfoCount(queueDesc.size())
+            .setPEnabledFeatures(&deviceFeatures)
+            .setEnabledExtensionCount(deviceVec.size())
+            .setPpEnabledExtensionNames(deviceVec.data())
+            .setEnabledLayerCount(layerVec.size())
+            .setPpEnabledLayerNames(layerVec.data())
+            .setPNext(&vk12Features);
 
         // Some weird info callback would happen here in donut
 

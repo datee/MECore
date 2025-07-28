@@ -30,7 +30,7 @@ namespace ME::render {
         auto depthDesc = nvrhi::TextureDesc()
             .setWidth(width)
             .setHeight(height)
-            .setFormat(nvrhi::Format::D24S8)
+            .setFormat(nvrhi::Format::D32S8)
             .setIsRenderTarget(true)
             .setInitialState(nvrhi::ResourceStates::DepthWrite)
             .setKeepInitialState(true);
